@@ -1,0 +1,7 @@
+/doc
+/build
+/bin
+/lib
+/src/test/
+*.dylib
+/*~
