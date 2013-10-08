@@ -45,6 +45,9 @@ pub mod ffi {
     pub static AL_POSITION :            i32         = 0x1004;
     pub static AL_ORIENTATION :         i32         = 0x100F;
     pub static AL_DIRECTION :           i32         = 0x1005;
+    pub static AL_LOOPING :             i32         = 0x1007;
+    pub static AL_MIN_GAIN :            i32         = 0x100D;
+    pub static AL_MAX_GAIN :            i32         = 0x100E;
 
     /// Sound format
     pub static AL_FORMAT_MONO16 :       i32         = 0x1101;

@@ -30,8 +30,12 @@ use openal::ffi;
 /**
 * Set the global volume of the scene.
 *
+* A value of 1.0 means unattenuated. Each division by 2 equals an attenuation
+* of about -6dB. Each multiplicaton by 2 equals an amplification of about
+* +6dB.
+*
 * # Argument
-* * `volume` - The global volume for the scene should be between 0. and 1. 
+* * `volume` - The global volume for the scene, should be between 0. and 1. 
 */
 #[fixed_stack_segment] #[inline(never)]
 pub fn set_volume(volume : f32) -> () {
