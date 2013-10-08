@@ -89,8 +89,6 @@ use ears::*;
 #[crate_type = "lib"];
 
 extern mod extra;
-extern mod sndfile;
-
 
 pub use sound::Sound;
 pub use sound_data::{SoundData, SoundTags};
@@ -106,3 +104,5 @@ pub mod states;
 
 #[doc(hidden)]
 mod openal;
+#[doc(hidden)]
+mod sndfile;
