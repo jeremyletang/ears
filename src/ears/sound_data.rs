@@ -54,9 +54,9 @@ use std::libc::c_void;
 */
 #[deriving(Clone)]
 pub struct SoundTags {
-	/// The title of the sound as a ~str
-	Title		: ~str,
-	/// The Copyright of the sound as a ~str
+    /// The title of the sound as a ~str
+    Title       : ~str,
+    /// The Copyright of the sound as a ~str
     Copyright   : ~str,
     /// The name of the software used to create the sound as a ~str
     Software    : ~str,
@@ -78,30 +78,30 @@ pub struct SoundTags {
 
 /// Structure containing the data extracted from the sound file.
 pub struct SoundData {
-	priv sound_tags : ~SoundTags,
-	priv snd_info : ~SndInfo,
-	priv nb_sample : i64,
-	priv al_buffer : u32
+    priv sound_tags : ~SoundTags,
+    priv snd_info : ~SndInfo,
+    priv nb_sample : i64,
+    priv al_buffer : u32
 }
 
 impl SoundData {
-	#[fixed_stack_segment] #[inline(never)]
-	pub fn new(path : ~str) -> Option<SoundData> {
-		let mut file;
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn new(path : ~str) -> Option<SoundData> {
+        let mut file;
 
-		match SndFile::new(path, Read) {
-			Ok(file_) => file = file_,
-			Err(err) => { println!("{}", err); return None; }
-		};
+        match SndFile::new(path, Read) {
+            Ok(file_) => file = file_,
+            Err(err) => { println!("{}", err); return None; }
+        };
 
-		let infos = file.get_sndinfo();
+        let infos = file.get_sndinfo();
 
-		let nb_sample = infos.channels as i64 * infos.frames;
+        let nb_sample = infos.channels as i64 * infos.frames;
 
-		let mut samples = vec::from_elem(nb_sample as uint, 0i16);
-		file.read_i16(samples, nb_sample as i64);
+        let mut samples = vec::from_elem(nb_sample as uint, 0i16);
+        file.read_i16(samples, nb_sample as i64);
 
-		let mut buffer_id = 0;
+        let mut buffer_id = 0;
         let len = sys::size_of::<i16>() * (samples.len());
         let format =  match infos.channels {
             1 => ffi::AL_FORMAT_MONO16,
@@ -109,66 +109,66 @@ impl SoundData {
             _ => { println!("Internal error : unrecognized format."); return None; }
         };
 
-		 unsafe {
+         unsafe {
             ffi::alGenBuffers(1, &mut buffer_id);
             ffi::alBufferData(buffer_id, format, vec::raw::to_ptr(samples) as *c_void, len as i32, infos.samplerate);
         }
 
         match openal_has_error() {
-        	Some(err) 	=> { println!("{}", err); return None; },
-        	None 		=> {}
+            Some(err)   => { println!("{}", err); return None; },
+            None        => {}
         };
 
-		let sound_data = SoundData {
-			sound_tags 	: SoundData::get_sound_tags(&file),
-			snd_info 	: infos,
-			nb_sample 	: nb_sample,
-			al_buffer 	: buffer_id
-		};
-		file.close();
-		
-		Some(sound_data)
-	}
+        let sound_data = SoundData {
+            sound_tags  : SoundData::get_sound_tags(&file),
+            snd_info    : infos,
+            nb_sample   : nb_sample,
+            al_buffer   : buffer_id
+        };
+        file.close();
+        
+        Some(sound_data)
+    }
 
-	fn get_sound_tags(file : &SndFile) -> ~SoundTags {
-		~SoundTags {
-			Title		: file.get_string(Title).unwrap_or(~""),
-    		Copyright   : file.get_string(Copyright).unwrap_or(~""),
-    		Software    : file.get_string(Software).unwrap_or(~""),
-   		 	Artist      : file.get_string(Artist).unwrap_or(~""),
-    		Comment     : file.get_string(Comment).unwrap_or(~""),
-    		Date        : file.get_string(Date).unwrap_or(~""),
-    		Album       : file.get_string(Album).unwrap_or(~""),
-    		License     : file.get_string(License).unwrap_or(~""),
-    		TrackNumber : file.get_string(TrackNumber).unwrap_or(~""),
-    		Genre       : file.get_string(Genre).unwrap_or(~"")
-		}
-	}
+    fn get_sound_tags(file : &SndFile) -> ~SoundTags {
+        ~SoundTags {
+            Title       : file.get_string(Title).unwrap_or(~""),
+            Copyright   : file.get_string(Copyright).unwrap_or(~""),
+            Software    : file.get_string(Software).unwrap_or(~""),
+            Artist      : file.get_string(Artist).unwrap_or(~""),
+            Comment     : file.get_string(Comment).unwrap_or(~""),
+            Date        : file.get_string(Date).unwrap_or(~""),
+            Album       : file.get_string(Album).unwrap_or(~""),
+            License     : file.get_string(License).unwrap_or(~""),
+            TrackNumber : file.get_string(TrackNumber).unwrap_or(~""),
+            Genre       : file.get_string(Genre).unwrap_or(~"")
+        }
+    }
 
-	pub fn get_samplerate(&self) -> i32 {
-		self.snd_info.samplerate
-	}
+    pub fn get_samplerate(&self) -> i32 {
+        self.snd_info.samplerate
+    }
 
-	pub fn get_tags(&self) -> ~SoundTags {
-		self.sound_tags.clone()
-	}
+    pub fn get_tags(&self) -> ~SoundTags {
+        self.sound_tags.clone()
+    }
 
-	pub fn get_buffer(&self) -> u32 {
-		self.al_buffer
-	}
+    pub fn get_buffer(&self) -> u32 {
+        self.al_buffer
+    }
 
-	pub fn get_sample_count(&self) -> i64 {
-		self.nb_sample
-	} 
-	pub fn get_channel_count(&self) -> i32 {
-		self.snd_info.channels
-	}
+    pub fn get_sample_count(&self) -> i64 {
+        self.nb_sample
+    } 
+    pub fn get_channel_count(&self) -> i32 {
+        self.snd_info.channels
+    }
 }
 
 impl Drop for SoundData {
-	/**
-	* Destroy all the resources attached to the SoundData.
-	*/
+    /**
+    * Destroy all the resources attached to the SoundData.
+    */
     #[fixed_stack_segment] #[inline(never)]
     fn drop(&mut self) -> () {
         unsafe {

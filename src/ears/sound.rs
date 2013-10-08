@@ -186,20 +186,21 @@ impl Sound {
     * Set the pitch of the source.
     * 
     * A multiplier for the frequency (sample rate) of the source's buffer.
+    *
     * Default pitch is 1.0.
     * 
     * # Argument
     * * `new_pitch` - The new pitch of the sound in the range [0.5 - 2.0]
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_pitch(&mut self, new_pitch : f32) -> () {
+    pub fn set_pitch(&mut self, pitch : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
 
         unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_PITCH, new_pitch)
+            ffi::alSourcef(self.al_source, ffi::AL_PITCH, pitch)
         }
     }
 
@@ -267,6 +268,90 @@ impl Sound {
             ffi::ALC_FALSE      => false,
             _                   => unreachable!()
         }
+    }
+
+    /**
+    * Set the Sound location in three dimensional space.
+    *
+    * OpenAL, like OpenGL, uses a right handed coordinate system, where in a
+    * frontal default view X (thumb) points right, Y points up (index finger), and
+    * Z points towards the viewer/camera (middle finger). 
+    * To switch from a left handed coordinate system, flip the sign on the Z
+    * coordinate.
+    *
+    * Default position is [0., 0., 0.]. 
+    *
+    * # Argument
+    * * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn set_position(&mut self, position : [f32, ..3]) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcefv(self.al_source, ffi::AL_POSITION, &position[0]);
+        }
+    }
+
+    /**
+    * Get the position of the Sound in three dimensional space.
+    *
+    * # Return
+    * A three dimensional vector of f32 containing the position of the listener [x, y, z].
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn get_position(&self) -> [f32, ..3] {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return [0., ..3]; }
+        };
+        let mut position : [f32, ..3] = [0., ..3];
+        unsafe {
+            ffi::alGetSourcefv(self.al_source, ffi::AL_POSITION, &mut position[0]);
+        }
+        position
+    }
+
+    /**
+    * Set the direction of the Sound.
+    *
+    * Specifies the current direction in local space.
+    *
+    * The default direction is: [0., 0., 0.]
+    *
+    * # Argument
+    * `direction` - The new direction of Sound.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn set_direction(&mut self, direction : [f32, ..3]) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcefv(self.al_source, ffi::AL_DIRECTION, &direction[0]);
+        }
+    }
+
+    /**
+    * Get the direction of the Sound.
+    *
+    * # Return
+    * The current direction of Sound.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn get_direction(&self)  -> [f32, ..3] {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return [0., ..3]; }
+        };
+        let mut direction : [f32, ..3] = [0., ..3];
+        unsafe {
+            ffi::alGetSourcefv(self.al_source, ffi::AL_DIRECTION, &mut direction[0]);
+        }
+        direction
     }
 }
 

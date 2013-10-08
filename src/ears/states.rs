@@ -25,12 +25,12 @@
 
 /// The differents states in which a sound can be.
 pub enum State {
-	/// Initial state of the sound or music
-	Initial,
-	/// The sound or music is currently playing
-	Playing,
-	/// The sound or music is paused
-	Paused,
-	/// The sound or music is stopped
-	Stopped
+    /// Initial state of the sound or music
+    Initial,
+    /// The sound or music is currently playing
+    Playing,
+    /// The sound or music is paused
+    Paused,
+    /// The sound or music is stopped
+    Stopped
 }

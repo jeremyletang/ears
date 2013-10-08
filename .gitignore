@@ -2,6 +2,8 @@
 /build
 /bin
 /lib
+/openal
 /src/test/
 *.dylib
 /*~
+/.rust

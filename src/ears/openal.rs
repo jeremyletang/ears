@@ -42,10 +42,9 @@ pub mod ffi {
     pub static AL_GAIN :                i32         = 0x100A;
     pub static AL_PITCH :               i32         = 0x1003;
     pub static AL_SOURCE_RELATIVE :     i32         = 0x202;
-
-    /// 3D Sound modifier
     pub static AL_POSITION :            i32         = 0x1004;
     pub static AL_ORIENTATION :         i32         = 0x100F;
+    pub static AL_DIRECTION :           i32         = 0x1005;
 
     /// Sound format
     pub static AL_FORMAT_MONO16 :       i32         = 0x1101;
@@ -99,6 +98,9 @@ pub mod ffi {
         pub fn alSourceStop(source : u32) -> ();
         pub fn alGetSourcei(source : u32, param : i32, value : *mut i32) -> ();
         pub fn alGetSourcef(source : u32, param : i32, value : *mut f32) -> ();
+        pub fn alSourcefv(source : u32, param : i32, value : *f32) -> ();
+        pub fn alGetSourcefv(source : u32, param : i32, value : *mut f32) -> ();
+
 
         /// Buffers functions
         pub fn alGenBuffers(n : i32, buffers : *mut u32) -> ();
