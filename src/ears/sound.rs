@@ -185,6 +185,19 @@ impl Sound {
     }
  
     /**
+    * Check if the Sound is playing or not.
+    *
+    * # Return
+    * True if the Sound is playing, false otherwise.
+    */
+    pub fn is_playing(&self) -> bool {
+        match self.get_state() {
+            Playing     => true,
+            _           => false
+        }
+    }
+
+    /**
     * Set the pitch of the source.
     * 
     * A multiplier for the frequency (sample rate) of the source's buffer.
