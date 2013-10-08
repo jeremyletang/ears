@@ -47,6 +47,14 @@ fn main() -> {
 }
 ```
 
+# Functionnality
+
+__ears__ provide two way for play audio files.
+
+* The Sound class, which represent light sounds who can share a buffer of samples with another Sound.
+* The Music class, which is a bigger sound and who can't share sample buffer.
+
+
 # Use ears
 
 As said before, __ears__ require OpenAL and libsndfile, you need to install these two libraries in your system.
