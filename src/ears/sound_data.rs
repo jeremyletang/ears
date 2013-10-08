@@ -79,13 +79,13 @@ pub struct SoundTags {
 /// Structure containing the data extracted from the sound file.
 pub struct SoundData {
     /// The SoundTags who contains all the information of the sound
-    priv sound_tags : ~SoundTags,
+    priv sound_tags     : ~SoundTags,
     /// The sndfile samples information
-    priv snd_info : ~SndInfo,
+    priv snd_info       : ~SndInfo,
     /// The total samples count of the Sound
-    priv nb_sample : i64,
+    priv nb_sample      : i64,
     /// The OpenAl internal identifier for the buffer
-    priv al_buffer : u32
+    priv al_buffer      : u32
 }
 
 impl SoundData {

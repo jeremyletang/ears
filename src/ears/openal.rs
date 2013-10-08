@@ -48,6 +48,9 @@ pub mod ffi {
     pub static AL_LOOPING :             i32         = 0x1007;
     pub static AL_MIN_GAIN :            i32         = 0x100D;
     pub static AL_MAX_GAIN :            i32         = 0x100E;
+    pub static AL_MAX_DISTANCE :        i32         = 0x1023;
+    pub static AL_REFERENCE_DISTANCE :  i32         = 0x1020;
+    pub static AL_ROLLOFF_FACTOR :      i32         = 0x1021;
 
     /// Sound format
     pub static AL_FORMAT_MONO16 :       i32         = 0x1101;

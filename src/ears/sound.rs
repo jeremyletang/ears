@@ -20,7 +20,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*!
-* Class for play Sounds.
+* Play Sounds easily.
 *
 * Simple class to play sound easily in 2 lines.
 *
@@ -39,7 +39,7 @@ use states::*;
 /// Class for play sounds
 pub struct Sound {
     /// The internal OpenAl source identifier
-    priv al_source : u32,
+    priv al_source  : u32,
     /// The SoundData associated to the Sound.
     priv sound_data : @SoundData
 }
@@ -96,8 +96,8 @@ impl Sound {
         }
 
         let snd = Sound {
-            al_source : source_id,
-            sound_data : sound_data
+            al_source   : source_id,
+            sound_data  : sound_data
         };
         
         Some(snd)
@@ -503,7 +503,7 @@ impl Sound {
     * True if the Sound is looping, false otherwise.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn is_looping(&mut self) -> bool {
+    pub fn is_looping(&self) -> bool {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return false; }
@@ -517,6 +517,130 @@ impl Sound {
             ffi::ALC_FALSE      => false,
             _                   => unreachable!()
         }
+    }
+
+    /**
+    * Set the maximum distance of the Sound.
+    *
+    * The distance above which the source is not attenuated any further with a
+    * clamped distance model, or where attenuation reaches 0.0 gain for linear
+    * distance models with a default rolloff factor.
+    * 
+    * The default maximum distance is +inf.
+    *
+    * # Argument
+    * `max_distance` - The new maximum distance in the range [0., +inf]
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn set_max_distance(&mut self, max_distance : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_MAX_DISTANCE, max_distance);
+        }
+    }
+
+    /**
+    * Get the maximum distance of the Sound.
+    *
+    * # Return
+    * The maximum distance of the Sound in the range [0., +inf]
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn get_max_distance(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 0.; }
+        };
+        let mut max_distance = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_MAX_DISTANCE, &mut max_distance);
+        }
+        max_distance
+    }
+
+    /**
+    * Set the reference distance of the Sound.
+    *
+    * The distance in units that no attenuation occurs.
+    * At 0.0, no distance attenuation ever occurs on non-linear attenuation models.
+    *
+    * The default distance reference is 1.
+    *
+    * # Argument
+    * * `ref_distance` - The new reference distance of the Sound.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn set_reference_distance(&mut self, ref_distance : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, ref_distance);
+        }
+    }
+
+    /**
+    * Get the reference distance of the Sound.
+    *
+    * # Return
+    * The current reference distance of the Sound.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn get_reference_distance(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 1.; }
+        };
+        let mut ref_distance = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, &mut ref_distance);
+        }
+        ref_distance
+    }
+
+    /**
+    * Set the attenuation of a Sound.
+    *
+    * Multiplier to exaggerate or diminish distance attenuation.
+    * At 0.0, no distance attenuation ever occurs.
+    *
+    * The default attenuation is 1.
+    *
+    * # Arguments
+    * `attenuation` - The new attenuation for the sound in the range [0., 1.].
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn set_attenuation(&mut self, attenuation : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, attenuation);
+        }
+    }
+
+    /**
+    * Get the attenuation of a Sound.
+    *
+    * # Return
+    * The current attenuation for the sound in the range [0., 1.].
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn get_attenuation(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 1.; }
+        };
+        let mut attenuation = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, &mut attenuation);
+        }
+        attenuation
     }
 }
 
