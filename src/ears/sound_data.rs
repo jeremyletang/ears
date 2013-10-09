@@ -29,16 +29,24 @@
 *
 * # Example
 * ```
-* // Create a SoundData
-* let snd_data = @SoundData::new(~"path/to/my/sound.wav").unwrap();
+* extern mod ears;
+* use ears::{Sound, SoundData};
 *
-* // Create two Sound with the same SoundData
-* let snd1 = Sound::new_with_data(snd_data).unwrap();
-* let snd2 = Sound::new)with_data(snd_data).unwrap();
+* fn main() -> () {
+*   // Create a SoundData
+*   let snd_data = @SoundData::new(~"path/to/my/sound.wav").unwrap();
 *
-* // Play the sounds
-* snd1.play();
-* snd2.play();
+*   // Create two Sound with the same SoundData
+*   let snd1 = Sound::new_with_data(snd_data).unwrap();
+*   let snd2 = Sound::new)with_data(snd_data).unwrap();
+*
+*   // Play the sounds
+*   snd1.play();
+*   snd2.play();
+* 
+*   // Wait until snd2 is playing
+*   while snd2.is_playing() {}
+* }
 * ```
 */
 
@@ -90,6 +98,18 @@ pub struct SoundData {
 
 impl SoundData {
     #[fixed_stack_segment] #[inline(never)]
+    /**
+    * Create a new SoundData.
+    *
+    * The SoundData contains all the information extracted from the file : samples and tags.
+    * It's an easy way to share the same samples between man Sounds objects.
+    * 
+    * # Arguments
+    * * `path` - The path of the file to load
+    *
+    * # Return
+    * An Option with Some(SoundData) if the SoundData is create, or None if an error has occured.
+    */
     pub fn new(path : ~str) -> Option<SoundData> {
         let mut file;
 
@@ -135,6 +155,11 @@ impl SoundData {
         Some(sound_data)
     }
 
+    /**
+    * Create the struct SoundTags who contains the tags of the sound.
+    *
+    * Private Method
+    */
     fn get_sound_tags(file : &SndFile) -> ~SoundTags {
         ~SoundTags {
             Title       : file.get_string(Title).unwrap_or(~""),
@@ -150,21 +175,47 @@ impl SoundData {
         }
     }
 
+
     pub fn get_samplerate(&self) -> i32 {
         self.snd_info.samplerate
     }
 
-    pub fn get_tags(&self) -> ~SoundTags {
-        self.sound_tags.clone()
+    /**
+    * Get the tags of a Sound.
+    *
+    * # Return
+    * A borrowed pointer to the internal struct SoundTags
+    */
+    pub fn get_tags<'r>(&'r self) -> &'r ~SoundTags {
+        &self.sound_tags
     }
 
+    /**
+    * Get the OpenAL identifier of the samples buffer.
+    *
+    * # Return
+    * The OpenAL internal identifier for the samples buffer of the sound.
+    */
     pub fn get_buffer(&self) -> u32 {
         self.al_buffer
     }
 
+    /**
+    * Get the total count of samples for this sound.
+    *
+    * # Return
+    * The number of samples.
+    */
     pub fn get_sample_count(&self) -> i64 {
         self.nb_sample
     } 
+
+    /**
+    * Get the numbers of channels for this sound.
+    *
+    * # Return
+    * The number of channels.
+    */
     pub fn get_channel_count(&self) -> i32 {
         self.snd_info.channels
     }

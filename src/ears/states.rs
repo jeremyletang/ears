@@ -20,7 +20,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*!
-* The states for a Sound or a Music
+* The states of a Sound or a Music
 */
 
 /// The differents states in which a sound can be.

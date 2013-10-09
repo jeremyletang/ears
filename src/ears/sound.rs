@@ -22,21 +22,34 @@
 /*!
 * Play Sounds easily.
 *
-* Simple class to play sound easily in 2 lines.
+* Simple class to play sound easily in 2 lines, Sounds are really ligth objects, 
+* the sounds data are entirely load in memory and can be share between Sounds using the SoundData object.
 *
 * # Examples 
-* ```
-* let snd = Sound::new(~"path/to/my/sound.ogg").unwrap();
-* snd.play();
+* ```Rust
+* extern mod ears;
+* use ears::Sound;
+*
+* fn main() -> () {
+*    // Create a Sound whith the path of the sound file.
+*    let snd = Sound::new(~"path/to/my/sound.ogg").unwrap();
+*
+*    // Play it   
+*    snd.play();
+*
+*    // Wait until the sound is playing
+*    while snd.is_playing() {}
+* }
 * ```
 */
 
 use internal::*;
 use sound_data::*;
-use openal::ffi;
+use openal::{ffi, al};
 use states::*;
+use audio_controller::AudioController;
 
-/// Class for play Sounds
+/// The Sound struct.
 pub struct Sound {
     /// The internal OpenAl source identifier
     priv al_source  : u32,
@@ -95,6 +108,12 @@ impl Sound {
             ffi::alSourcei(source_id, ffi::AL_BUFFER, sound_data.get_buffer() as i32);
         }
 
+        // Check if there is OpenAL internal error
+        match al::openal_has_error() {
+            Some(err) => { println!("{}", err); return None; },
+            None => {} 
+        };
+
         Some(Sound {
             al_source   : source_id,
             sound_data  : sound_data
@@ -110,12 +129,14 @@ impl Sound {
     pub fn get_datas(&self) -> @SoundData {
         self.sound_data
     }
+}
 
+impl AudioController for Sound {
     /**
     * Play or resume the Sound.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn play(&mut self) -> () {
+    fn play(&mut self) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -130,7 +151,7 @@ impl Sound {
     * Pause the Sound.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn pause(&mut self) -> () {
+    fn pause(&mut self) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -145,7 +166,7 @@ impl Sound {
     * Stop the Sound.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn stop(&mut self) -> () {
+    fn stop(&mut self) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -163,7 +184,7 @@ impl Sound {
     * The state of the sound as a variant of the enum State
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_state(&self) -> State {
+    fn get_state(&self) -> State {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return Initial; }
@@ -189,7 +210,7 @@ impl Sound {
     * # Return
     * True if the Sound is playing, false otherwise.
     */
-    pub fn is_playing(&self) -> bool {
+    fn is_playing(&self) -> bool {
         match self.get_state() {
             Playing     => true,
             _           => false
@@ -207,7 +228,7 @@ impl Sound {
     * * `new_pitch` - The new pitch of the sound in the range [0.5 - 2.0]
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_pitch(&mut self, pitch : f32) -> () {
+    fn set_pitch(&mut self, pitch : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -225,7 +246,7 @@ impl Sound {
     * The pitch of the sound in the range [0.5 - 2.0]
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_pitch(&self) -> f32 {
+    fn get_pitch(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 0.; }
@@ -247,7 +268,7 @@ impl Sound {
     * `relative` - True to set sound relative to the listener false to set the sound position absolute.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_relative(&mut self, relative : bool) -> () {
+    fn set_relative(&mut self, relative : bool) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -267,7 +288,7 @@ impl Sound {
     * True if the sound is relative to the listener false otherwise
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn is_relative(&mut self) -> bool {
+    fn is_relative(&mut self) -> bool {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return false; }
@@ -299,7 +320,7 @@ impl Sound {
     * * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_position(&mut self, position : [f32, ..3]) -> () {
+    fn set_position(&mut self, position : [f32, ..3]) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -316,7 +337,7 @@ impl Sound {
     * A three dimensional vector of f32 containing the position of the listener [x, y, z].
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_position(&self) -> [f32, ..3] {
+    fn get_position(&self) -> [f32, ..3] {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return [0., ..3]; }
@@ -339,7 +360,7 @@ impl Sound {
     * `direction` - The new direction of the Sound.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_direction(&mut self, direction : [f32, ..3]) -> () {
+    fn set_direction(&mut self, direction : [f32, ..3]) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -356,7 +377,7 @@ impl Sound {
     * The current direction of the Sound.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_direction(&self)  -> [f32, ..3] {
+    fn get_direction(&self)  -> [f32, ..3] {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return [0., ..3]; }
@@ -379,7 +400,7 @@ impl Sound {
     * * `volume` - The volume of the Sound, should be between 0. and 1. 
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_volume(&mut self, volume : f32) -> () {
+    fn set_volume(&mut self, volume : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -396,7 +417,7 @@ impl Sound {
     * The volume of the Sound between 0. and 1.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_volume(&self) -> f32 {
+    fn get_volume(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 0.; }
@@ -418,7 +439,7 @@ impl Sound {
     * * `min_volume` - The new minimal volume of the Sound should be between 0. and 1. 
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_min_volume(&mut self, min_volume : f32) -> () {
+    fn set_min_volume(&mut self, min_volume : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -435,7 +456,7 @@ impl Sound {
     * The minimal volume of the Sound between 0. and 1.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_min_volume(&self) -> f32 {
+    fn get_min_volume(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 0.; }
@@ -450,14 +471,14 @@ impl Sound {
     /**
     * Set the maximal volume for a Sound.
     *
-    * The maximum volume allowed for a source, after distance and cone attenation is
+    * The maximum volume allowed for a sound, after distance and cone attenation is
     * applied (if applicable).
     *
     * # Argument
     * * `max_volume` - The new maximal volume of the Sound should be between 0. and 1. 
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_max_volume(&mut self, max_volume : f32) -> () {
+    fn set_max_volume(&mut self, max_volume : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -474,7 +495,7 @@ impl Sound {
     * The maximal volume of the Sound between 0. and 1.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_max_volume(&self) -> f32 {
+    fn get_max_volume(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 0.; }
@@ -495,7 +516,7 @@ impl Sound {
     * `looping` - The new looping state.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_looping(&mut self, looping : bool) -> () {
+    fn set_looping(&mut self, looping : bool) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -515,7 +536,7 @@ impl Sound {
     * True if the Sound is looping, false otherwise.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn is_looping(&self) -> bool {
+    fn is_looping(&self) -> bool {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return false; }
@@ -544,7 +565,7 @@ impl Sound {
     * `max_distance` - The new maximum distance in the range [0., +inf]
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_max_distance(&mut self, max_distance : f32) -> () {
+    fn set_max_distance(&mut self, max_distance : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -561,7 +582,7 @@ impl Sound {
     * The maximum distance of the Sound in the range [0., +inf]
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_max_distance(&self) -> f32 {
+    fn get_max_distance(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 0.; }
@@ -585,7 +606,7 @@ impl Sound {
     * * `ref_distance` - The new reference distance of the Sound.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_reference_distance(&mut self, ref_distance : f32) -> () {
+    fn set_reference_distance(&mut self, ref_distance : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -602,7 +623,7 @@ impl Sound {
     * The current reference distance of the Sound.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_reference_distance(&self) -> f32 {
+    fn get_reference_distance(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 1.; }
@@ -626,7 +647,7 @@ impl Sound {
     * `attenuation` - The new attenuation for the sound in the range [0., 1.].
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn set_attenuation(&mut self, attenuation : f32) -> () {
+    fn set_attenuation(&mut self, attenuation : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -643,7 +664,7 @@ impl Sound {
     * The current attenuation for the sound in the range [0., 1.].
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_attenuation(&self) -> f32 {
+    fn get_attenuation(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 1.; }
@@ -654,6 +675,7 @@ impl Sound {
         }
         attenuation
     }
+
 }
 
 #[unsafe_destructor]
