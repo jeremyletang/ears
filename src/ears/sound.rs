@@ -36,7 +36,7 @@ use sound_data::*;
 use openal::ffi;
 use states::*;
 
-/// Class for play sounds
+/// Class for play Sounds
 pub struct Sound {
     /// The internal OpenAl source identifier
     priv al_source  : u32,
@@ -95,12 +95,10 @@ impl Sound {
             ffi::alSourcei(source_id, ffi::AL_BUFFER, sound_data.get_buffer() as i32);
         }
 
-        let snd = Sound {
+        Some(Sound {
             al_source   : source_id,
             sound_data  : sound_data
-        };
-        
-        Some(snd)
+        })
     }
 
     /**
@@ -182,6 +180,7 @@ impl Sound {
             ffi::AL_STOPPED     => Stopped,
             _                   => unreachable!()
         }
+        
     }
  
     /**

@@ -44,7 +44,7 @@
 
 use sndfile::*;
 use std::{vec, sys};
-use openal::*;
+use openal::{ffi, al};
 use std::libc::c_void;
 
 /**
@@ -107,10 +107,11 @@ impl SoundData {
 
         let mut buffer_id = 0;
         let len = sys::size_of::<i16>() * (samples.len());
-        let format =  match infos.channels {
-            1 => ffi::AL_FORMAT_MONO16,
-            2 => ffi::AL_FORMAT_STEREO16,
-            _ => { println!("Internal error : unrecognized format."); return None; }
+        
+        // Retrieve format informations
+        let format =  match al::get_channels_format(infos.channels) {
+            Some(fmt) => fmt,
+            None => { println!("Internal error : unrecognized format."); return None; }
         };
 
          unsafe {
@@ -118,7 +119,7 @@ impl SoundData {
             ffi::alBufferData(buffer_id, format, vec::raw::to_ptr(samples) as *c_void, len as i32, infos.samplerate);
         }
 
-        match openal_has_error() {
+        match al::openal_has_error() {
             Some(err)   => { println!("{}", err); return None; },
             None        => {}
         };

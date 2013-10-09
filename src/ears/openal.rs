@@ -55,9 +55,15 @@ pub mod ffi {
     /// Sound format
     pub static AL_FORMAT_MONO16 :       i32         = 0x1101;
     pub static AL_FORMAT_STEREO16 :     i32         = 0x1103;
+    pub static AL_FORMAT_51CHN16 :      i32         = 0x120B;
+    pub static AL_FORMAT_61CHN16 :      i32         = 0x120E;
+    pub static AL_FORMAT_71CHN16 :      i32         = 0x1211;
+    pub static AL_FORMAT_QUAD16 :       i32         = 0x1205;
 
     /// Source params
     pub static AL_BUFFER :              i32         = 0x1009;
+    pub static AL_BUFFERS_PROCESSED :   i32         = 0x1016;
+    pub static AL_BUFFERS_QUEUED :      i32         = 0x1015;
 
     /// Error identifiers
     pub static AL_NO_ERROR :            i32         = 0;
@@ -106,6 +112,8 @@ pub mod ffi {
         pub fn alGetSourcef(source : u32, param : i32, value : *mut f32) -> ();
         pub fn alSourcefv(source : u32, param : i32, value : *f32) -> ();
         pub fn alGetSourcefv(source : u32, param : i32, value : *mut f32) -> ();
+        pub fn alSourceQueueBuffers(source : u32, nb : i32, buffers : *mut u32) -> ();
+        pub fn alSourceUnqueueBuffers(source : u32, nb : i32, buffers : *mut u32) -> ();
 
 
         /// Buffers functions
@@ -121,16 +129,33 @@ pub mod ffi {
     pub struct ALCcontext;
 }
 
-#[fixed_stack_segment] #[inline(never)]
-pub fn openal_has_error() -> Option<~str> {
-     match unsafe { ffi::alGetError() } {
-        ffi::AL_NO_ERROR            => None,
-        ffi::AL_INVALID_NAME        => Some(~"OpenAL error : Invalid name paramater passed to AL call."),
-        ffi::AL_INVALID_ENUM        => Some(~"OpenAL error : Invalid enum parameter passed to AL call."),
-        ffi::AL_INVALID_VALUE       => Some(~"OpenAL error : Invalid value parameter passed to AL call."),
-        ffi::AL_INVALID_OPERATION   => Some(~"OpenAL error : Illegal AL call."),
-        ffi::AL_OUT_OF_MEMORY       => Some(~"OpenAL error : Not enough memory."),
-        _                           => Some(~"OpenAL internal error : Unknow error.")
+pub mod al {
+    
+    use super::ffi;
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn openal_has_error() -> Option<~str> {
+         match unsafe { ffi::alGetError() } {
+            ffi::AL_NO_ERROR            => None,
+            ffi::AL_INVALID_NAME        => Some(~"OpenAL error : Invalid name paramater passed to AL call."),
+            ffi::AL_INVALID_ENUM        => Some(~"OpenAL error : Invalid enum parameter passed to AL call."),
+            ffi::AL_INVALID_VALUE       => Some(~"OpenAL error : Invalid value parameter passed to AL call."),
+            ffi::AL_INVALID_OPERATION   => Some(~"OpenAL error : Illegal AL call."),
+            ffi::AL_OUT_OF_MEMORY       => Some(~"OpenAL error : Not enough memory."),
+            _                           => Some(~"OpenAL internal error : Unknow error.")
+        }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn get_channels_format(channels : i32) -> Option<i32> {
+        match channels {
+            1 => Some(ffi::AL_FORMAT_MONO16),
+            2 => Some(ffi::AL_FORMAT_STEREO16),
+            4 => Some(ffi::AL_FORMAT_QUAD16),
+            5 => Some(ffi::AL_FORMAT_51CHN16),
+            6 => Some(ffi::AL_FORMAT_61CHN16),
+            7 => Some(ffi::AL_FORMAT_71CHN16),
+            _ => return None
+        }
     }
 }
-
