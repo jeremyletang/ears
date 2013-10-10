@@ -34,7 +34,7 @@
 *
 * fn main() -> () {
 *    // Load a Music
-*   let msc = Music::new(~"path/to/my/sound.ogg").unwrap();
+*   let msc = Music::new(~"path/to/my/sound.flac").unwrap();
 *
 *   // Play it
 *   msc.play();
@@ -42,15 +42,16 @@
 * ```
 */
 
+use std::rt::io::timer::sleep;
+use std::{vec, sys};
+use std::libc::c_void;
+use std::task::*;
+
 use internal::*;
 use openal::{ffi, al};
 use sndfile::*;
 use states::*;
-use std::rt::io::timer::sleep;
-
-use std::{vec, sys};
-use std::libc::c_void;
-use std::task::*;
+use audio_controller::AudioController;
 
 /// Class for play Musics
 pub struct Music {
@@ -69,6 +70,15 @@ pub struct Music {
 }
 
 impl Music {
+    /**
+    * Create a new Music
+    *
+    * # Argument
+    * * `path` - The path of the file to load the music
+    *
+    * # Return
+    * An Option containing Some(Music) on success, None otherwise
+    */
     #[fixed_stack_segment] #[inline(never)]
     pub fn new(path : &str) -> Option<Music> {
         // Check that OpenAL is launched
@@ -113,30 +123,6 @@ impl Music {
             sample_to_read : 50000,
             sample_format : format
         })        
-    }
-
-    #[fixed_stack_segment] #[inline(never)]
-    pub fn play(&mut self) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
-
-        match self.get_state() {
-            Paused   => { al::alSourcePlay(self.al_source); return; },
-            _       => {
-                if self.is_playing() {
-                    unsafe { ffi::alSourceStop(self.al_source) };
-                    // wait a bit for openal terminate
-                    sleep(50);
-                }
-                self.file.get_mut_ref().seek(0, SeekSet);
-                self.process_music();
-            }
-        }
-
-        
-        
     }
 
     fn process_music(&mut self) -> () {
@@ -205,12 +191,38 @@ impl Music {
         let file = self.file.get_ref().clone();
         chan.send(file);
     }
+}
+
+impl AudioController for Music {
+    /**
+    * Play or resume the Music.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn play(&mut self) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+
+        match self.get_state() {
+            Paused   => { al::alSourcePlay(self.al_source); return; },
+            _       => {
+                if self.is_playing() {
+                    unsafe { ffi::alSourceStop(self.al_source) };
+                    // wait a bit for openal terminate
+                    sleep(50);
+                }
+                self.file.get_mut_ref().seek(0, SeekSet);
+                self.process_music();
+            }
+        }
+    }
 
     /**
     * Pause the Music.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn pause(&mut self) -> () {
+    fn pause(&mut self) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -225,7 +237,7 @@ impl Music {
     * Stop the Music.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn stop(&mut self) -> () {
+    fn stop(&mut self) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
@@ -237,13 +249,26 @@ impl Music {
     }
 
     /**
-    * Get the current state of the Sound
+    * Check if the Music is playing or not.
     *
     * # Return
-    * The state of the sound as a variant of the enum State
+    * True if the Music is playing, false otherwise.
+    */
+    fn is_playing(&self) -> bool {
+        match self.get_state() {
+            Playing     => true,
+            _           => false
+        }
+    }
+
+    /**
+    * Get the current state of the Music
+    *
+    * # Return
+    * The state of the music as a variant of the enum State
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn get_state(&self) -> State {
+    fn get_state(&self) -> State {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return Initial; }
@@ -262,22 +287,473 @@ impl Music {
         }
         
     }
- 
+
     /**
-    * Check if the Sound is playing or not.
+    * Set the volume of the Music.
     *
-    * # Return
-    * True if the Sound is playing, false otherwise.
+    * A value of 1.0 means unattenuated. Each division by 2 equals an attenuation
+    * of about -6dB. Each multiplicaton by 2 equals an amplification of about
+    * +6dB.
+    *
+    * # Argument
+    * * `volume` - The volume of the Music, should be between 0. and 1. 
     */
-    pub fn is_playing(&self) -> bool {
-        match self.get_state() {
-            Playing     => true,
-            _           => false
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_volume(&mut self, volume : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_GAIN, volume);
         }
     }
+
+    /**
+    * Get the volume of the Music.
+    *
+    * # Return
+    * The volume of the Music between 0. and 1.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_volume(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 0.; }
+        };
+        let mut volume : f32 = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_GAIN, &mut volume);
+        }
+        volume
+    }
+
+    /**
+    * Set the minimal volume for a Music.
+    *
+    * The minimum volume allowed for a music, after distance and cone attenation is
+    * applied (if applicable).
+    *
+    * # Argument
+    * * `min_volume` - The new minimal volume of the Music should be between 0. and 1. 
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_min_volume(&mut self, min_volume : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_MIN_GAIN, min_volume);
+        }
+    }
+
+    /**
+    * Get the minimal volume of the Music.
+    *
+    * # Return
+    * The minimal volume of the Music between 0. and 1.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_min_volume(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 0.; }
+        };
+        let mut volume : f32 = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_MIN_GAIN, &mut volume);
+        }
+        volume
+    }
+
+    /**
+    * Set the maximal volume for a Music.
+    *
+    * The maximum volume allowed for a sound, after distance and cone attenation is
+    * applied (if applicable).
+    *
+    * # Argument
+    * * `max_volume` - The new maximal volume of the Music should be between 0. and 1. 
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_max_volume(&mut self, max_volume : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_MAX_GAIN, max_volume);
+        }
+    }
+
+    /**
+    * Get the maximal volume of the Music.
+    *
+    * # Return
+    * The maximal volume of the Music between 0. and 1.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_max_volume(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 0.; }
+        };
+        let mut volume : f32 = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_MAX_GAIN, &mut volume);
+        }
+        volume
+    }
+
+    /**
+    * Set the Music looping or not
+    *
+    * The default looping is false.
+    *
+    * # Arguments
+    * `looping` - The new looping state.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_looping(&mut self, looping : bool) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            match looping {
+                true    => ffi::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_TRUE as i32),
+                false   => ffi::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_FALSE as i32)
+            };
+        }
+    }
+
+    /**
+    * Check if the Music is looping or not
+    *
+    * # Return
+    * True if the Music is looping, false otherwise.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn is_looping(&self) -> bool {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return false; }
+        };
+        let mut boolean = 0; 
+        unsafe {
+            ffi::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
+        }
+        match boolean as i8 {
+            ffi::ALC_TRUE       => true,
+            ffi::ALC_FALSE      => false,
+            _                   => unreachable!()
+        }
+    }
+
+    /**
+    * Set the pitch of the Music.
+    * 
+    * A multiplier for the frequency (sample rate) of the Music's buffer.
+    *
+    * Default pitch is 1.0.
+    * 
+    * # Argument
+    * * `new_pitch` - The new pitch of the Music in the range [0.5 - 2.0]
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_pitch(&mut self, pitch : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_PITCH, pitch)
+        }
+    }
+
+    /**
+    * Set the pitch of the Music.
+    * 
+    * # Return
+    * The pitch of the Music in the range [0.5 - 2.0]
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_pitch(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 0.; }
+        };
+
+        let mut pitch = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_PITCH, &mut pitch)
+        }
+        pitch
+    }
+
+    /**
+    * Set the position of the Music relative to the listener or absolute.
+    *
+    * Default position is absolute.
+    *
+    * # Argument
+    * `relative` - True to set Music relative to the listener false to set the Music position absolute.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_relative(&mut self, relative : bool) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            match relative {
+                true    => ffi::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_TRUE as i32),
+                false   => ffi::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_FALSE as i32)
+            };
+        }
+    }
+
+    /**
+    * Is the Music relative to the listener or not ?
+    *
+    * # Return
+    * True if the Music is relative to the listener false otherwise
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn is_relative(&mut self) -> bool {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return false; }
+        };
+
+        let mut boolean = 0; 
+        unsafe {
+            ffi::alGetSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, &mut boolean);
+        }
+        match boolean as i8 {
+            ffi::ALC_TRUE       => true,
+            ffi::ALC_FALSE      => false,
+            _                   => unreachable!()
+        }
+    }
+
+    /**
+    * Set the Music location in three dimensional space.
+    *
+    * OpenAL, like OpenGL, uses a right handed coordinate system, where in a
+    * frontal default view X (thumb) points right, Y points up (index finger), and
+    * Z points towards the viewer/camera (middle finger). 
+    * To switch from a left handed coordinate system, flip the sign on the Z
+    * coordinate.
+    *
+    * Default position is [0., 0., 0.]. 
+    *
+    * # Argument
+    * * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_position(&mut self, position : [f32, ..3]) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcefv(self.al_source, ffi::AL_POSITION, &position[0]);
+        }
+    }
+
+    /**
+    * Get the position of the Music in three dimensional space.
+    *
+    * # Return
+    * A three dimensional vector of f32 containing the position of the listener [x, y, z].
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_position(&self) -> [f32, ..3] {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return [0., ..3]; }
+        };
+        let mut position : [f32, ..3] = [0., ..3];
+        unsafe {
+            ffi::alGetSourcefv(self.al_source, ffi::AL_POSITION, &mut position[0]);
+        }
+        position
+    }
+
+    /**
+    * Set the direction of the Music.
+    *
+    * Specifies the current direction in local space.
+    *
+    * The default direction is: [0., 0., 0.]
+    *
+    * # Argument
+    * `direction` - The new direction of the Music.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_direction(&mut self, direction : [f32, ..3]) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcefv(self.al_source, ffi::AL_DIRECTION, &direction[0]);
+        }
+    }
+
+    /**
+    * Get the direction of the Music.
+    *
+    * # Return
+    * The current direction of the Music.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_direction(&self)  -> [f32, ..3] {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return [0., ..3]; }
+        };
+        let mut direction : [f32, ..3] = [0., ..3];
+        unsafe {
+            ffi::alGetSourcefv(self.al_source, ffi::AL_DIRECTION, &mut direction[0]);
+        }
+        direction
+    }
+
+    /**
+    * Set the maximum distance of the Music.
+    *
+    * The distance above which the source is not attenuated any further with a
+    * clamped distance model, or where attenuation reaches 0.0 gain for linear
+    * distance models with a default rolloff factor.
+    * 
+    * The default maximum distance is +inf.
+    *
+    * # Argument
+    * `max_distance` - The new maximum distance in the range [0., +inf]
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_max_distance(&mut self, max_distance : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_MAX_DISTANCE, max_distance);
+        }
+    }
+
+    /**
+    * Get the maximum distance of the Music.
+    *
+    * # Return
+    * The maximum distance of the Music in the range [0., +inf]
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_max_distance(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 0.; }
+        };
+        let mut max_distance = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_MAX_DISTANCE, &mut max_distance);
+        }
+        max_distance
+    }
+
+    /**
+    * Set the reference distance of the Music.
+    *
+    * The distance in units that no attenuation occurs.
+    * At 0.0, no distance attenuation ever occurs on non-linear attenuation models.
+    *
+    * The default distance reference is 1.
+    *
+    * # Argument
+    * * `ref_distance` - The new reference distance of the Music.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_reference_distance(&mut self, ref_distance : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, ref_distance);
+        }
+    }
+
+    /**
+    * Get the reference distance of the Music.
+    *
+    * # Return
+    * The current reference distance of the Music.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_reference_distance(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 1.; }
+        };
+        let mut ref_distance = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, &mut ref_distance);
+        }
+        ref_distance
+    }
+
+    /**
+    * Set the attenuation of a Music.
+    *
+    * Multiplier to exaggerate or diminish distance attenuation.
+    * At 0.0, no distance attenuation ever occurs.
+    *
+    * The default attenuation is 1.
+    *
+    * # Arguments
+    * `attenuation` - The new attenuation for the Music in the range [0., 1.].
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_attenuation(&mut self, attenuation : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, attenuation);
+        }
+    }
+
+    /**
+    * Get the attenuation of a Music.
+    *
+    * # Return
+    * The current attenuation for the Music in the range [0., 1.].
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_attenuation(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 1.; }
+        };
+        let mut attenuation = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, &mut attenuation);
+        }
+        attenuation
+    } 
+
 }
 
+
 impl Drop for Music {
+    /**
+    * Destroy all the resources of the Music.
+    */
     #[fixed_stack_segment] #[inline(never)]
     fn drop(&mut self) -> () {
         unsafe {
