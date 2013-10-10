@@ -19,9 +19,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/**
-* __ears__ initializtion (optional).
-* 
+/*!
+* __ears__ initialization (optional).
+*
 * This module provide a unique function to initialize __ears__. 
 * Use this function in the case of you don't use __ears__ for the first time 
 * in you program in the main task. This prevent that the context was created and destroyed
