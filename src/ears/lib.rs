@@ -99,6 +99,7 @@ pub use audio_controller::AudioController;
 #[doc(hidden)]
 mod internal;
 
+pub mod init;
 pub mod listener;
 pub mod sound;
 pub mod music;
