@@ -187,7 +187,6 @@ impl Music {
             }
             al::alSourcei(al_source, ffi::AL_BUFFER, 0);
         }
-        
         let file = self.file.get_ref().clone();
         chan.send(file);
     }
@@ -246,6 +245,7 @@ impl AudioController for Music {
         unsafe {
             ffi::alSourceStop(self.al_source)
         }
+        sleep(50)
     }
 
     /**
