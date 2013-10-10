@@ -21,8 +21,6 @@
 
 /*!
 * The functionnality that a Sound or a Music should implement.
-* 
-*
 */
 
 use states::State;

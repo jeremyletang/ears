@@ -182,6 +182,19 @@ impl AudioController for Sound {
     }
 
     /**
+    * Check if the Sound is playing or not.
+    *
+    * # Return
+    * True if the Sound is playing, false otherwise.
+    */
+    fn is_playing(&self) -> bool {
+        match self.get_state() {
+            Playing     => true,
+            _           => false
+        }
+    }
+
+    /**
     * Get the current state of the Sound
     *
     * # Return
@@ -209,15 +222,165 @@ impl AudioController for Sound {
     }
  
     /**
-    * Check if the Sound is playing or not.
+    * Set the volume of the Sound.
+    *
+    * A value of 1.0 means unattenuated. Each division by 2 equals an attenuation
+    * of about -6dB. Each multiplicaton by 2 equals an amplification of about
+    * +6dB.
+    *
+    * # Argument
+    * * `volume` - The volume of the Sound, should be between 0. and 1. 
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_volume(&mut self, volume : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_GAIN, volume);
+        }
+    }
+
+    /**
+    * Get the volume of the Sound.
     *
     * # Return
-    * True if the Sound is playing, false otherwise.
+    * The volume of the Sound between 0. and 1.
     */
-    fn is_playing(&self) -> bool {
-        match self.get_state() {
-            Playing     => true,
-            _           => false
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_volume(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 0.; }
+        };
+        let mut volume : f32 = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_GAIN, &mut volume);
+        }
+        volume
+    }
+
+    /**
+    * Set the minimal volume for a Sound.
+    *
+    * The minimum volume allowed for a source, after distance and cone attenation is
+    * applied (if applicable).
+    *
+    * # Argument
+    * * `min_volume` - The new minimal volume of the Sound should be between 0. and 1. 
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_min_volume(&mut self, min_volume : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_MIN_GAIN, min_volume);
+        }
+    }
+
+    /**
+    * Get the minimal volume of the Sound.
+    *
+    * # Return
+    * The minimal volume of the Sound between 0. and 1.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_min_volume(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 0.; }
+        };
+        let mut volume : f32 = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_MIN_GAIN, &mut volume);
+        }
+        volume
+    }
+
+    /**
+    * Set the maximal volume for a Sound.
+    *
+    * The maximum volume allowed for a sound, after distance and cone attenation is
+    * applied (if applicable).
+    *
+    * # Argument
+    * * `max_volume` - The new maximal volume of the Sound should be between 0. and 1. 
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_max_volume(&mut self, max_volume : f32) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            ffi::alSourcef(self.al_source, ffi::AL_MAX_GAIN, max_volume);
+        }
+    }
+
+    /**
+    * Get the maximal volume of the Sound.
+    *
+    * # Return
+    * The maximal volume of the Sound between 0. and 1.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn get_max_volume(&self) -> f32 {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return 0.; }
+        };
+        let mut volume : f32 = 0.;
+        unsafe {
+            ffi::alGetSourcef(self.al_source, ffi::AL_MAX_GAIN, &mut volume);
+        }
+        volume
+    }
+
+    /**
+    * Set the Sound looping or not
+    *
+    * The default looping is false.
+    *
+    * # Arguments
+    * `looping` - The new looping state.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn set_looping(&mut self, looping : bool) -> () {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return; }
+        };
+        unsafe {
+            match looping {
+                true    => ffi::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_TRUE as i32),
+                false   => ffi::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_FALSE as i32)
+            };
+        }
+    }
+
+    /**
+    * Check if the Sound is looping or not
+    *
+    * # Return
+    * True if the Sound is looping, false otherwise.
+    */
+    #[fixed_stack_segment] #[inline(never)]
+    fn is_looping(&self) -> bool {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return false; }
+        };
+        let mut boolean = 0; 
+        unsafe {
+            ffi::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
+        }
+        match boolean as i8 {
+            ffi::ALC_TRUE       => true,
+            ffi::ALC_FALSE      => false,
+            _                   => unreachable!()
         }
     }
 
@@ -391,169 +554,6 @@ impl AudioController for Sound {
             ffi::alGetSourcefv(self.al_source, ffi::AL_DIRECTION, &mut direction[0]);
         }
         direction
-    }
-
-    /**
-    * Set the volume of the Sound.
-    *
-    * A value of 1.0 means unattenuated. Each division by 2 equals an attenuation
-    * of about -6dB. Each multiplicaton by 2 equals an amplification of about
-    * +6dB.
-    *
-    * # Argument
-    * * `volume` - The volume of the Sound, should be between 0. and 1. 
-    */
-    #[fixed_stack_segment] #[inline(never)]
-    fn set_volume(&mut self, volume : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_GAIN, volume);
-        }
-    }
-
-    /**
-    * Get the volume of the Sound.
-    *
-    * # Return
-    * The volume of the Sound between 0. and 1.
-    */
-    #[fixed_stack_segment] #[inline(never)]
-    fn get_volume(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 0.; }
-        };
-        let mut volume : f32 = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_GAIN, &mut volume);
-        }
-        volume
-    }
-
-    /**
-    * Set the minimal volume for a Sound.
-    *
-    * The minimum volume allowed for a source, after distance and cone attenation is
-    * applied (if applicable).
-    *
-    * # Argument
-    * * `min_volume` - The new minimal volume of the Sound should be between 0. and 1. 
-    */
-    #[fixed_stack_segment] #[inline(never)]
-    fn set_min_volume(&mut self, min_volume : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_MIN_GAIN, min_volume);
-        }
-    }
-
-    /**
-    * Get the minimal volume of the Sound.
-    *
-    * # Return
-    * The minimal volume of the Sound between 0. and 1.
-    */
-    #[fixed_stack_segment] #[inline(never)]
-    fn get_min_volume(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 0.; }
-        };
-        let mut volume : f32 = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_MIN_GAIN, &mut volume);
-        }
-        volume
-    }
-
-    /**
-    * Set the maximal volume for a Sound.
-    *
-    * The maximum volume allowed for a sound, after distance and cone attenation is
-    * applied (if applicable).
-    *
-    * # Argument
-    * * `max_volume` - The new maximal volume of the Sound should be between 0. and 1. 
-    */
-    #[fixed_stack_segment] #[inline(never)]
-    fn set_max_volume(&mut self, max_volume : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_MAX_GAIN, max_volume);
-        }
-    }
-
-    /**
-    * Get the maximal volume of the Sound.
-    *
-    * # Return
-    * The maximal volume of the Sound between 0. and 1.
-    */
-    #[fixed_stack_segment] #[inline(never)]
-    fn get_max_volume(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 0.; }
-        };
-        let mut volume : f32 = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_MAX_GAIN, &mut volume);
-        }
-        volume
-    }
-
-    /**
-    * Set the Sound looping or not
-    *
-    * The default looping is false.
-    *
-    * # Arguments
-    * `looping` - The new looping state.
-    */
-    #[fixed_stack_segment] #[inline(never)]
-    fn set_looping(&mut self, looping : bool) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
-        unsafe {
-            match looping {
-                true    => ffi::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_TRUE as i32),
-                false   => ffi::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_FALSE as i32)
-            };
-        }
-    }
-
-    /**
-    * Check if the Sound is looping or not
-    *
-    * # Return
-    * True if the Sound is looping, false otherwise.
-    */
-    #[fixed_stack_segment] #[inline(never)]
-    fn is_looping(&self) -> bool {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return false; }
-        };
-        let mut boolean = 0; 
-        unsafe {
-            ffi::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
-        }
-        match boolean as i8 {
-            ffi::ALC_TRUE       => true,
-            ffi::ALC_FALSE      => false,
-            _                   => unreachable!()
-        }
     }
 
     /**
