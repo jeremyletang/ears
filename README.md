@@ -52,7 +52,7 @@ use ears::*;
 ```
 # Compile examples
 
-Like __ears__ you can build the examples with rustpkg, just do :
+Like __ears__ you can build the examples with `rustpkg`, just do :
 
 ```Shell
 > rustpkg install examples/an_example
