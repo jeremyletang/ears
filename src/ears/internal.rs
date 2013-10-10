@@ -31,6 +31,7 @@ use openal::ffi;
 
 static al_context : local_data::Key<@OpenAlData> = &local_data::Key;
 
+#[deriving(Clone)]
 pub struct OpenAlData {
     priv al_context : *ffi::ALCcontext,
     priv al_device : *ffi::ALCdevice
@@ -69,7 +70,11 @@ impl OpenAlData {
     * # Return
     * A result containing nothing if the OpenAlData struct exist, otherwise an error message.
     */
+    #[fixed_stack_segment] #[inline(never)]
     pub fn check_al_context() -> Result<(), ~str> {
+        if unsafe { ffi::alcGetCurrentContext() } != ptr::null() {
+            return Ok(())
+        }
         local_data::get(al_context, |openal_data| {
             match openal_data {
                 Some(_)    => Ok(()),
