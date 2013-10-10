@@ -30,6 +30,12 @@
 
 use internal::*;
 
+/**
+* Initialize the internal context
+*
+* # Return
+* true if initialization is made with success, false otherwise
+*/
 pub fn ears_init() -> bool {
     match OpenAlData::check_al_context() {
         Ok(_)       => true,
