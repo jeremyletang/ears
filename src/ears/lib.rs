@@ -90,10 +90,10 @@ use ears::*;
 
 extern mod extra;
 
+pub use music::Music;
 pub use sound::Sound;
-// pub use music::Music;
-pub use sound_data::{SoundData, SoundTags};
 pub use states::{State, Initial, Playing, Paused, Stopped};
+pub use sound_data::{SoundData, SoundTags};
 pub use audio_controller::AudioController;
 
 #[doc(hidden)]
@@ -101,7 +101,7 @@ mod internal;
 
 pub mod listener;
 pub mod sound;
-// pub mod music;
+pub mod music;
 pub mod sound_data;
 pub mod states;
 pub mod audio_controller;

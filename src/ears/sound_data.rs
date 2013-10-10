@@ -110,7 +110,7 @@ impl SoundData {
     * # Return
     * An Option with Some(SoundData) if the SoundData is create, or None if an error has occured.
     */
-    pub fn new(path : ~str) -> Option<SoundData> {
+    pub fn new(path : &str) -> Option<SoundData> {
         let mut file;
 
         match SndFile::new(path, Read) {

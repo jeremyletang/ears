@@ -70,7 +70,7 @@ impl Sound {
     * An Option with Some(Sound) if the Sound is created properly, or None if un error has occured.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn new(path : ~str) -> Option<Sound> {
+    pub fn new(path : &str) -> Option<Sound> {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return None; }
@@ -143,7 +143,11 @@ impl AudioController for Sound {
         };
 
         unsafe {
-             ffi::alSourcePlay(self.al_source)
+             ffi::alSourcePlay(self.al_source);
+        }
+        match al::openal_has_error() {
+            None => {},
+            Some(err) => println!("{}", err)
         }
     }
 

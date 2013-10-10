@@ -87,6 +87,7 @@ pub mod ffi {
         pub fn alcCreateContext(device : *ALCdevice, attrlist : *i32) -> *ALCcontext;
         pub fn alcMakeContextCurrent(context : *ALCcontext) -> ALCboolean;
         pub fn alcDestroyContext(context : *ALCcontext);
+        pub fn alcGetCurrentContext() -> *ALCcontext;
 
         /// Device functions
         pub fn alcOpenDevice(devicename : *c_char) -> *ALCdevice;
@@ -112,7 +113,7 @@ pub mod ffi {
         pub fn alGetSourcef(source : u32, param : i32, value : *mut f32) -> ();
         pub fn alSourcefv(source : u32, param : i32, value : *f32) -> ();
         pub fn alGetSourcefv(source : u32, param : i32, value : *mut f32) -> ();
-        pub fn alSourceQueueBuffers(source : u32, nb : i32, buffers : *mut u32) -> ();
+        pub fn alSourceQueueBuffers(source : u32, nb : i32, buffers : *u32) -> ();
         pub fn alSourceUnqueueBuffers(source : u32, nb : i32, buffers : *mut u32) -> ();
 
 
@@ -132,6 +133,44 @@ pub mod ffi {
 pub mod al {
     
     use super::ffi;
+    use std::libc::c_void;
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alBufferData(buffer : u32, format : i32, data : *c_void, size : i32, freq : i32) -> () {
+        unsafe { ffi::alBufferData(buffer, format, data, size, freq); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alSourceQueueBuffers(source : u32, nb : i32, buffers : *u32) -> () {
+        unsafe { ffi::alSourceQueueBuffers(source, nb, buffers); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alSourcePlay(source : u32) -> () {
+        unsafe { ffi::alSourcePlay(source); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alGetSourcei(source : u32, param : i32, value : *mut i32) -> () {
+        unsafe { ffi::alGetSourcei(source, param, value); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alGetState(source : u32) -> i32 {
+        let mut i = 0;
+        unsafe { ffi::alGetSourcei(source, ffi::AL_SOURCE_STATE, &mut i); }
+        i
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alSourcei(source : u32, param : i32, value : i32) -> (){
+        unsafe { ffi::alSourcei(source, param, value); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alSourceUnqueueBuffers(source : u32, nb : i32, buffers : *mut u32) -> () {
+        unsafe { ffi::alSourceUnqueueBuffers(source, nb, buffers); }
+    }
 
     #[fixed_stack_segment] #[inline(never)]
     pub fn openal_has_error() -> Option<~str> {

@@ -232,6 +232,15 @@ pub struct SndFile {
     priv info : ~SndInfo
 }
 
+impl Clone for SndFile {
+    fn clone(&self) -> SndFile {
+        SndFile {
+            handle : self.handle,
+            info : self.info.clone()
+        }
+    }
+}
+
 impl SndFile {
     /**
     * Construct SndFile object with the path to the music and a mode to open it.
@@ -243,9 +252,11 @@ impl SndFile {
     * Return Ok() containing the SndFile on success, a string representation of the error otherwise.
     */
     #[fixed_stack_segment] #[inline(never)]
-    pub fn new(path : ~str, mode : OpenMode) -> Result<SndFile, ~str> {
+    pub fn new(path : &str, mode : OpenMode) -> Result<SndFile, ~str> {
         let info : ~SndInfo = ~SndInfo {frames : 0, samplerate : 0, channels : 0, format : 0, sections : 0, seekable : 0};
-        let tmp_sndfile = unsafe { ffi::sf_open(path.to_c_str().unwrap(), mode as i32, &*info) };
+        let tmp_sndfile = do path.with_c_str |c_path| {
+            unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
+        };
         if tmp_sndfile.is_null() {
             Err(unsafe { str::raw::from_c_str(ffi::sf_strerror(ptr::null())) })
         } else {
