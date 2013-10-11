@@ -1,5 +1,8 @@
 # ears
 
+[![Build Status](https://travis-ci.org/JeremyLetang/ears.png?branch=master)](https://travis-ci.org/JeremyLetang/ears)
+
+
 __ears__ is a simple library for play Sounds and Musics in Rust.
 
 __ears__ is build on the top of OpenAL and libsndfile.
