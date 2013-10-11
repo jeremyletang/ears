@@ -641,7 +641,6 @@ impl Drop for Sound {
 mod test {
     use super::*;
     use states::*;
-    use std::rt::io::timer::sleep;
 
     #[test]
     fn sound_create_OK() -> () {
@@ -670,7 +669,6 @@ mod test {
         snd.play();
         assert_eq!(snd.get_state() as i32, Playing as i32);
         snd.stop();
-        sleep(100);
     }
 
     #[test]
@@ -681,7 +679,6 @@ mod test {
         snd.pause();
         assert_eq!(snd.get_state() as i32, Paused as i32);
         snd.stop();
-        sleep(100);
     }
 
     #[test]
@@ -692,7 +689,6 @@ mod test {
         snd.stop();
         assert_eq!(snd.get_state() as i32, Stopped as i32);
         snd.stop();
-        sleep(100);
     }
 
     #[test]
@@ -702,7 +698,6 @@ mod test {
         snd.play();
         assert_eq!(snd.is_playing(), true);
         snd.stop();
-        sleep(100);
     }
 
     #[test]
@@ -711,7 +706,6 @@ mod test {
         
         assert_eq!(snd.is_playing(), false);
         snd.stop();
-        sleep(100);
     }
 
     #[test]
@@ -720,7 +714,6 @@ mod test {
 
         snd.set_volume(0.7);        
         assert_eq!(snd.get_volume(), 0.7);
-        sleep(100);
     }
 
     #[test]
@@ -729,7 +722,6 @@ mod test {
 
         snd.set_min_volume(0.1);        
         assert_eq!(snd.get_min_volume(), 0.1);
-        sleep(100);
     }
 
     #[test]
@@ -739,7 +731,6 @@ mod test {
         snd.set_max_volume(0.9);      
         println!("MAX VOLUME : {}", snd.get_max_volume());  
         assert_eq!(snd.get_max_volume(), 0.9);
-        sleep(100);
     }
 
     #[test]
@@ -748,7 +739,6 @@ mod test {
 
         snd.set_looping(true);
         assert_eq!(snd.is_looping(), true);
-        sleep(100);
     }
 
     #[test]
@@ -757,7 +747,6 @@ mod test {
 
         snd.set_looping(false);      
         assert_eq!(snd.is_looping(), false);
-        sleep(100);
     }
 
     #[test]
@@ -766,7 +755,6 @@ mod test {
 
         snd.set_pitch(1.5);
         assert_eq!(snd.get_pitch(), 1.5);
-        sleep(100);
     }
 
      #[test]
@@ -775,7 +763,6 @@ mod test {
 
         snd.set_relative(true);
         assert_eq!(snd.is_relative(), true);
-        sleep(100);
     }
 
     #[test]
@@ -784,6 +771,5 @@ mod test {
 
         snd.set_relative(false);      
         assert_eq!(snd.is_relative(), false);
-        sleep(100);
     }
 }
