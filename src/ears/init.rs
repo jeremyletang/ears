@@ -43,6 +43,7 @@ pub fn ears_init() -> bool {
     }
 }
 
+#[cfg(test)]
 mod test {
     use super::*;
 

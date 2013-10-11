@@ -637,6 +637,7 @@ impl Drop for Sound {
     }
 }
 
+#[cfg(test)]
 mod test {
     use super::*;
     use states::*;
