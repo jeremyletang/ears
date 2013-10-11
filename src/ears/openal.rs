@@ -156,6 +156,11 @@ pub mod al {
     }
 
     #[fixed_stack_segment] #[inline(never)]
+    pub fn alGetSourcef(source : u32, param : i32, value : *mut f32) -> () {
+        unsafe { ffi::alGetSourcef(source, param, value); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
     pub fn alGetState(source : u32) -> i32 {
         let mut i = 0;
         unsafe { ffi::alGetSourcei(source, ffi::AL_SOURCE_STATE, &mut i); }
@@ -168,8 +173,38 @@ pub mod al {
     }
 
     #[fixed_stack_segment] #[inline(never)]
+    pub fn alSourcef(source : u32, param : i32, value : f32) -> (){
+        unsafe { ffi::alSourcef(source, param, value); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)] 
+    pub fn alSourcePause(source : u32) -> () {
+        unsafe { ffi::alSourcePause(source); }
+    }
+    
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alSourceStop(source : u32) -> () {
+        unsafe { ffi::alSourceStop(source); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
     pub fn alSourceUnqueueBuffers(source : u32, nb : i32, buffers : *mut u32) -> () {
         unsafe { ffi::alSourceUnqueueBuffers(source, nb, buffers); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alGenSources(n : i32, sources : *mut u32) -> () {
+        unsafe {ffi::alGenSources(n, sources); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alSourcefv(source : u32, param : i32, value : *f32) -> () {
+        unsafe { ffi::alSourcefv(source, param, value); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alGetSourcefv(source : u32, param : i32, value : *mut f32) -> () {
+        unsafe { ffi::alGetSourcefv(source, param, value); }
     }
 
     #[fixed_stack_segment] #[inline(never)]

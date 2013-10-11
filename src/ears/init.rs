@@ -42,3 +42,12 @@ pub fn ears_init() -> bool {
         Err(err)    => { println!("{}", err); false }
     }
 }
+
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_init_ears_OK() -> () {
+        assert_eq!(ears_init(), true)
+    }
+}
