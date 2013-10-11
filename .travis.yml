@@ -5,7 +5,7 @@ install:
   - sudo apt-get install rust-nightly
   - sudo apt-get install libopenal-dev
   - sudo apt-get install libsndfile1-dev
-  env:
+env:
   - RUST_TEST_TASKS=1
 script:
   - ./travis_build.sh
