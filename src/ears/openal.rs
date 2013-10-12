@@ -213,6 +213,36 @@ pub mod al {
     }
 
     #[fixed_stack_segment] #[inline(never)]
+    pub fn alListenerf(param : i32, value : f32) -> () {
+        unsafe { ffi::alListenerf(param, value); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alListener3f(param : i32, value1 : f32, value2 : f32, value3 : f32) -> () {
+        unsafe { ffi::alListener3f(param, value1, value2, value3); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alGetListenerf(param : i32, value : *mut f32) -> () {
+        unsafe { ffi::alGetListenerf(param, value); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alGetListener3f(param : f32, value1 : *mut f32, value2 : *mut f32, value3 : *mut f32) -> () {
+        unsafe { ffi::alGetListener3f(param, value1, value2, value3); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alListenerfv(param : i32, values : *f32) -> () {
+        unsafe { ffi::alListenerfv(param, values); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
+    pub fn alGetListenerfv(param : i32, values : *mut f32) -> () {
+        unsafe { ffi::alGetListenerfv(param, values); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
     pub fn openal_has_error() -> Option<~str> {
          match unsafe { ffi::alGetError() } {
             ffi::AL_NO_ERROR            => None,
