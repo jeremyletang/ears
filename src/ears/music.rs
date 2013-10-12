@@ -25,7 +25,7 @@
 * Simple class to play musics easily in 2 lines.
 *
 * The musics are played in them own task and load the samples progressively using circular buffers.
-* They are not associated to a SoundData like Sounds.
+* They are not associated to a MusicData like Musics.
 *
 * # Examples 
 * ```
@@ -34,7 +34,7 @@
 *
 * fn main() -> () {
 *    // Load a Music
-*   let msc = Music::new(~"path/to/my/sound.flac").unwrap();
+*   let msc = Music::new(~"path/to/my/Music.flac").unwrap();
 *
 *   // Play it
 *   msc.play();
@@ -59,7 +59,7 @@ pub struct Music {
     priv al_source  : u32,
     /// The internal OpenAL buffers
     priv al_buffers : [u32, ..2],
-    /// The file open with libsndfile
+    /// The file open with libmscfile
     priv file : Option<~SndFile>,
     /// Information of the file
     priv file_infos : ~SndInfo,
@@ -85,7 +85,7 @@ impl Music {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return None; }
         };
-        // Retrieve File and sound datas
+        // Retrieve File and Music datas
         let file = match SndFile::new(path, Read) {
             Ok(file)    => ~file,
             Err(err)    => { println!("{}", err); return None; }
@@ -145,7 +145,7 @@ impl Music {
         // Queue the buffers
         al::alSourceQueueBuffers(al_source, 2, &al_buffers[0]);
        
-        // Launche the sound
+        // Launche the Music
         al::alSourcePlay(al_source);
 
         do spawn {
@@ -264,8 +264,7 @@ impl AudioController for Music {
             Err(err)    => { println!("{}", err); return Initial; }
         };
 
-        let mut state : i32 = 0;
-        al::alGetSourcei(self.al_source, ffi::AL_SOURCE_STATE, &mut state);
+        let state  = al::alGetState(self.al_source);
 
         match state {
             ffi::AL_INITIAL     => Initial,
@@ -351,7 +350,7 @@ impl AudioController for Music {
     /**
     * Set the maximal volume for a Music.
     *
-    * The maximum volume allowed for a sound, after distance and cone attenation is
+    * The maximum volume allowed for a Music, after distance and cone attenation is
     * applied (if applicable).
     *
     * # Argument
@@ -704,5 +703,186 @@ impl Drop for Music {
             ffi::alDeleteSources(1, &mut self.al_source);
             // self.file.take_unwrap().close();         
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use states::*;
+
+    #[test]
+    fn music_create_OK() -> () {
+        let msc = Music::new("shot.wav");
+
+        match msc {
+            Some(_) => {},
+            None    => fail!()
+        }
+    }
+
+    #[test]
+    fn music_create_FAIL() -> () {
+        let msc = Music::new("toto.wav");
+
+        match msc {
+            Some(_) => fail!(),
+            None    => {}
+        }
+    }
+
+    // TODO fix this
+    // #[test]
+    // fn music_play_OK() -> () {
+    //     let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+    //     msc.play();
+    //     assert_eq!(msc.get_state() as i32, Playing as i32);
+    //     msc.stop();
+    // }
+
+    // TODO fix this
+    // #[test]
+    // fn music_pause_OK() -> () {
+    //     let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+    //     msc.play();
+    //     msc.pause();
+    //     assert_eq!(msc.get_state() as i32, Paused as i32);
+    //     msc.stop();
+    // }
+
+    #[test]
+    fn music_stop_OK() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.play();
+        msc.stop();
+        assert_eq!(msc.get_state() as i32, Stopped as i32);
+        msc.stop();
+    }
+
+
+    // TODO fix this
+    // #[test]
+    // fn music_is_playing_TRUE() -> () {
+    //     let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        
+    //     msc.play();
+    //     assert_eq!(msc.is_playing(), true);
+    //     msc.stop();
+    // }
+
+    // TODO fix this
+    // #[test]
+    // fn music_is_playing_FALSE() -> () {
+    //     let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        
+    //     assert_eq!(msc.is_playing(), false);
+    //     msc.stop();
+    // }
+
+    #[test]
+    fn music_set_volume_OK() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_volume(0.7);        
+        assert_eq!(msc.get_volume(), 0.7);
+    }
+
+    #[test]
+    fn music_set_min_volume_OK() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_min_volume(0.1);        
+        assert_eq!(msc.get_min_volume(), 0.1);
+    }
+
+    #[test]
+    fn music_set_max_volume_OK() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_max_volume(0.9);      
+        assert_eq!(msc.get_max_volume(), 0.9);
+    }
+
+    #[test]
+    fn music_is_looping_TRUE() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_looping(true);
+        assert_eq!(msc.is_looping(), true);
+    }
+
+    #[test]
+    fn music_is_looping_FALSE() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_looping(false);      
+        assert_eq!(msc.is_looping(), false);
+    }
+
+    #[test]
+    fn music_set_pitch_OK() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_pitch(1.5);
+        assert_eq!(msc.get_pitch(), 1.5);
+    }
+
+     #[test]
+    fn music_set_relative_TRUE() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_relative(true);
+        assert_eq!(msc.is_relative(), true);
+    }
+
+    #[test]
+    fn music_set_relative_FALSE() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_relative(false);      
+        assert_eq!(msc.is_relative(), false);
+    }
+
+    #[test]
+    fn music_set_position_OK() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_position([50., 150., 250.]);      
+        assert_eq!(msc.get_position(), [50., 150., 250.]);
+    }
+
+    #[test]
+    fn music_set_direction_OK() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_direction([50., 150., 250.]);      
+        assert_eq!(msc.get_direction(), [50., 150., 250.]);
+    }
+
+    #[test]
+    fn music_set_max_distance() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_max_distance(70.);      
+        assert_eq!(msc.get_max_distance(), 70.);
+    }
+
+    #[test]
+    fn music_set_reference_distance() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_reference_distance(70.);      
+        assert_eq!(msc.get_reference_distance(), 70.);
+    }
+
+    #[test]
+    fn music_set_attenuation() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+
+        msc.set_attenuation(70.);      
+        assert_eq!(msc.get_attenuation(), 70.);
     }
 }

@@ -97,7 +97,6 @@ pub struct SoundData {
 }
 
 impl SoundData {
-    #[fixed_stack_segment] #[inline(never)]
     /**
     * Create a new SoundData.
     *
@@ -134,10 +133,8 @@ impl SoundData {
             None => { println!("Internal error : unrecognized format."); return None; }
         };
 
-         unsafe {
-            ffi::alGenBuffers(1, &mut buffer_id);
-            ffi::alBufferData(buffer_id, format, vec::raw::to_ptr(samples) as *c_void, len as i32, infos.samplerate);
-        }
+        al::alGenBuffers(1, &mut buffer_id);
+        al::alBufferData(buffer_id, format, vec::raw::to_ptr(samples) as *c_void, len as i32, infos.samplerate);
 
         match al::openal_has_error() {
             Some(err)   => { println!("{}", err); return None; },
