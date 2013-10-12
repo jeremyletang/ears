@@ -729,7 +729,6 @@ mod test {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
         snd.set_max_volume(0.9);      
-        println!("MAX VOLUME : {}", snd.get_max_volume());  
         assert_eq!(snd.get_max_volume(), 0.9);
     }
 
@@ -771,5 +770,45 @@ mod test {
 
         snd.set_relative(false);      
         assert_eq!(snd.is_relative(), false);
+    }
+
+    #[test]
+    fn sound_set_position_OK() -> () {
+        let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
+
+        snd.set_position([50., 150., 250.]);      
+        assert_eq!(snd.get_position(), [50., 150., 250.]);
+    }
+
+    #[test]
+    fn sound_set_direction_OK() -> () {
+        let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
+
+        snd.set_direction([50., 150., 250.]);      
+        assert_eq!(snd.get_direction(), [50., 150., 250.]);
+    }
+
+    #[test]
+    fn sound_set_max_distance() -> () {
+        let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
+
+        snd.set_max_distance(70.);      
+        assert_eq!(snd.get_max_distance(), 70.);
+    }
+
+    #[test]
+    fn sound_set_reference_distance() -> () {
+        let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
+
+        snd.set_reference_distance(70.);      
+        assert_eq!(snd.get_reference_distance(), 70.);
+    }
+
+    #[test]
+    fn sound_set_attenuation() -> () {
+        let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
+
+        snd.set_attenuation(70.);      
+        assert_eq!(snd.get_attenuation(), 70.);
     }
 }
