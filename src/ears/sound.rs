@@ -48,6 +48,7 @@ use sound_data::*;
 use openal::{ffi, al};
 use states::*;
 use audio_controller::AudioController;
+use audio_tags::{AudioTags, Tags};
 
 /// The Sound struct.
 pub struct Sound {
@@ -125,6 +126,18 @@ impl Sound {
     */
     pub fn get_datas(&self) -> @SoundData {
         self.sound_data
+    }
+}
+
+impl AudioTags for Sound {
+    /**
+    * Get the tags of a Sound.
+    *
+    * # Return
+    * A borrowed pointer to the internal struct SoundTags
+    */
+    fn get_tags<'r>(&'r self) -> &'r Tags {
+        self.sound_data.get_tags()
     }
 }
 

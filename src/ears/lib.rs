@@ -93,8 +93,9 @@ extern mod extra;
 pub use music::Music;
 pub use sound::Sound;
 pub use states::{State, Initial, Playing, Paused, Stopped};
-pub use sound_data::{SoundData, SoundTags};
+pub use sound_data::SoundData;
 pub use audio_controller::AudioController;
+pub use audio_tags::{AudioTags, Tags};
 
 #[doc(hidden)]
 mod internal;
@@ -106,6 +107,7 @@ pub mod music;
 pub mod sound_data;
 pub mod states;
 pub mod audio_controller;
+pub mod audio_tags;
 
 #[doc(hidden)]
 mod openal;

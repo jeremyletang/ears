@@ -22,9 +22,8 @@
 /*!
 * The datas extracted from a sound file.
 *
-* Datas extracted from the file are dispatched between two struct, 
-* a first who contains all the tags of the sound,
-* a second who contains the samples.
+* Samples extracted from a file, 
+*
 * SoundDatas are made to be share between several Sound and play in the same time.
 *
 * # Example
@@ -54,40 +53,13 @@ use sndfile::*;
 use std::{vec, sys};
 use openal::{ffi, al};
 use std::libc::c_void;
-
-/**
-* Structure containing the tags of a sound. 
-*
-* If the tags doesn't exist in the sound file, the string is ~"".
-*/
-#[deriving(Clone)]
-pub struct SoundTags {
-    /// The title of the sound as a ~str
-    Title       : ~str,
-    /// The Copyright of the sound as a ~str
-    Copyright   : ~str,
-    /// The name of the software used to create the sound as a ~str
-    Software    : ~str,
-    /// The name of the artist of the sound as a ~str
-    Artist      : ~str,
-    /// A comment as a ~str
-    Comment     : ~str,
-    /// The creation date of the sound as a ~str
-    Date        : ~str,
-    /// The name of the album where the sound come from as a ~str
-    Album       : ~str,
-    /// The license of the sound as a ~str
-    License     : ~str,
-    /// The tracknumber of the sound as a ~str
-    TrackNumber : ~str,
-    /// The genre of the sound as a ~str
-    Genre       : ~str
-}
+use internal::*;
+use audio_tags::*;
 
 /// Structure containing the data extracted from the sound file.
 pub struct SoundData {
     /// The SoundTags who contains all the information of the sound
-    priv sound_tags     : ~SoundTags,
+    priv sound_tags     : Tags,
     /// The sndfile samples information
     priv snd_info       : ~SndInfo,
     /// The total samples count of the Sound
@@ -109,7 +81,13 @@ impl SoundData {
     * # Return
     * An Option with Some(SoundData) if the SoundData is create, or None if an error has occured.
     */
+    #[fixed_stack_segment]
     pub fn new(path : &str) -> Option<SoundData> {
+        match OpenAlData::check_al_context() {
+            Ok(_)       => {},
+            Err(err)    => { println!("{}", err); return None; }
+        };
+
         let mut file;
 
         match SndFile::new(path, Read) {
@@ -133,16 +111,17 @@ impl SoundData {
             None => { println!("Internal error : unrecognized format."); return None; }
         };
 
-        al::alGenBuffers(1, &mut buffer_id);
-        al::alBufferData(buffer_id, format, vec::raw::to_ptr(samples) as *c_void, len as i32, infos.samplerate);
-
+        unsafe {
+            ffi::alGenBuffers(1, &mut buffer_id);
+            ffi::alBufferData(buffer_id, format, vec::raw::to_ptr(samples) as *c_void, len as i32, infos.samplerate);
+        }
         match al::openal_has_error() {
             Some(err)   => { println!("{}", err); return None; },
             None        => {}
         };
 
         let sound_data = SoundData {
-            sound_tags  : SoundData::get_sound_tags(&file),
+            sound_tags  : get_sound_tags(&file),
             snd_info    : infos,
             nb_sample   : nb_sample,
             al_buffer   : buffer_id
@@ -152,39 +131,8 @@ impl SoundData {
         Some(sound_data)
     }
 
-    /**
-    * Create the struct SoundTags who contains the tags of the sound.
-    *
-    * Private Method
-    */
-    fn get_sound_tags(file : &SndFile) -> ~SoundTags {
-        ~SoundTags {
-            Title       : file.get_string(Title).unwrap_or(~""),
-            Copyright   : file.get_string(Copyright).unwrap_or(~""),
-            Software    : file.get_string(Software).unwrap_or(~""),
-            Artist      : file.get_string(Artist).unwrap_or(~""),
-            Comment     : file.get_string(Comment).unwrap_or(~""),
-            Date        : file.get_string(Date).unwrap_or(~""),
-            Album       : file.get_string(Album).unwrap_or(~""),
-            License     : file.get_string(License).unwrap_or(~""),
-            TrackNumber : file.get_string(TrackNumber).unwrap_or(~""),
-            Genre       : file.get_string(Genre).unwrap_or(~"")
-        }
-    }
-
-
     pub fn get_samplerate(&self) -> i32 {
         self.snd_info.samplerate
-    }
-
-    /**
-    * Get the tags of a Sound.
-    *
-    * # Return
-    * A borrowed pointer to the internal struct SoundTags
-    */
-    pub fn get_tags<'r>(&'r self) -> &'r ~SoundTags {
-        &self.sound_tags
     }
 
     /**
@@ -215,6 +163,18 @@ impl SoundData {
     */
     pub fn get_channel_count(&self) -> i32 {
         self.snd_info.channels
+    }
+}
+
+impl AudioTags for SoundData {
+    /**
+    * Get the tags of a Sound.
+    *
+    * # Return
+    * A borrowed pointer to the internal struct SoundTags
+    */
+    fn get_tags<'r>(&'r self) -> &'r Tags {
+        &self.sound_tags
     }
 }
 

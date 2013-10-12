@@ -52,21 +52,24 @@ use openal::{ffi, al};
 use sndfile::*;
 use states::*;
 use audio_controller::AudioController;
+use audio_tags::*;
 
 /// Class for play Musics
 pub struct Music {
     /// The internal OpenAL source identifier
-    priv al_source  : u32,
+    priv al_source      : u32,
     /// The internal OpenAL buffers
-    priv al_buffers : [u32, ..2],
+    priv al_buffers     : [u32, ..2],
     /// The file open with libmscfile
-    priv file : Option<~SndFile>,
+    priv file           : Option<~SndFile>,
     /// Information of the file
-    priv file_infos : ~SndInfo,
+    priv file_infos     : ~SndInfo,
     /// Quantity of sample to read each time
     priv sample_to_read : i32,
     /// Format of the sample
-    priv sample_format : i32
+    priv sample_format  : i32,
+    /// Audio tags
+    priv sound_tags     : Tags
 }
 
 impl Music {
@@ -112,13 +115,16 @@ impl Music {
             None => {} 
         };
 
+        let sound_tags = get_sound_tags(file);
+
         Some( Music {
-            al_source : source_id,
-            al_buffers : buffer_ids,
-            file : Some(file),
-            file_infos : infos,
-            sample_to_read : 50000,
-            sample_format : format
+            al_source       : source_id,
+            al_buffers      : buffer_ids,
+            file            : Some(file),
+            file_infos      : infos,
+            sample_to_read  : 50000,
+            sample_format   : format,
+            sound_tags      : sound_tags
         })        
     }
 
@@ -186,6 +192,19 @@ impl Music {
         }
         let file = self.file.get_ref().clone();
         chan.send(file);
+    }
+
+}
+
+impl AudioTags for Music {
+    /**
+    * Get the tags of a Sound.
+    *
+    * # Return
+    * A borrowed pointer to the internal struct SoundTags
+    */
+    fn get_tags<'r>(&'r self) -> &'r Tags {
+        &self.sound_tags
     }
 }
 
