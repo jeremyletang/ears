@@ -63,7 +63,7 @@ pub struct Music {
     /// The file open with libmscfile
     priv file           : Option<~SndFile>,
     /// Information of the file
-    priv file_infos     : ~SndInfo,
+    priv file_infos     : SndInfo,
     /// Quantity of sample to read each time
     priv sample_to_read : i32,
     /// Format of the sample

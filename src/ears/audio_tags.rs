@@ -54,12 +54,13 @@ pub struct Tags {
     Genre       : ~str
 }
 
-#[doc(hidden)]
+
 /**
 * Create the struct SoundTags who contains the tags of the sound.
 *
 * Private Method
 */
+#[doc(hidden)]
 pub fn get_sound_tags(file : &SndFile) -> Tags {
     Tags {
         Title       : file.get_string(Title).unwrap_or(~""),

@@ -297,8 +297,8 @@ impl SndFile {
     /**
     * Return the SndInfo struct of the current music.
     */
-    pub fn get_sndinfo(&self) -> ~SndInfo {
-        self.info.clone()
+    pub fn get_sndinfo(&self) -> SndInfo {
+        *self.info.clone()
     }
 
     /**

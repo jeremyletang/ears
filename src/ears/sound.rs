@@ -127,6 +127,27 @@ impl Sound {
     pub fn get_datas(&self) -> @SoundData {
         self.sound_data
     }
+
+    /**
+    * Set the sound datas.
+    *
+    * Doesn't work if the sound is currently playing.
+    * 
+    * # Argument
+    * `sound_data` - The new sound_data
+    *
+    */
+    pub fn set_datas(&mut self, sound_data : @SoundData) -> () {
+        
+        if self.is_playing() {
+            return;
+        }
+        
+        // set the buffer
+        al::alSourcei(self.al_source, ffi::AL_BUFFER, sound_data.get_buffer() as i32);
+
+        self.sound_data = sound_data
+    }
 }
 
 impl AudioTags for Sound {

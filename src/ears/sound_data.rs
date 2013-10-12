@@ -61,7 +61,7 @@ pub struct SoundData {
     /// The SoundTags who contains all the information of the sound
     priv sound_tags     : Tags,
     /// The sndfile samples information
-    priv snd_info       : ~SndInfo,
+    priv snd_info       : SndInfo,
     /// The total samples count of the Sound
     priv nb_sample      : i64,
     /// The OpenAl internal identifier for the buffer
@@ -131,8 +131,15 @@ impl SoundData {
         Some(sound_data)
     }
 
-    pub fn get_samplerate(&self) -> i32 {
-        self.snd_info.samplerate
+    /**
+    * Get the sound file infos.
+    * 
+    * # Return
+    * The struct SndInfo.
+    */
+    #[doc(hidden)]
+    pub fn get_sndinfo<'r>(&'r self) -> &'r SndInfo {
+        &self.snd_info
     }
 
     /**
@@ -141,28 +148,9 @@ impl SoundData {
     * # Return
     * The OpenAL internal identifier for the samples buffer of the sound.
     */
+    #[doc(hidden)]
     pub fn get_buffer(&self) -> u32 {
         self.al_buffer
-    }
-
-    /**
-    * Get the total count of samples for this sound.
-    *
-    * # Return
-    * The number of samples.
-    */
-    pub fn get_sample_count(&self) -> i64 {
-        self.nb_sample
-    } 
-
-    /**
-    * Get the numbers of channels for this sound.
-    *
-    * # Return
-    * The number of channels.
-    */
-    pub fn get_channel_count(&self) -> i32 {
-        self.snd_info.channels
     }
 }
 
