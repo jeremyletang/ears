@@ -151,3 +151,31 @@ pub fn get_orientation() -> ([f32, ..3], [f32, ..3]) {
     ([orientation[0], orientation[1], orientation[2]], [orientation[3], orientation[4], orientation[5]])
 }
 
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    pub fn listener_set_volume() -> () {
+        set_volume(0.77);
+        assert_eq!(get_volume(), 0.77);
+    }
+
+    #[test]
+    pub fn listener_set_position() -> () {
+        set_position([50., 150., 234.]);
+        assert_eq!(get_position(), [50., 150., 234.]);
+    }
+
+    #[test]
+    pub fn listener_set_orientation() -> () {
+        set_orientation([50., 150., 234.], [277., 125., 71.]);
+        match get_orientation() {
+           ([x1, y1, z1], [x2, y2, z2]) => { 
+                assert_eq!([x1, y1, z1], [50., 150., 234.]); 
+                assert_eq!([x2, y2, z2], [277., 125., 71.]) 
+            }
+        }
+    }
+}
+
