@@ -208,6 +208,11 @@ pub mod al {
     }
 
     #[fixed_stack_segment] #[inline(never)]
+    pub fn alGenBuffers(n : i32, buffers : *mut u32) -> () {
+        unsafe { ffi::alGenBuffers(n, buffers); }
+    }
+
+    #[fixed_stack_segment] #[inline(never)]
     pub fn openal_has_error() -> Option<~str> {
          match unsafe { ffi::alGetError() } {
             ffi::AL_NO_ERROR            => None,

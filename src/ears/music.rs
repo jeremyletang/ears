@@ -79,7 +79,6 @@ impl Music {
     * # Return
     * An Option containing Some(Music) on success, None otherwise
     */
-    #[fixed_stack_segment] #[inline(never)]
     pub fn new(path : &str) -> Option<Music> {
         // Check that OpenAL is launched
         match OpenAlData::check_al_context() {
@@ -96,12 +95,10 @@ impl Music {
         // create the source and the buffers
         let mut source_id = 0;
         let mut buffer_ids = [0, ..2];
-        unsafe {
-            // create the source
-            ffi::alGenSources(1, &mut source_id);
-            // create the buffers
-            ffi::alGenBuffers(2, &mut buffer_ids[0]);
-        }
+        // create the source
+        al::alGenSources(1, &mut source_id);
+        // create the buffers
+        al::alGenBuffers(2, &mut buffer_ids[0]);
 
         // Retrieve format informations
         let format =  match al::get_channels_format(infos.channels) {
@@ -196,7 +193,6 @@ impl AudioController for Music {
     /**
     * Play or resume the Music.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn play(&mut self) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
@@ -207,7 +203,8 @@ impl AudioController for Music {
             Paused   => { al::alSourcePlay(self.al_source); return; },
             _       => {
                 if self.is_playing() {
-                    unsafe { ffi::alSourceStop(self.al_source) };
+                    al::alSourceStop(self.al_source);
+                    
                     // wait a bit for openal terminate
                     sleep(50);
                 }
@@ -220,31 +217,25 @@ impl AudioController for Music {
     /**
     * Pause the Music.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn pause(&mut self) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
 
-        unsafe {
-            ffi::alSourcePause(self.al_source)
-        }
+        al::alSourcePause(self.al_source)
     }
 
     /**
     * Stop the Music.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn stop(&mut self) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
 
-        unsafe {
-            ffi::alSourceStop(self.al_source)
-        }
+        al::alSourceStop(self.al_source);
         sleep(50)
     }
 
@@ -267,7 +258,6 @@ impl AudioController for Music {
     * # Return
     * The state of the music as a variant of the enum State
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_state(&self) -> State {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
@@ -275,9 +265,8 @@ impl AudioController for Music {
         };
 
         let mut state : i32 = 0;
-        unsafe {
-            ffi::alGetSourcei(self.al_source, ffi::AL_SOURCE_STATE, &mut state);
-        }
+        al::alGetSourcei(self.al_source, ffi::AL_SOURCE_STATE, &mut state);
+
         match state {
             ffi::AL_INITIAL     => Initial,
             ffi::AL_PLAYING     => Playing,
@@ -298,15 +287,13 @@ impl AudioController for Music {
     * # Argument
     * * `volume` - The volume of the Music, should be between 0. and 1. 
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_volume(&mut self, volume : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_GAIN, volume);
-        }
+
+        al::alSourcef(self.al_source, ffi::AL_GAIN, volume);
     }
 
     /**
@@ -315,16 +302,14 @@ impl AudioController for Music {
     * # Return
     * The volume of the Music between 0. and 1.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_volume(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 0.; }
         };
+    
         let mut volume : f32 = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_GAIN, &mut volume);
-        }
+        al::alGetSourcef(self.al_source, ffi::AL_GAIN, &mut volume);
         volume
     }
 
@@ -337,15 +322,13 @@ impl AudioController for Music {
     * # Argument
     * * `min_volume` - The new minimal volume of the Music should be between 0. and 1. 
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_min_volume(&mut self, min_volume : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_MIN_GAIN, min_volume);
-        }
+        
+        al::alSourcef(self.al_source, ffi::AL_MIN_GAIN, min_volume);
     }
 
     /**
@@ -354,16 +337,14 @@ impl AudioController for Music {
     * # Return
     * The minimal volume of the Music between 0. and 1.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_min_volume(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 0.; }
         };
+        
         let mut volume : f32 = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_MIN_GAIN, &mut volume);
-        }
+        al::alGetSourcef(self.al_source, ffi::AL_MIN_GAIN, &mut volume);
         volume
     }
 
@@ -376,15 +357,13 @@ impl AudioController for Music {
     * # Argument
     * * `max_volume` - The new maximal volume of the Music should be between 0. and 1. 
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_max_volume(&mut self, max_volume : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_MAX_GAIN, max_volume);
-        }
+        
+        al::alSourcef(self.al_source, ffi::AL_MAX_GAIN, max_volume);
     }
 
     /**
@@ -393,16 +372,14 @@ impl AudioController for Music {
     * # Return
     * The maximal volume of the Music between 0. and 1.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_max_volume(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 0.; }
         };
+        
         let mut volume : f32 = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_MAX_GAIN, &mut volume);
-        }
+        al::alGetSourcef(self.al_source, ffi::AL_MAX_GAIN, &mut volume);
         volume
     }
 
@@ -414,18 +391,16 @@ impl AudioController for Music {
     * # Arguments
     * `looping` - The new looping state.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_looping(&mut self, looping : bool) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            match looping {
-                true    => ffi::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_TRUE as i32),
-                false   => ffi::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_FALSE as i32)
-            };
-        }
+
+        match looping {
+            true    => al::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_TRUE as i32),
+            false   => al::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_FALSE as i32)
+        };
     }
 
     /**
@@ -434,16 +409,14 @@ impl AudioController for Music {
     * # Return
     * True if the Music is looping, false otherwise.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn is_looping(&self) -> bool {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return false; }
         };
+        
         let mut boolean = 0; 
-        unsafe {
-            ffi::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
-        }
+        al::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
         match boolean as i8 {
             ffi::ALC_TRUE       => true,
             ffi::ALC_FALSE      => false,
@@ -461,16 +434,13 @@ impl AudioController for Music {
     * # Argument
     * * `new_pitch` - The new pitch of the Music in the range [0.5 - 2.0]
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_pitch(&mut self, pitch : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
 
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_PITCH, pitch)
-        }
+        al::alSourcef(self.al_source, ffi::AL_PITCH, pitch)
     }
 
     /**
@@ -479,7 +449,6 @@ impl AudioController for Music {
     * # Return
     * The pitch of the Music in the range [0.5 - 2.0]
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_pitch(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
@@ -487,9 +456,7 @@ impl AudioController for Music {
         };
 
         let mut pitch = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_PITCH, &mut pitch)
-        }
+        al::alGetSourcef(self.al_source, ffi::AL_PITCH, &mut pitch);
         pitch
     }
 
@@ -501,18 +468,16 @@ impl AudioController for Music {
     * # Argument
     * `relative` - True to set Music relative to the listener false to set the Music position absolute.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_relative(&mut self, relative : bool) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            match relative {
-                true    => ffi::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_TRUE as i32),
-                false   => ffi::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_FALSE as i32)
-            };
-        }
+       
+        match relative {
+            true    => al::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_TRUE as i32),
+            false   => al::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_FALSE as i32)
+        };
     }
 
     /**
@@ -521,7 +486,6 @@ impl AudioController for Music {
     * # Return
     * True if the Music is relative to the listener false otherwise
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn is_relative(&mut self) -> bool {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
@@ -529,9 +493,7 @@ impl AudioController for Music {
         };
 
         let mut boolean = 0; 
-        unsafe {
-            ffi::alGetSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, &mut boolean);
-        }
+        al::alGetSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, &mut boolean);
         match boolean as i8 {
             ffi::ALC_TRUE       => true,
             ffi::ALC_FALSE      => false,
@@ -553,15 +515,13 @@ impl AudioController for Music {
     * # Argument
     * * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_position(&mut self, position : [f32, ..3]) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            ffi::alSourcefv(self.al_source, ffi::AL_POSITION, &position[0]);
-        }
+        
+        al::alSourcefv(self.al_source, ffi::AL_POSITION, &position[0]);
     }
 
     /**
@@ -570,16 +530,14 @@ impl AudioController for Music {
     * # Return
     * A three dimensional vector of f32 containing the position of the listener [x, y, z].
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_position(&self) -> [f32, ..3] {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return [0., ..3]; }
         };
+        
         let mut position : [f32, ..3] = [0., ..3];
-        unsafe {
-            ffi::alGetSourcefv(self.al_source, ffi::AL_POSITION, &mut position[0]);
-        }
+        al::alGetSourcefv(self.al_source, ffi::AL_POSITION, &mut position[0]);
         position
     }
 
@@ -593,15 +551,13 @@ impl AudioController for Music {
     * # Argument
     * `direction` - The new direction of the Music.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_direction(&mut self, direction : [f32, ..3]) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            ffi::alSourcefv(self.al_source, ffi::AL_DIRECTION, &direction[0]);
-        }
+        
+        al::alSourcefv(self.al_source, ffi::AL_DIRECTION, &direction[0]);
     }
 
     /**
@@ -610,16 +566,14 @@ impl AudioController for Music {
     * # Return
     * The current direction of the Music.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_direction(&self)  -> [f32, ..3] {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return [0., ..3]; }
         };
+        
         let mut direction : [f32, ..3] = [0., ..3];
-        unsafe {
-            ffi::alGetSourcefv(self.al_source, ffi::AL_DIRECTION, &mut direction[0]);
-        }
+        al::alGetSourcefv(self.al_source, ffi::AL_DIRECTION, &mut direction[0]);
         direction
     }
 
@@ -635,15 +589,13 @@ impl AudioController for Music {
     * # Argument
     * `max_distance` - The new maximum distance in the range [0., +inf]
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_max_distance(&mut self, max_distance : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_MAX_DISTANCE, max_distance);
-        }
+        
+        al::alSourcef(self.al_source, ffi::AL_MAX_DISTANCE, max_distance);
     }
 
     /**
@@ -652,16 +604,14 @@ impl AudioController for Music {
     * # Return
     * The maximum distance of the Music in the range [0., +inf]
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_max_distance(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 0.; }
         };
+        
         let mut max_distance = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_MAX_DISTANCE, &mut max_distance);
-        }
+        al::alGetSourcef(self.al_source, ffi::AL_MAX_DISTANCE, &mut max_distance);
         max_distance
     }
 
@@ -676,15 +626,13 @@ impl AudioController for Music {
     * # Argument
     * * `ref_distance` - The new reference distance of the Music.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_reference_distance(&mut self, ref_distance : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, ref_distance);
-        }
+        
+        al::alSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, ref_distance);
     }
 
     /**
@@ -693,16 +641,14 @@ impl AudioController for Music {
     * # Return
     * The current reference distance of the Music.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_reference_distance(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 1.; }
         };
+
         let mut ref_distance = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, &mut ref_distance);
-        }
+        al::alGetSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, &mut ref_distance);
         ref_distance
     }
 
@@ -717,15 +663,13 @@ impl AudioController for Music {
     * # Arguments
     * `attenuation` - The new attenuation for the Music in the range [0., 1.].
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn set_attenuation(&mut self, attenuation : f32) -> () {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return; }
         };
-        unsafe {
-            ffi::alSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, attenuation);
-        }
+        
+        al::alSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, attenuation);
     }
 
     /**
@@ -734,16 +678,14 @@ impl AudioController for Music {
     * # Return
     * The current attenuation for the Music in the range [0., 1.].
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn get_attenuation(&self) -> f32 {
         match OpenAlData::check_al_context() {
             Ok(_)       => {},
             Err(err)    => { println!("{}", err); return 1.; }
         };
+        
         let mut attenuation = 0.;
-        unsafe {
-            ffi::alGetSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, &mut attenuation);
-        }
+        al::alGetSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, &mut attenuation);
         attenuation
     } 
 
