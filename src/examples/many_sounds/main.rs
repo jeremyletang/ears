@@ -39,7 +39,7 @@ fn main() -> () {
 			while snd2.is_playing() {}
 		}
 		i += 1;
-		sleep(5);
+		// sleep(5);
 	}
 	sleep(900);
 }

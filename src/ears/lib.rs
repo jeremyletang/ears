@@ -106,6 +106,7 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 
 extern mod extra;
 
+// Reexport public API
 pub use music::Music;
 pub use sound::Sound;
 pub use states::{State, Initial, Playing, Paused, Stopped};
@@ -113,9 +114,15 @@ pub use sound_data::SoundData;
 pub use audio_controller::AudioController;
 pub use audio_tags::{AudioTags, Tags};
 
+// Hidden internal bindings
 #[doc(hidden)]
 pub mod internal;
+#[doc(hidden)]
+mod openal;
+#[doc(hidden)]
+mod sndfile;
 
+// The public ears API
 pub mod init;
 pub mod listener;
 pub mod sound;
@@ -125,8 +132,3 @@ pub mod states;
 pub mod audio_controller;
 pub mod audio_tags;
 pub mod recorder;
-
-#[doc(hidden)]
-mod openal;
-#[doc(hidden)]
-mod sndfile;

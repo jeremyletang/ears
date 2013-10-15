@@ -152,7 +152,10 @@ impl Music {
         al::alSourcePlay(al_source);
 
         do spawn {
-            // check_openal_context!(());
+            match OpenAlData::check_al_context() {
+                Ok(_)       => {},
+                Err(err)    => { println!("{}", err);}
+            };
 
             let mut file : ~SndFile = port.recv();
             let mut samples = vec::from_elem(sample_t_r as uint, 0i16);

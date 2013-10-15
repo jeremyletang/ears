@@ -39,10 +39,7 @@ use openal::{ffi, al};
 */
 #[fixed_stack_segment] #[inline(never)]
 pub fn set_volume(volume : f32) -> () {
-    match OpenAlData::check_al_context() {
-        Ok(_)       => {},
-        Err(err)    => { println!("{}", err); return; }
-    };
+    check_openal_context!(());
     
     al::alListenerf(ffi::AL_GAIN, volume);
 }
@@ -54,10 +51,7 @@ pub fn set_volume(volume : f32) -> () {
 * The global volume of the scene between 0. and 1.
 */
 pub fn get_volume() -> f32 {
-    match OpenAlData::check_al_context() {
-        Ok(_)       => {},
-        Err(err)    => { println!("{}", err); return 0.; }
-    };
+    check_openal_context!(0.);
 
     let mut volume : f32 = 0.;
     al::alGetListenerf(ffi::AL_GAIN, &mut volume);
@@ -79,10 +73,7 @@ pub fn get_volume() -> f32 {
 * * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
 */
 pub fn set_position(position : [f32, ..3]) -> () {
-    match OpenAlData::check_al_context() {
-        Ok(_)       => {},
-        Err(err)    => { println!("{}", err); return; }
-    };
+    check_openal_context!(());
     
     al::alListenerfv(ffi::AL_POSITION, &position[0]);
 }
@@ -94,10 +85,7 @@ pub fn set_position(position : [f32, ..3]) -> () {
 * A three dimensional vector of f32 containing the position of the listener [x, y, z].
 */
 pub fn get_position() -> [f32, ..3] {
-    match OpenAlData::check_al_context() {
-        Ok(_)       => {},
-        Err(err)    => { println!("{}", err); return [0., ..3]; }
-    };
+    check_openal_context!([0., ..3]);
 
     let mut position : [f32, ..3] = [0., ..3];
     al::alGetListenerfv(ffi::AL_POSITION, &mut position[0]);
@@ -114,10 +102,7 @@ pub fn get_position() -> [f32, ..3] {
 * * `orientation_up` - The top as a three dimensional vector [x, y, z].
 */
 pub fn set_orientation(orientation_at : [f32, ..3], orientation_up : [f32, ..3]) -> () {
-    match OpenAlData::check_al_context() {
-        Ok(_)       => {},
-        Err(err)    => { println!("{}", err); return; }
-    };
+    check_openal_context!(());
 
     let orientation : [f32, ..6] = [orientation_at[0], orientation_at[1], orientation_at[2], orientation_up[0], orientation_up[1], orientation_up[2]];
     al::alListenerfv(ffi::AL_ORIENTATION, &orientation[0]);
@@ -130,10 +115,7 @@ pub fn set_orientation(orientation_at : [f32, ..3], orientation_up : [f32, ..3])
 * A tuple containing the orientation as two three dimensional vector [x, y, z].
 */
 pub fn get_orientation() -> ([f32, ..3], [f32, ..3]) {
-    match OpenAlData::check_al_context() {
-        Ok(_)       => {},
-        Err(err)    => { println!("{}", err); return ([0., ..3], [0., ..3]); }
-    };
+    check_openal_context!(([0., ..3], [0., ..3]));
     
     let mut orientation : [f32, ..6] = [0., ..6];
     al::alGetListenerfv(ffi::AL_ORIENTATION, &mut orientation[0]);

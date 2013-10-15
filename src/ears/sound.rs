@@ -71,10 +71,7 @@ impl Sound {
     * An Option with Some(Sound) if the Sound is created properly, or None if un error has occured.
     */
     pub fn new(path : &str) -> Option<Sound> {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return None; }
-        };
+        check_openal_context!(None);
 
         let s_data = match SoundData::new(path) {
             Some(s_d)   => @s_d,
@@ -94,10 +91,7 @@ impl Sound {
     * An Option with Some(Sound) if the Sound is created properly, or None if un error has occured.
     */
     pub fn new_with_data(sound_data : @SoundData) -> Option<Sound> {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return None; }
-        };
+        check_openal_context!(None);
 
         let mut source_id = 0;
 
@@ -138,7 +132,8 @@ impl Sound {
     *
     */
     pub fn set_datas(&mut self, sound_data : @SoundData) -> () {
-        
+        check_openal_context!(());
+
         if self.is_playing() {
             return;
         }
@@ -167,10 +162,7 @@ impl AudioController for Sound {
     * Play or resume the Sound.
     */
     fn play(&mut self) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         al::alSourcePlay(self.al_source);
 
@@ -184,10 +176,7 @@ impl AudioController for Sound {
     * Pause the Sound.
     */
     fn pause(&mut self) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         al::alSourcePause(self.al_source)       
     }
@@ -196,10 +185,7 @@ impl AudioController for Sound {
     * Stop the Sound.
     */
     fn stop(&mut self) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         al::alSourceStop(self.al_source)
     }
@@ -224,10 +210,7 @@ impl AudioController for Sound {
     * The state of the sound as a variant of the enum State
     */
     fn get_state(&self) -> State {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return Initial; }
-        };
+        check_openal_context!(Initial);
 
         // Get the source state
         let mut state : i32 = 0;
@@ -254,10 +237,7 @@ impl AudioController for Sound {
     * * `volume` - The volume of the Sound, should be between 0. and 1. 
     */
     fn set_volume(&mut self, volume : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_GAIN, volume);
     }
@@ -269,10 +249,7 @@ impl AudioController for Sound {
     * The volume of the Sound between 0. and 1.
     */
     fn get_volume(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 0.; }
-        };
+        check_openal_context!(0.);
 
         let mut volume : f32 = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_GAIN, &mut volume);
@@ -289,10 +266,8 @@ impl AudioController for Sound {
     * * `min_volume` - The new minimal volume of the Sound should be between 0. and 1. 
     */
     fn set_min_volume(&mut self, min_volume : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
+
         al::alSourcef(self.al_source, ffi::AL_MIN_GAIN, min_volume);
     }
 
@@ -303,10 +278,7 @@ impl AudioController for Sound {
     * The minimal volume of the Sound between 0. and 1.
     */
     fn get_min_volume(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 0.; }
-        };
+        check_openal_context!(0.);
 
         let mut volume : f32 = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_MIN_GAIN, &mut volume);
@@ -323,10 +295,7 @@ impl AudioController for Sound {
     * * `max_volume` - The new maximal volume of the Sound should be between 0. and 1. 
     */
     fn set_max_volume(&mut self, max_volume : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_MAX_GAIN, max_volume);
     }
@@ -338,10 +307,7 @@ impl AudioController for Sound {
     * The maximal volume of the Sound between 0. and 1.
     */
     fn get_max_volume(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 0.; }
-        };
+        check_openal_context!(0.);
 
         let mut volume : f32 = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_MAX_GAIN, &mut volume);
@@ -357,10 +323,7 @@ impl AudioController for Sound {
     * `looping` - The new looping state.
     */
     fn set_looping(&mut self, looping : bool) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
         
         match looping {
             true    => al::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_TRUE as i32),
@@ -375,10 +338,7 @@ impl AudioController for Sound {
     * True if the Sound is looping, false otherwise.
     */
     fn is_looping(&self) -> bool {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return false; }
-        };
+        check_openal_context!(false);
 
         let mut boolean = 0; 
         al::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
@@ -401,10 +361,7 @@ impl AudioController for Sound {
     * * `new_pitch` - The new pitch of the sound in the range [0.5 - 2.0]
     */
     fn set_pitch(&mut self, pitch : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_PITCH, pitch)
     }
@@ -416,10 +373,7 @@ impl AudioController for Sound {
     * The pitch of the sound in the range [0.5 - 2.0]
     */
     fn get_pitch(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 0.; }
-        };
+       check_openal_context!(0.);
 
         let mut pitch = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_PITCH, &mut pitch);
@@ -435,10 +389,7 @@ impl AudioController for Sound {
     * `relative` - True to set sound relative to the listener false to set the sound position absolute.
     */
     fn set_relative(&mut self, relative : bool) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         match relative {
             true    => al::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_TRUE as i32),
@@ -453,10 +404,7 @@ impl AudioController for Sound {
     * True if the sound is relative to the listener false otherwise
     */
     fn is_relative(&mut self) -> bool {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return false; }
-        };
+        check_openal_context!(false);
 
         let mut boolean = 0; 
         al::alGetSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, &mut boolean);
@@ -483,10 +431,7 @@ impl AudioController for Sound {
     * * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
     */
     fn set_position(&mut self, position : [f32, ..3]) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         al::alSourcefv(self.al_source, ffi::AL_POSITION, &position[0]);
     }
@@ -498,10 +443,7 @@ impl AudioController for Sound {
     * A three dimensional vector of f32 containing the position of the listener [x, y, z].
     */
     fn get_position(&self) -> [f32, ..3] {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return [0., ..3]; }
-        };
+        check_openal_context!([0., ..3]);
         
         let mut position : [f32, ..3] = [0., ..3];
         al::alGetSourcefv(self.al_source, ffi::AL_POSITION, &mut position[0]);
@@ -519,10 +461,7 @@ impl AudioController for Sound {
     * `direction` - The new direction of the Sound.
     */
     fn set_direction(&mut self, direction : [f32, ..3]) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
     
         al::alSourcefv(self.al_source, ffi::AL_DIRECTION, &direction[0]);
     }
@@ -534,10 +473,7 @@ impl AudioController for Sound {
     * The current direction of the Sound.
     */
     fn get_direction(&self)  -> [f32, ..3] {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return [0., ..3]; }
-        };
+        check_openal_context!([0., ..3]);
     
         let mut direction : [f32, ..3] = [0., ..3];
         al::alGetSourcefv(self.al_source, ffi::AL_DIRECTION, &mut direction[0]);
@@ -557,10 +493,7 @@ impl AudioController for Sound {
     * `max_distance` - The new maximum distance in the range [0., +inf]
     */
     fn set_max_distance(&mut self, max_distance : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_MAX_DISTANCE, max_distance);
     }
@@ -572,10 +505,7 @@ impl AudioController for Sound {
     * The maximum distance of the Sound in the range [0., +inf]
     */
     fn get_max_distance(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 0.; }
-        };
+        check_openal_context!(0.);
 
         let mut max_distance = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_MAX_DISTANCE, &mut max_distance);
@@ -594,10 +524,7 @@ impl AudioController for Sound {
     * * `ref_distance` - The new reference distance of the Sound.
     */
     fn set_reference_distance(&mut self, ref_distance : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
         
         al::alSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, ref_distance);
     }
@@ -609,10 +536,7 @@ impl AudioController for Sound {
     * The current reference distance of the Sound.
     */
     fn get_reference_distance(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 1.; }
-        };
+        check_openal_context!(1.);
 
         let mut ref_distance = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, &mut ref_distance);
@@ -631,10 +555,7 @@ impl AudioController for Sound {
     * `attenuation` - The new attenuation for the sound in the range [0., 1.].
     */
     fn set_attenuation(&mut self, attenuation : f32) -> () {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return; }
-        };
+        check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, attenuation);
     }
@@ -646,10 +567,7 @@ impl AudioController for Sound {
     * The current attenuation for the sound in the range [0., 1.].
     */
     fn get_attenuation(&self) -> f32 {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return 1.; }
-        };
+        check_openal_context!(1.);
 
         let mut attenuation = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, &mut attenuation);
