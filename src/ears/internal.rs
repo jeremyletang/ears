@@ -26,6 +26,8 @@
 * to be sure that the context is created.
 */
 
+#[macro_escape];
+
 use std::{local_data, ptr};
 use openal::ffi;
 
@@ -98,3 +100,12 @@ impl Drop for OpenAlData {
         }
     }
 }
+
+macro_rules! check_openal_context(
+    ($def_ret:expr) => (
+            match OpenAlData::check_al_context() {
+                Ok(_)       => {},
+                Err(err)    => { println!("{}", err); return $def_ret; }
+            }
+        );
+)

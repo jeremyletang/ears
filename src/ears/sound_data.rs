@@ -83,10 +83,11 @@ impl SoundData {
     */
     #[fixed_stack_segment]
     pub fn new(path : &str) -> Option<SoundData> {
-        match OpenAlData::check_al_context() {
-            Ok(_)       => {},
-            Err(err)    => { println!("{}", err); return None; }
-        };
+        check_openal_context!(None);
+        // match OpenAlData::check_al_context() {
+        //     Ok(_)       => {},
+        //     Err(err)    => { println!("{}", err); return None; }
+        // };
 
         let mut file;
 
@@ -111,10 +112,9 @@ impl SoundData {
             None => { println!("Internal error : unrecognized format."); return None; }
         };
 
-        unsafe {
-            ffi::alGenBuffers(1, &mut buffer_id);
-            ffi::alBufferData(buffer_id, format, vec::raw::to_ptr(samples) as *c_void, len as i32, infos.samplerate);
-        }
+        al::alGenBuffers(1, &mut buffer_id);
+        al::alBufferData(buffer_id, format, vec::raw::to_ptr(samples) as *c_void, len as i32, infos.samplerate);
+        
         match al::openal_has_error() {
             Some(err)   => { println!("{}", err); return None; },
             None        => {}

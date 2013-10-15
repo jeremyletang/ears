@@ -47,12 +47,22 @@ __ears__ work fully with `rustpkg`, so just install __ears__ in your project wor
 > rustpkg install github.com/JeremyLetang/ears
 ```
 
-then import stuff from __ears__ in your project :
+then import stuff from __ears__ in your project, you can import all the stuff :
 
 ```Rust
 extern mod ears;
+
 use ears::*;
 ```
+
+or a specific :
+
+```Rust
+extern mod ears;
+
+use ears::Music;
+```
+
 # Compile examples
 
 Like __ears__ you can build the examples with `rustpkg`, just do :

@@ -67,16 +67,32 @@ __ears__ work fully with `rustpkg`, so just install __ears__ in your project wor
 > rustpkg install github.com/JeremyLetang/ears
 ```
 
-then import stuff from __ears__ in your project :
+then import stuff from __ears__ in your project, you can import all the stuff :
 
 ```Rust
 extern mod ears;
+
 use ears::*;
 ```
 
+or a specific :
+
+```Rust
+extern mod ears;
+
+use ears::Music;
+```
+
+# Compile examples
+
+Like __ears__ you can build the examples with `rustpkg`, just do :
+
+```Shell
+> rustpkg install examples/an_example
+```
 */
 
-#[feature(globs)];
+#[feature(globs, macro_rules)];
 
 #[link(name = "ears",
        vers = "0.0.1",
@@ -98,7 +114,7 @@ pub use audio_controller::AudioController;
 pub use audio_tags::{AudioTags, Tags};
 
 #[doc(hidden)]
-mod internal;
+pub mod internal;
 
 pub mod init;
 pub mod listener;
@@ -108,6 +124,7 @@ pub mod sound_data;
 pub mod states;
 pub mod audio_controller;
 pub mod audio_tags;
+pub mod recorder;
 
 #[doc(hidden)]
 mod openal;
