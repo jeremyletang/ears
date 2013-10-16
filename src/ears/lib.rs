@@ -94,7 +94,7 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 
 #[feature(globs, macro_rules)];
 
-#[link(name = "ears",
+#[link(name = "src/ears",
        vers = "0.0.1",
        package_id = "github.com/JeremyLetang/ears",
        author = "letang.jeremy@gmail.com",
