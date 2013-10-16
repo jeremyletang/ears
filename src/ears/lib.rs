@@ -96,6 +96,7 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 
 #[link(name = "ears",
        vers = "0.0.1",
+       package_id = "github.com/JeremyLetang/ears",
        author = "letang.jeremy@gmail.com",
        uuid = "D0271EC6-5F27-4C72-BBEA-1341DC665F34",
        url = "https://github.com/JeremyLetang/ears")];
