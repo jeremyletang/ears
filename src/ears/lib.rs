@@ -108,6 +108,7 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 extern mod extra;
 
 // Reexport public API
+pub use init::ears_init;
 pub use music::Music;
 pub use sound::Sound;
 pub use states::{State, Initial, Playing, Paused, Stopped};
