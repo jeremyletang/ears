@@ -50,7 +50,7 @@
 */
 
 use sndfile::*;
-use std::{vec, sys};
+use std::{vec, mem};
 use openal::{ffi, al};
 use std::libc::c_void;
 use internal::*;
@@ -104,7 +104,7 @@ impl SoundData {
         file.read_i16(samples, nb_sample as i64);
 
         let mut buffer_id = 0;
-        let len = sys::size_of::<i16>() * (samples.len());
+        let len = mem::size_of::<i16>() * (samples.len());
         
         // Retrieve format informations
         let format =  match al::get_channels_format(infos.channels) {

@@ -43,7 +43,7 @@
 */
 
 use std::rt::io::timer::sleep;
-use std::{vec, sys};
+use std::{vec, mem};
 use std::libc::c_void;
 use std::task::*;
 
@@ -137,12 +137,12 @@ impl Music {
         let mut samples = vec::from_elem(sample_t_r as uint, 0i16);
 
         // full buff1
-        let mut len = sys::size_of::<i16>() * self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
+        let mut len = mem::size_of::<i16>() * self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
         al::alBufferData(al_buffers[0], sample_format, vec::raw::to_ptr(samples) as *c_void, len as i32, sample_rate);
           
         // full buff2
         samples.clear();
-        len = sys::size_of::<i16>() * self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
+        len = mem::size_of::<i16>() * self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
         al::alBufferData(al_buffers[1], sample_format, vec::raw::to_ptr(samples) as *c_void, len as i32, sample_rate);
 
         // Queue the buffers
@@ -175,7 +175,7 @@ impl Music {
 
                         samples.clear();
                         al::alSourceUnqueueBuffers(al_source, 1, &mut buf);
-                        read = file.read_i16(samples, sample_t_r as i64) * sys::size_of::<i16>() as i64;
+                        read = file.read_i16(samples, sample_t_r as i64) * mem::size_of::<i16>() as i64;
                         al::alBufferData(buf, sample_format, vec::raw::to_ptr(samples) as *c_void, read as i32, sample_rate);
                         al::alSourceQueueBuffers(al_source, 1, &buf);
 
