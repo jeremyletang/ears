@@ -669,25 +669,27 @@ mod test {
     }
 
     // TODO fix this
-    // #[test]
-    // fn music_play_OK() -> () {
-    //     let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+    #[test]
+    #[ignore]
+    fn music_play_OK() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-    //     msc.play();
-    //     assert_eq!(msc.get_state() as i32, Playing as i32);
-    //     msc.stop();
-    // }
+        msc.play();
+        assert_eq!(msc.get_state() as i32, Playing as i32);
+        msc.stop();
+    }
 
     // TODO fix this
-    // #[test]
-    // fn music_pause_OK() -> () {
-    //     let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+    #[test]
+    #[ignore]
+    fn music_pause_OK() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-    //     msc.play();
-    //     msc.pause();
-    //     assert_eq!(msc.get_state() as i32, Paused as i32);
-    //     msc.stop();
-    // }
+        msc.play();
+        msc.pause();
+        assert_eq!(msc.get_state() as i32, Paused as i32);
+        msc.stop();
+    }
 
     #[test]
     fn music_stop_OK() -> () {
@@ -700,24 +702,26 @@ mod test {
     }
 
 
-    // TODO fix this
-    // #[test]
-    // fn music_is_playing_TRUE() -> () {
-    //     let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+    //TODO fix this
+    #[test]
+    #[ignore]
+    fn music_is_playing_TRUE() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
         
-    //     msc.play();
-    //     assert_eq!(msc.is_playing(), true);
-    //     msc.stop();
-    // }
+        msc.play();
+        assert_eq!(msc.is_playing(), true);
+        msc.stop();
+    }
 
-    // TODO fix this
-    // #[test]
-    // fn music_is_playing_FALSE() -> () {
-    //     let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+    //TODO fix this
+    #[test]
+    #[ignore]
+    fn music_is_playing_FALSE() -> () {
+        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
         
-    //     assert_eq!(msc.is_playing(), false);
-    //     msc.stop();
-    // }
+        assert_eq!(msc.is_playing(), false);
+        msc.stop();
+    }
 
     #[test]
     fn music_set_volume_OK() -> () {
