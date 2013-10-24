@@ -92,7 +92,7 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 ```
 */
 
-#[feature(globs, macro_rules)];
+#[feature(globs, macro_rules, managed_boxes)];
 
 #[link(name = "ears",
        vers = "0.1",
