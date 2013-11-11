@@ -170,7 +170,6 @@ impl Drop for SoundData {
     /**
     * Destroy all the resources attached to the SoundData.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn drop(&mut self) -> () {
         unsafe {
             ffi::alDeleteBuffers(1, &mut self.al_buffer);

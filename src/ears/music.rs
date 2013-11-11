@@ -632,7 +632,6 @@ impl Drop for Music {
     /**
     * Destroy all the resources of the Music.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn drop(&mut self) -> () {
         unsafe {
             al::alSourcei(self.al_source, ffi::AL_BUFFER, 0);

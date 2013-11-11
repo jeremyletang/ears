@@ -581,7 +581,6 @@ impl Drop for Sound {
     /**
     * Destroy all the resources attached to the Sound.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn drop(&mut self) -> () {
         unsafe {
             ffi::alDeleteSources(1, &mut self.al_source);            

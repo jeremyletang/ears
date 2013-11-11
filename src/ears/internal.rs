@@ -45,7 +45,6 @@ impl OpenAlData {
     *
     * Private method.
     */
-    #[fixed_stack_segment] #[inline(never)]
     fn new() -> Result<OpenAlData, ~str> {
         let device = unsafe { ffi::alcOpenDevice(ptr::null()) };
         if device.is_null() { return Err(~"Internal error : cannot open the default device."); }  
@@ -72,7 +71,6 @@ impl OpenAlData {
     * # Return
     * A result containing nothing if the OpenAlData struct exist, otherwise an error message.
     */
-    #[fixed_stack_segment] #[inline(never)]
     pub fn check_al_context() -> Result<(), ~str> {
         if unsafe { ffi::alcGetCurrentContext() } != ptr::null() {
             return Ok(())
@@ -92,7 +90,6 @@ impl OpenAlData {
 }
 
 impl Drop for OpenAlData {
-    #[fixed_stack_segment] #[inline(never)]
     fn drop(&mut self) {
         unsafe {
             ffi::alcDestroyContext(self.al_context);
