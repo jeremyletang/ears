@@ -95,6 +95,7 @@ pub enum StringSoundType {
 }
 
 /// Types of error who can be return by API functions
+#[repr(C)]
 pub enum Error {
     NoError             = ffi::SF_ERR_NO_ERROR as i32,
     UnrecognizedFormat  = ffi::SF_ERR_UNRECOGNISED_FORMAT as i32,
