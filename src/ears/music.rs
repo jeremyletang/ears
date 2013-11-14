@@ -42,7 +42,7 @@
 * ```
 */
 
-use std::rt::io::timer::sleep;
+use std::io::timer::sleep;
 use std::{vec, mem};
 use std::libc::c_void;
 use std::task::*;
