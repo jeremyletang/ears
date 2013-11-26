@@ -81,7 +81,6 @@ impl SoundData {
     * # Return
     * An Option with Some(SoundData) if the SoundData is create, or None if an error has occured.
     */
-    #[fixed_stack_segment]
     pub fn new(path : &str) -> Option<SoundData> {
         check_openal_context!(None);
         // match OpenAlData::check_al_context() {

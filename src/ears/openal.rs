@@ -169,7 +169,6 @@ pub mod al {
         unsafe { ffi::alSourcef(source, param, value); }
     }
 
-    #[fixed_stack_segment] #[inline(never)] 
     pub fn alSourcePause(source : u32) -> () {
         unsafe { ffi::alSourcePause(source); }
     }

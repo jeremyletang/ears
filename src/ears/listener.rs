@@ -37,7 +37,6 @@ use openal::{ffi, al};
 * # Argument
 * * `volume` - The global volume for the scene, should be between 0. and 1. 
 */
-#[fixed_stack_segment] #[inline(never)]
 pub fn set_volume(volume : f32) -> () {
     check_openal_context!(());
     

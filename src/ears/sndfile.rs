@@ -28,18 +28,6 @@
 * unaware of issues such as file endian-ness and data format
 */
 
-#[feature(globs)];
-
-#[link(name = "sndfile",
-       vers = "0.0.1",
-       author = "letang.jeremy@gmail.com",
-       uuid = "F8CC5AA5-95DC-449C-B7DD-A6663DAC8E51",
-       url = "http://https://github.com/JeremyLetang/rust-sndfile")];
-
-#[desc = "Libsndfile binding for sfml"];
-#[license = "GPL/LGPL"];
-#[crate_type = "lib"];
-
 extern mod extra;
 
 use std::{str, ptr, vec};
