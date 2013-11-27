@@ -242,9 +242,9 @@ impl SndFile {
     */
     pub fn new(path : &str, mode : OpenMode) -> Result<SndFile, ~str> {
         let info : ~SndInfo = ~SndInfo {frames : 0, samplerate : 0, channels : 0, format : 0, sections : 0, seekable : 0};
-        let tmp_sndfile = do path.with_c_str |c_path| {
+        let tmp_sndfile = path.with_c_str(|c_path| {
             unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
-        };
+        });
         if tmp_sndfile.is_null() {
             Err(unsafe { str::raw::from_c_str(ffi::sf_strerror(ptr::null())) })
         } else {
