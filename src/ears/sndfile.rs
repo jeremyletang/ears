@@ -37,7 +37,7 @@ use std::{str, ptr, vec};
 #[cfg(target_os="linux")]
 #[cfg(target_os="win32")]
 mod libsndfile {
-    #[link_args="-lsndfile"]
+    #[link(name = "sndfile")]
     extern {}
 }
 

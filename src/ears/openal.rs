@@ -26,7 +26,7 @@
 
 
 
-#[link_args="-lopenal"]
+#[link(name = "openal")]
 extern {}
 
 pub mod ffi {
