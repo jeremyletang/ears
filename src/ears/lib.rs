@@ -105,6 +105,7 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 #[license = "MIT"];
 #[crate_type = "lib"];
 // #[warn(missing_doc)];
+#[allow(dead_code)];
 
 extern mod extra;
 

@@ -28,6 +28,8 @@
 * unaware of issues such as file endian-ness and data format
 */
 
+#[allow(dead_code)];
+
 extern mod extra;
 
 use std::{str, ptr, vec};
