@@ -112,7 +112,7 @@ impl SoundData {
         };
 
         al::alGenBuffers(1, &mut buffer_id);
-        al::alBufferData(buffer_id, format, vec::raw::to_ptr(samples) as *c_void, len as i32, infos.samplerate);
+        al::alBufferData(buffer_id, format, samples.as_ptr() as *c_void, len as i32, infos.samplerate);
         
         match al::openal_has_error() {
             Some(err)   => { println!("{}", err); return None; },
