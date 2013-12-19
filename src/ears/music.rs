@@ -126,7 +126,7 @@ impl Music {
     }
 
     fn process_music(&mut self) -> () {
-        let (port, chan) = stream();
+        let (port, chan) = Chan::new();
         let sample_t_r = self.sample_to_read;
         let sample_rate = self.file_infos.samplerate;
         let sample_format = self.sample_format;
