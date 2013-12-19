@@ -9,5 +9,6 @@ env:
   - RUST_TEST_TASKS=1
 script:
   - rustpkg install ears
-  - rustc --test src/ears/lib.rs  -o build/ears_tests
-  - ./build/ears_tests
+  - rustc --test src/ears/lib.rs  -o bin/ears_tests
+  - cd bin 
+  - ./ears_tests
