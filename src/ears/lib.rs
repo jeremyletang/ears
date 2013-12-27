@@ -94,13 +94,7 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 
 #[feature(globs, macro_rules, managed_boxes)];
 
-#[link(name = "ears",
-       vers = "0.1",
-       package_id = "github.com/JeremyLetang/ears",
-       author = "letang.jeremy@gmail.com",
-       uuid = "D0271EC6-5F27-4C72-BBEA-1341DC665F34",
-       url = "https://github.com/JeremyLetang/ears")];
-
+#[crate_id = "ears#0.1"]
 #[desc = "Easy Api in Rust for Sounds"];
 #[license = "MIT"];
 #[crate_type = "lib"];
