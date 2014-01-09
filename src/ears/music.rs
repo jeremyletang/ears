@@ -646,6 +646,7 @@ impl Drop for Music {
 mod test {
     use super::*;
     use states::*;
+    use audio_controller::AudioController;
 
     #[test]
     fn music_create_OK() -> () {

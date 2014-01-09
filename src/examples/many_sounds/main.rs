@@ -21,7 +21,7 @@
 
 extern mod ears;
 
-use std::rt::io::timer::sleep;
+use std::io::timer::sleep;
 
 use ears::{Sound, AudioController};
 use ears::init::ears_init;
