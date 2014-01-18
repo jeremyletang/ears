@@ -198,8 +198,8 @@ impl AudioTags for Music {
     * # Return
     * A borrowed pointer to the internal struct SoundTags
     */
-    fn get_tags<'r>(&'r self) -> &'r Tags {
-        &self.sound_tags
+    fn get_tags(&self) -> Tags {
+        self.sound_tags.clone()
     }
 }
 

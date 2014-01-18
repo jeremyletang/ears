@@ -43,6 +43,9 @@
 * ```
 */
 
+use std::rc::Rc;
+use std::cell::RefCell;
+
 use internal::OpenAlData;
 use sound_data::SoundData;
 use openal::{ffi, al};
@@ -55,7 +58,7 @@ pub struct Sound {
     /// The internal OpenAl source identifier
     priv al_source  : u32,
     /// The SoundData associated to the Sound.
-    priv sound_data : @SoundData
+    priv sound_data : Rc<RefCell<SoundData>>
 }
 
 impl Sound {
@@ -74,7 +77,7 @@ impl Sound {
         check_openal_context!(None);
 
         let s_data = match SoundData::new(path) {
-            Some(s_d)   => @s_d,
+            Some(s_d)   => Rc::new(RefCell::new(s_d)),
             None        => return None
         };
 
@@ -90,7 +93,7 @@ impl Sound {
     * # Return
     * An Option with Some(Sound) if the Sound is created properly, or None if un error has occured.
     */
-    pub fn new_with_data(sound_data : @SoundData) -> Option<Sound> {
+    pub fn new_with_data(sound_data : Rc<RefCell<SoundData>>) -> Option<Sound> {
         check_openal_context!(None);
 
         let mut source_id = 0;
@@ -98,7 +101,7 @@ impl Sound {
         // create the source
         al::alGenSources(1, &mut source_id);
         // set the buffer
-        al::alSourcei(source_id, ffi::AL_BUFFER, sound_data.get_buffer() as i32);
+        al::alSourcei(source_id, ffi::AL_BUFFER, sound_data.borrow().with_mut(|sd| sd.get_buffer()) as i32);
 
         // Check if there is OpenAL internal error
         match al::openal_has_error() {
@@ -118,8 +121,8 @@ impl Sound {
     * # Return
     * The SoundData associated to this Sound.
     */
-    pub fn get_datas(&self) -> @SoundData {
-        self.sound_data
+    pub fn get_datas(&self) -> Rc<RefCell<SoundData>> {
+        self.sound_data.clone()
     }
 
     /**
@@ -131,7 +134,7 @@ impl Sound {
     * `sound_data` - The new sound_data
     *
     */
-    pub fn set_datas(&mut self, sound_data : @SoundData) -> () {
+    pub fn set_datas(&mut self, sound_data : Rc<RefCell<SoundData>>) -> () {
         check_openal_context!(());
 
         if self.is_playing() {
@@ -139,7 +142,7 @@ impl Sound {
         }
         
         // set the buffer
-        al::alSourcei(self.al_source, ffi::AL_BUFFER, sound_data.get_buffer() as i32);
+        al::alSourcei(self.al_source, ffi::AL_BUFFER, sound_data.borrow().with(|sd| sd.get_buffer()) as i32);
 
         self.sound_data = sound_data
     }
@@ -152,8 +155,8 @@ impl AudioTags for Sound {
     * # Return
     * A borrowed pointer to the internal struct SoundTags
     */
-    fn get_tags<'r>(&'r self) -> &'r Tags {
-        self.sound_data.get_tags()
+    fn get_tags(&self) -> Tags {
+        self.sound_data.borrow().with(|sd| sd.get_tags().clone())
     }
 }
 
