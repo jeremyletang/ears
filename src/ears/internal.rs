@@ -31,7 +31,7 @@
 use std::{local_data, ptr};
 use openal::ffi;
 
-static al_context : local_data::Key<@OpenAlData> = &local_data::Key;
+static al_context : local_data::Key<~OpenAlData> = &local_data::Key;
 
 #[deriving(Clone)]
 pub struct OpenAlData {
@@ -80,7 +80,7 @@ impl OpenAlData {
                 Some(_)    => Ok(()),
                 None        => {
                     match OpenAlData::new() {
-                        Ok(al_data) => { local_data::set(al_context, @al_data); Ok(()) },
+                        Ok(al_data) => { local_data::set(al_context, ~al_data); Ok(()) },
                         Err(err)    => Err(err)
                     }
                 }
