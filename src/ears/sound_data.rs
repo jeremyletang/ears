@@ -49,12 +49,12 @@
 * ```
 */
 
-use sndfile::*;
+use sndfile::{SndFile, SndInfo, Read};
 use std::{vec, mem};
 use openal::{ffi, al};
 use std::libc::c_void;
-use internal::*;
-use audio_tags::*;
+use internal::OpenAlData;
+use audio_tags::{Tags, AudioTags, get_sound_tags};
 
 /// Structure containing the data extracted from the sound file.
 pub struct SoundData {
@@ -179,7 +179,7 @@ impl Drop for SoundData {
 #[cfg(test)]
 mod test {
     #[allow(unused_variable)]
-    use super::*;
+    use sound_data::SoundData;
 
     #[test]
     fn sounddata_create_OK() -> () {

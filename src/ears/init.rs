@@ -28,7 +28,7 @@
 * in a another task.
 */
 
-use internal::*;
+use internal::OpenAlData;
 
 /**
 * Initialize the internal context
@@ -45,7 +45,7 @@ pub fn ears_init() -> bool {
 
 #[cfg(test)]
 mod test {
-    use super::*;
+    use init::ears_init;
 
     #[test]
     fn test_init_ears_OK() -> () {

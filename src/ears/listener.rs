@@ -24,7 +24,7 @@
 * 
 */
 
-use internal::*;
+use internal::OpenAlData;
 use openal::{ffi, al};
 
 /**
@@ -123,7 +123,8 @@ pub fn get_orientation() -> ([f32, ..3], [f32, ..3]) {
 
 #[cfg(test)]
 mod test {
-    use super::*;
+    use listener::{set_volume, set_position, set_orientation};
+    use listener::{get_volume, get_position, get_orientation};
 
     #[test]
     pub fn listener_set_volume() -> () {

@@ -45,14 +45,13 @@
 use std::io::timer::sleep;
 use std::{vec, mem};
 use std::libc::c_void;
-use std::task::*;
 
-use internal::*;
+use internal::OpenAlData;
 use openal::{ffi, al};
-use sndfile::*;
-use states::*;
+use sndfile::{SndInfo, SndFile, Read, SeekSet};
+use states::{State, Initial, Playing, Paused, Stopped};
 use audio_controller::AudioController;
-use audio_tags::*;
+use audio_tags::{Tags, AudioTags, get_sound_tags};
 
 /// Class for play Musics
 pub struct Music {
@@ -644,8 +643,8 @@ impl Drop for Music {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use states::*;
+    use music::Music;
+    use states::{State, Inital, Playing, Paused, Stopped};
     use audio_controller::AudioController;
 
     #[test]

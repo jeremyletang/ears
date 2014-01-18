@@ -43,10 +43,10 @@
 * ```
 */
 
-use internal::*;
-use sound_data::*;
+use internal::OpenAlData;
+use sound_data::SoundData;
 use openal::{ffi, al};
-use states::*;
+use states::{State, Initial, Playing, Paused, Stopped};
 use audio_controller::AudioController;
 use audio_tags::{AudioTags, Tags};
 
@@ -590,8 +590,8 @@ impl Drop for Sound {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use states::*;
+    use sound::Sound;
+    use states::{State, Initial, Playing, Paused, Stopped};
     use audio_controller::AudioController;
 
     #[test]

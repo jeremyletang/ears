@@ -21,7 +21,7 @@
 
 #[allow(dead_code)];
 
-use super::*;
+use super::{SndInfo, Error};
 use std::libc::{c_char, c_void};
 
 pub type SF_MODE = i32;
