@@ -644,7 +644,7 @@ impl Drop for Music {
 #[cfg(test)]
 mod test {
     use music::Music;
-    use states::{State, Inital, Playing, Paused, Stopped};
+    use states::{State, Initial, Playing, Paused, Stopped};
     use audio_controller::AudioController;
 
     #[test]
