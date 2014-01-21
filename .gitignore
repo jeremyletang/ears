@@ -6,3 +6,12 @@
 *.dylib
 /*~
 /.rust
+/bin/ears_test
+/bin/many_sound
+bin/ears_tests
+
+bin/many_sounds
+
+src/ears/lib
+
+src/examples/many_sounds/main
