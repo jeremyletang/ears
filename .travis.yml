@@ -5,8 +5,6 @@ install:
   - sudo apt-get install rust-nightly
   - sudo apt-get install libopenal-dev
   - sudo apt-get install libsndfile1-dev
-after_script:
-  - curl http://www.rust-ci.org/artifacts/put?t=$RUSTCI_TOKEN | sh
 env:
   - RUST_TEST_TASKS=1
   global:
@@ -16,3 +14,5 @@ script:
   - rustc --test src/ears/lib.rs  -o bin/ears_tests
   - cd bin 
   - ./ears_tests
+after_script:
+  - curl http://www.rust-ci.org/artifacts/put?t=$RUSTCI_TOKEN | sh
