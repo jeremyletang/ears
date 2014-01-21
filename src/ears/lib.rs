@@ -94,7 +94,7 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 
 #[feature(macro_rules)];
 
-#[crate_id = "ears#0.1"];
+#[crate_id = "ears#0.2"];
 #[desc = "Easy Api in Rust for Sounds"];
 #[license = "MIT"];
 #[crate_type = "lib"];
