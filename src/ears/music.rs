@@ -151,7 +151,7 @@ impl Music {
         // Launche the Music
         al::alSourcePlay(al_source);
 
-        task::spawn(|| {
+        task::spawn(proc() {
             match OpenAlData::check_al_context() {
                 Ok(_)       => {},
                 Err(err)    => { println!("{}", err);}
