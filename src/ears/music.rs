@@ -44,6 +44,7 @@
 
 use std::io::timer::sleep;
 use std::{vec, mem};
+use std::task;
 use std::libc::c_void;
 
 use internal::OpenAlData;
@@ -150,7 +151,7 @@ impl Music {
         // Launche the Music
         al::alSourcePlay(al_source);
 
-        spawn::task(|| {
+        task::spawn(|| {
             match OpenAlData::check_al_context() {
                 Ok(_)       => {},
                 Err(err)    => { println!("{}", err);}
