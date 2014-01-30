@@ -150,7 +150,7 @@ impl Music {
         // Launche the Music
         al::alSourcePlay(al_source);
 
-        do spawn {
+        spawn::task(|| {
             match OpenAlData::check_al_context() {
                 Ok(_)       => {},
                 Err(err)    => { println!("{}", err);}
@@ -184,7 +184,7 @@ impl Music {
                 status = al::alGetState(al_source);
             }
             al::alSourcei(al_source, ffi::AL_BUFFER, 0);
-        }
+        });
         let file = self.file.get_ref().clone();
         chan.send(file);
     }
