@@ -78,5 +78,6 @@ pub fn get_sound_tags(file : &SndFile) -> Tags {
 
 /// AudioTags trait implemented by all struct who can provides audio.
 pub trait AudioTags{
+    /// Get the tags of the audio source.
     fn get_tags(&self) -> Tags;
 }

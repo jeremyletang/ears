@@ -94,17 +94,18 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 
 #[feature(macro_rules)];
 
-#[crate_id = "ears#0.2"];
+#[crate_id = "ears#0.3"];
 #[desc = "Easy Api in Rust for Sounds"];
 #[license = "MIT"];
-#[crate_type = "lib"];
-// #[warn(missing_doc)];
+#[crate_type = "dylib"];
+#[crate_type = "rlib"];
+#[warn(missing_doc)];
 #[allow(dead_code)];
 
 extern mod extra;
 
 // Reexport public API
-pub use init::ears_init;
+pub use einit::init;
 pub use music::Music;
 pub use sound::Sound;
 pub use states::{State, Initial, Playing, Paused, Stopped};
@@ -113,20 +114,19 @@ pub use audio_controller::AudioController;
 pub use audio_tags::{AudioTags, Tags};
 
 // Hidden internal bindings
-#[doc(hidden)]
-pub mod internal;
-#[doc(hidden)]
+mod internal;
 mod openal;
-#[doc(hidden)]
 mod sndfile;
 
 // The public ears API
-pub mod init;
+
+#[path = "init.rs"]
+mod einit;
 pub mod listener;
-pub mod sound;
-pub mod music;
-pub mod sound_data;
-pub mod states;
-pub mod audio_controller;
-pub mod audio_tags;
+mod sound;
+mod music;
+mod sound_data;
+mod states;
+mod audio_controller;
+mod audio_tags;
 pub mod recorder;

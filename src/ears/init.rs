@@ -36,7 +36,7 @@ use internal::OpenAlData;
 * # Return
 * true if initialization is made with success, false otherwise
 */
-pub fn ears_init() -> bool {
+pub fn init() -> bool {
     match OpenAlData::check_al_context() {
         Ok(_)       => true,
         Err(err)    => { println!("{}", err); false }
@@ -49,6 +49,6 @@ mod test {
 
     #[test]
     fn test_init_ears_OK() -> () {
-        assert_eq!(ears_init(), true)
+        assert_eq!(init(), true)
     }
 }

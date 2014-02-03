@@ -24,9 +24,11 @@
 *
 */
 
+/// Records audio
 pub struct Recorder;
 
 impl Recorder {
+	/// Create a new audio recorder
 	pub fn new() -> Recorder {
 		Recorder
 	}

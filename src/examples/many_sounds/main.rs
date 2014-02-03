@@ -24,11 +24,10 @@ extern mod ears;
 use std::io::timer::sleep;
 
 use ears::{Sound, AudioController};
-use ears::init::ears_init;
 
 fn main() -> () {
 	// call ears_init() function to ensure that the ears context is not destroyed by a task.
-	ears_init();
+	ears::init();
 
 	let mut i = 0;
 

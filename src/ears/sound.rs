@@ -338,7 +338,7 @@ impl AudioController for Sound {
     * Check if the Sound is looping or not
     *
     * # Return
-    * True if the Sound is looping, false otherwise.
+    * true if the Sound is looping, false otherwise.
     */
     fn is_looping(&self) -> bool {
         check_openal_context!(false);
