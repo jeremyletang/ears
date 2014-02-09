@@ -39,10 +39,15 @@ As said before, __ears__ require OpenAL and libsndfile, you need to install thes
 
 __ears__ compile against the last Rust compiler, so if it doesn't work on your computer you may need to update your compiler.
 
-__ears__ work fully with `rustpkg`, so just install __ears__ in your project workspace like this :
+__ears__ is build using make, so just type `make` at the root of the __ears__ repository, this command
+build __ears__, the examples, and the documentation.
+
+You can build them separatly to with the dedicated commands:
 
 ```Shell
-> rustpkg install github.com/JeremyLetang/ears
+> make ears
+> make examples
+> make doc
 ```
 
 then import stuff from __ears__ in your project, you can import all the stuff :
@@ -59,12 +64,4 @@ or a specific :
 extern mod ears;
 
 use ears::Music;
-```
-
-# Compile examples
-
-Like __ears__ you can build the examples with `rustpkg`, just do :
-
-```Shell
-> rustpkg install examples/an_example
 ```
