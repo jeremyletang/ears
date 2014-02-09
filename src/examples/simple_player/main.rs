@@ -23,19 +23,18 @@
 
 extern mod ears;
 
-use std::io;
+use std::io::{BufferedReader, stdin};
 
-use ears::{Music, AudioController};
-use ears::states::*;
+use ears::{Music, AudioController, Playing, Stopped, Paused};
 
 fn main() {
 
 	// Read the inputs
-	let stdin = io::stdin();
+	let mut stdin = BufferedReader::new(stdin());
 
 	print!("Insert the path to an audio file : ");
 
-	let line = stdin.read_line();
+	let line = stdin.read_line().unwrap();
 
 	// Try to create the music
 	let mut music = match Music::new(line) {
@@ -49,7 +48,7 @@ fn main() {
 	loop {
 		// Make your choice
 		println!("Commands :\n\tPlay  : l\n\tPause : p\n\tStop  : s\n\tExit  : x\n");
-		match stdin.read_line() {
+		match stdin.read_line().unwrap() {
 			~"l" 	=> music.play(),
 			~"p" 	=> music.pause(),
 			~"s" 	=> music.stop(),

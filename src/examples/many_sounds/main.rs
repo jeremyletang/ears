@@ -22,6 +22,7 @@
 extern mod ears;
 
 use std::io::timer::sleep;
+use std::task;
 
 use ears::{Sound, AudioController};
 
@@ -32,11 +33,11 @@ fn main() -> () {
 	let mut i = 0;
 
 	while i < 20 {
-		do spawn {
+		task::spawn(proc() {
 			let mut snd2 = Sound::new("shot.wav").expect("Error on Sound loading.");
 			snd2.play();
 			while snd2.is_playing() {}
-		}
+		});
 		i += 1;
 		// sleep(5);
 	}
