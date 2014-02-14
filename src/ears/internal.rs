@@ -41,10 +41,10 @@ pub struct OpenAlData {
 
 impl OpenAlData {
     /**
-    * Create a new OpenAlData struct
-    *
-    * Private method.
-    */
+     * Create a new OpenAlData struct
+     *
+     * Private method.
+     */
     fn new() -> Result<OpenAlData, ~str> {
         let device = unsafe { ffi::alcOpenDevice(ptr::null()) };
         if device.is_null() { return Err(~"Internal error : cannot open the default device."); }  
@@ -63,14 +63,14 @@ impl OpenAlData {
     }
 
     /**
-    * Check if the context is created.
-    *
-    * This function check is the OpenAl context is already created. If context doesn't exist, create it,
-    * and store it in a local_data, else get it from the local data and return it.
-    *
-    * # Return
-    * A result containing nothing if the OpenAlData struct exist, otherwise an error message.
-    */
+     * Check if the context is created.
+     *
+     * This function check is the OpenAl context is already created. If context doesn't exist, create it,
+     * and store it in a local_data, else get it from the local data and return it.
+     *
+     * # Return
+     * A result containing nothing if the OpenAlData struct exist, otherwise an error message.
+     */
     pub fn check_al_context() -> Result<(), ~str> {
         if unsafe { ffi::alcGetCurrentContext() } != ptr::null() {
             return Ok(())

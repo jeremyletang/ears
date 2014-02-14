@@ -20,16 +20,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*!
-* The tags extracted from an audio file.
-*/
+ * The tags extracted from an audio file.
+ */
 
 use sndfile::{SndFile, Title, Copyright, Software, Artist, Comment, Date, Album, License, TrackNumber, Genre};
 
 /**
-* Structure containing the tags of a sound. 
-*
-* If the tags doesn't exist in the sound file, the string is ~"".
-*/
+ * Structure containing the tags of a sound. 
+ *
+ * If the tags doesn't exist in the sound file, the string is ~"".
+ */
 #[deriving(Clone)]
 pub struct Tags {
     /// The title of the sound as a ~str
@@ -54,12 +54,6 @@ pub struct Tags {
     Genre       : ~str
 }
 
-
-/**
-* Create the struct SoundTags who contains the tags of the sound.
-*
-* Private Method
-*/
 #[doc(hidden)]
 pub fn get_sound_tags(file : &SndFile) -> Tags {
     Tags {

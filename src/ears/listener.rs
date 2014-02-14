@@ -20,23 +20,23 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*!
-* Module for manage the listener in the scene.
-* 
-*/
+ * Module for manage the listener in the scene.
+ * 
+ */
 
 use internal::OpenAlData;
 use openal::{ffi, al};
 
 /**
-* Set the global volume of the scene.
-*
-* A value of 1.0 means unattenuated. Each division by 2 equals an attenuation
-* of about -6dB. Each multiplicaton by 2 equals an amplification of about
-* +6dB.
-*
-* # Argument
-* * `volume` - The global volume for the scene, should be between 0. and 1. 
-*/
+ * Set the global volume of the scene.
+ *
+ * A value of 1.0 means unattenuated. Each division by 2 equals an attenuation
+ * of about -6dB. Each multiplicaton by 2 equals an amplification of about
+ * +6dB.
+ *
+ * # Argument
+ * * `volume` - The global volume for the scene, should be between 0. and 1. 
+ */
 pub fn set_volume(volume : f32) -> () {
     check_openal_context!(());
     
@@ -44,11 +44,11 @@ pub fn set_volume(volume : f32) -> () {
 }
 
 /**
-* Get the global volume of the scene.
-*
-* # Return
-* The global volume of the scene between 0. and 1.
-*/
+ * Get the global volume of the scene.
+ *
+ * # Return
+ * The global volume of the scene between 0. and 1.
+ */
 pub fn get_volume() -> f32 {
     check_openal_context!(0.);
 
@@ -58,19 +58,19 @@ pub fn get_volume() -> f32 {
 }
 
 /**
-* Set the listener location in three dimensional space.
-*
-* OpenAL, like OpenGL, uses a right handed coordinate system, where in a
-* frontal default view X (thumb) points right, Y points up (index finger), and
-* Z points towards the viewer/camera (middle finger). 
-* To switch from a left handed coordinate system, flip the sign on the Z
-* coordinate.
-*
-* Default is [0., 0., 0.]. 
-*
-* # Argument
-* * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
-*/
+ * Set the listener location in three dimensional space.
+ *
+ * OpenAL, like OpenGL, uses a right handed coordinate system, where in a
+ * frontal default view X (thumb) points right, Y points up (index finger), and
+ * Z points towards the viewer/camera (middle finger). 
+ * To switch from a left handed coordinate system, flip the sign on the Z
+ * coordinate.
+ *
+ * Default is [0., 0., 0.]. 
+ *
+ * # Argument
+ * * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
+ */
 pub fn set_position(position : [f32, ..3]) -> () {
     check_openal_context!(());
     
@@ -78,11 +78,11 @@ pub fn set_position(position : [f32, ..3]) -> () {
 }
 
 /**
-* Get the location of the listener in three dimensional space.
-*
-* # Return
-* A three dimensional vector of f32 containing the position of the listener [x, y, z].
-*/
+ * Get the location of the listener in three dimensional space.
+ *
+ * # Return
+ * A three dimensional vector of f32 containing the position of the listener [x, y, z].
+ */
 pub fn get_position() -> [f32, ..3] {
     check_openal_context!([0., ..3]);
 
@@ -92,27 +92,27 @@ pub fn get_position() -> [f32, ..3] {
 }
 
 /**
-* Set the orientation of the listener.
-*
-* Default orientation is : at[0.0, 0.0, -1.0] - up[0.0, 1.0, 0.0]
-*
-* # Arguments
-* * `orientation_at` - The front as a three dimensional vector [x, y, z].
-* * `orientation_up` - The top as a three dimensional vector [x, y, z].
-*/
+ * Set the orientation of the listener.
+ *
+ * Default orientation is : at[0.0, 0.0, -1.0] - up[0.0, 1.0, 0.0]
+ *
+ * # Arguments
+ * * `orientation_at` - The front as a three dimensional vector [x, y, z].
+ * * `orientation_up` - The top as a three dimensional vector [x, y, z].
+ */
 pub fn set_orientation(orientation_at : [f32, ..3], orientation_up : [f32, ..3]) -> () {
     check_openal_context!(());
-
+    
     let orientation : [f32, ..6] = [orientation_at[0], orientation_at[1], orientation_at[2], orientation_up[0], orientation_up[1], orientation_up[2]];
     al::alListenerfv(ffi::AL_ORIENTATION, &orientation[0]);
 }
 
 /**
-* Get the orientation of the listener.
-*
-* # Return
-* A tuple containing the orientation as two three dimensional vector [x, y, z].
-*/
+ * Get the orientation of the listener.
+ *
+ * # Return
+ * A tuple containing the orientation as two three dimensional vector [x, y, z].
+ */
 pub fn get_orientation() -> ([f32, ..3], [f32, ..3]) {
     check_openal_context!(([0., ..3], [0., ..3]));
     

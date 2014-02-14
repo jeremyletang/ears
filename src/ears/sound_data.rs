@@ -20,34 +20,34 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*!
-* The datas extracted from a sound file.
-*
-* Samples extracted from a file, 
-*
-* SoundDatas are made to be share between several Sound and play in the same time.
-*
-* # Example
-* ```
-* extern mod ears;
-* use ears::{Sound, SoundData};
-*
-* fn main() -> () {
-*   // Create a SoundData
-*   let snd_data = @SoundData::new(~"path/to/my/sound.wav").unwrap();
-*
-*   // Create two Sound with the same SoundData
-*   let snd1 = Sound::new_with_data(snd_data).unwrap();
-*   let snd2 = Sound::new)with_data(snd_data).unwrap();
-*
-*   // Play the sounds
-*   snd1.play();
-*   snd2.play();
-* 
-*   // Wait until snd2 is playing
-*   while snd2.is_playing() {}
-* }
-* ```
-*/
+ * The datas extracted from a sound file.
+ *
+ * Samples extracted from a file, 
+ *
+ * SoundDatas are made to be share between several Sound and play in the same time.
+ *
+ * # Example
+ * ```
+ * extern mod ears;
+ * use ears::{Sound, SoundData};
+ *
+ * fn main() -> () {
+ *   // Create a SoundData
+ *   let snd_data = @SoundData::new(~"path/to/my/sound.wav").unwrap();
+ *
+ *   // Create two Sound with the same SoundData
+ *   let snd1 = Sound::new_with_data(snd_data).unwrap();
+ *   let snd2 = Sound::new)with_data(snd_data).unwrap();
+ *
+ *   // Play the sounds
+ *   snd1.play();
+ *   snd2.play();
+ * 
+ *   // Wait until snd2 is playing
+ *   while snd2.is_playing() {}
+ * }
+ * ```
+ */
 
 use sndfile::{SndFile, SndInfo, Read};
 use std::{vec, mem};
@@ -70,23 +70,19 @@ pub struct SoundData {
 
 impl SoundData {
     /**
-    * Create a new SoundData.
-    *
-    * The SoundData contains all the information extracted from the file : samples and tags.
-    * It's an easy way to share the same samples between man Sounds objects.
-    * 
-    * # Arguments
-    * * `path` - The path of the file to load
-    *
-    * # Return
-    * An Option with Some(SoundData) if the SoundData is create, or None if an error has occured.
-    */
+     * Create a new SoundData.
+     *
+     * The SoundData contains all the information extracted from the file : samples and tags.
+     * It's an easy way to share the same samples between man Sounds objects.
+     * 
+     * # Arguments
+     * * `path` - The path of the file to load
+     *
+     * # Return
+     * An Option with Some(SoundData) if the SoundData is create, or None if an error has occured.
+     */
     pub fn new(path : &str) -> Option<SoundData> {
         check_openal_context!(None);
-        // match OpenAlData::check_al_context() {
-        //     Ok(_)       => {},
-        //     Err(err)    => { println!("{}", err); return None; }
-        // };
 
         let mut file;
 
@@ -131,22 +127,22 @@ impl SoundData {
     }
 
     /**
-    * Get the sound file infos.
-    * 
-    * # Return
-    * The struct SndInfo.
-    */
+     * Get the sound file infos.
+     * 
+     * # Return
+     * The struct SndInfo.
+     */
     #[doc(hidden)]
     pub fn get_sndinfo<'r>(&'r self) -> &'r SndInfo {
         &self.snd_info
     }
 
     /**
-    * Get the OpenAL identifier of the samples buffer.
-    *
-    * # Return
-    * The OpenAL internal identifier for the samples buffer of the sound.
-    */
+     * Get the OpenAL identifier of the samples buffer.
+     *
+     * # Return
+     * The OpenAL internal identifier for the samples buffer of the sound.
+     */
     #[doc(hidden)]
     pub fn get_buffer(&self) -> u32 {
         self.al_buffer
@@ -155,11 +151,11 @@ impl SoundData {
 
 impl AudioTags for SoundData {
     /**
-    * Get the tags of a Sound.
-    *
-    * # Return
-    * A borrowed pointer to the internal struct SoundTags
-    */
+     * Get the tags of a Sound.
+     *
+     * # Return
+     * A borrowed pointer to the internal struct SoundTags
+     */
     fn get_tags(&self) -> Tags {
         self.sound_tags.clone()
     }
@@ -167,8 +163,8 @@ impl AudioTags for SoundData {
 
 impl Drop for SoundData {
     /**
-    * Destroy all the resources attached to the SoundData.
-    */
+     * Destroy all the resources attached to the SoundData.
+     */
     fn drop(&mut self) -> () {
         unsafe {
             ffi::alDeleteBuffers(1, &mut self.al_buffer);
