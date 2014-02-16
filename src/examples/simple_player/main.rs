@@ -21,7 +21,7 @@
 
 #[feature(globs)];
 
-extern mod ears;
+extern crate ears;
 
 use std::io::{BufferedReader, stdin};
 

@@ -102,7 +102,7 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 #[warn(missing_doc)];
 #[allow(dead_code)];
 
-extern mod extra;
+extern crate extra;
 
 // Reexport public API
 pub use einit::init;
