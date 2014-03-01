@@ -49,6 +49,8 @@
  * ```
  */
 
+#[allow(visible_private_types)];
+
 use sndfile::{SndFile, SndInfo, Read};
 use std::{vec, mem};
 use openal::{ffi, al};
