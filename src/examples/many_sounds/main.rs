@@ -27,19 +27,22 @@ use std::task;
 use ears::{Sound, AudioController};
 
 fn main() -> () {
-	// call ears_init() function to ensure that the ears context is not destroyed by a task.
-	ears::init();
+    // call ears_init() function to ensure that the ears context is not destroyed by a task.
+    ears::init();
 
-	let mut i = 0;
+    let mut i = 0;
 
-	while i < 20 {
-		task::spawn(proc() {
-			let mut snd2 = Sound::new("shot.wav").expect("Error on Sound loading.");
-			snd2.play();
-			while snd2.is_playing() {}
-		});
-		i += 1;
-		// sleep(5);
-	}
-	sleep(900);
+    while i < 20 {
+        task::spawn(proc() {
+            let mut snd2 = Sound::new("shot.wav").expect("Error on Sound loading.");
+            snd2.play();
+            while snd2.is_playing() {}
+        });
+        i += 1;
+        sleep(150);
+    }
+
+    // Wait until the last sound is played, the main task own the ears context, 
+    // so we should kepp it alive
+    sleep(900);
 }

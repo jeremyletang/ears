@@ -23,44 +23,47 @@
 
 extern crate ears;
 
-use std::io::{BufferedReader, stdin};
+use std::io::stdin;
+use std::io::stdio::flush;
 
 use ears::{Music, AudioController, Playing, Stopped, Paused};
 
 fn main() {
 
-	// Read the inputs
-	let mut stdin = BufferedReader::new(stdin());
+    // Read the inputs
+    let mut stdin = stdin();
 
-	print!("Insert the path to an audio file : ");
+    print!("Insert the path to an audio file : ");
+    flush();
 
-	let line = stdin.read_line().unwrap();
+    let mut line = stdin.read_line().unwrap();
+    line.pop_char();
 
-	// Try to create the music
-	let mut music = match Music::new(line) {
-		Some(music) => music,
-		None 		=> fail!("Cannot load the music.")
-	};
+    // Try to create the music
+    let mut music = match Music::new(line) {
+        Some(music) => music,
+        None        => fail!("Cannot load the music.")
+    };
 
-	// Play it
-	music.play();
+    // Play it
+    music.play();
 
-	loop {
-		// Make your choice
-		println!("Commands :\n\tPlay  : l\n\tPause : p\n\tStop  : s\n\tExit  : x\n");
-		match stdin.read_line().unwrap() {
-			~"l" 	=> music.play(),
-			~"p" 	=> music.pause(),
-			~"s" 	=> music.stop(),
-			~"x" 	=> { music.stop(); break; },
-			_ 		=> println!("Unknwon command.")
-		}
-		match music.get_state() {
-			Playing => println!("State : Playing"),
-			Stopped => println!("State : Stopped"),
-			Paused 	=> println!("State : Paused"),
-			_ 		=> unreachable!() 
-		};
-	}
-	println!("Goodbye!");
+    loop {
+        // Make your choice
+        println!("Commands :\n\tPlay  : l\n\tPause : p\n\tStop  : s\n\tExit  : x\n");
+        match stdin.read_line().unwrap() {
+            ~"l\n"    => music.play(),
+            ~"p\n"    => music.pause(),
+            ~"s\n"    => music.stop(),
+            ~"x\n"    => { music.stop(); break; },
+            _       => println!("Unknwon command.")
+        }
+        match music.get_state() {
+            Playing => println!("State : Playing"),
+            Stopped => println!("State : Stopped"),
+            Paused  => println!("State : Paused"),
+            _       => unreachable!() 
+        };
+    }
+    println!("Goodbye!");
 }
