@@ -20,11 +20,14 @@
 #
 # 3. This notice may not be removed or altered from any source distribution.
 
+CARGO_OUT_DIR ?= lib
+CARGO_RUSTFLAGS ?= -O -g
+
 all: ears examples doc
 
 ears:
-	mkdir -p lib
-	rustc --out-dir=lib src/ears/lib.rs
+	mkdir -p $(CARGO_OUT_DIR)
+	rustc --out-dir=$(CARGO_OUT_DIR) $(CARGO_RUSTFLAGS) src/ears/lib.rs
 
 doc:
 	mkdir -p doc
