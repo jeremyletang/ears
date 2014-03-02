@@ -1,17 +1,17 @@
 // The MIT License (MIT)
-// 
+//
 // Copyright (c) 2013 Jeremy Letang (letang.jeremy@gmail.com)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
 // the Software, and to permit persons to whom the Software is furnished to do so,
 // subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
 // FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
@@ -22,10 +22,11 @@
 /*!
  * Play Sounds easily.
  *
- * Simple class to play sound easily in 2 lines, Sounds are really ligth objects, 
- * the sounds data are entirely load in memory and can be share between Sounds using the SoundData object.
+ * Simple class to play sound easily in 2 lines, Sounds are really ligth
+ * objects, the sounds data are entirely load in memory and can be share between
+ * Sounds using the SoundData object.
  *
- * # Examples 
+ * # Examples
  * ```Rust
  * extern mod ears;
  * use ears::Sound;
@@ -34,7 +35,7 @@
  *    // Create a Sound whith the path of the sound file.
  *    let snd = Sound::new(~"path/to/my/sound.ogg").unwrap();
  *
- *    // Play it   
+ *    // Play it
  *    snd.play();
  *
  *    // Wait until the sound is playing
@@ -48,6 +49,7 @@ use std::cell::RefCell;
 
 use internal::OpenAlData;
 use sound_data::SoundData;
+use sound_data;
 use openal::{ffi, al};
 use states::{State, Initial, Playing, Paused, Stopped};
 use audio_controller::AudioController;
@@ -66,12 +68,13 @@ impl Sound {
      * Default constructor for Sound struct.
      *
      * Create a new struct and an associated SoundData.
-     * 
+     *
      * # Argument
      * `path` - The path of the sound file to create the SoundData.
      *
      * # Return
-     * An Option with Some(Sound) if the Sound is created properly, or None if un error has occured.
+     * An Option with Some(Sound) if the Sound is created properly, or None if
+     * un error has occured.
      */
     pub fn new(path : &str) -> Option<Sound> {
         check_openal_context!(None);
@@ -86,27 +89,31 @@ impl Sound {
 
     /**
      * Create a new struct with a SoundData to associate.
-     * 
+     *
      * # Argument
      * `sound_data` - The sound_data to associate to the Sound.
      *
      * # Return
-     * An Option with Some(Sound) if the Sound is created properly, or None if un error has occured.
+     * An Option with Some(Sound) if the Sound is created properly, or None if
+     * un error has occured.
      */
     pub fn new_with_data(sound_data : Rc<RefCell<SoundData>>) -> Option<Sound> {
         check_openal_context!(None);
-        
+
         let mut source_id = 0;
-        
         // create the source
         al::alGenSources(1, &mut source_id);
         // set the buffer
-        al::alSourcei(source_id, ffi::AL_BUFFER, sound_data.borrow().with_mut(|sd| sd.get_buffer()) as i32);
-        
+        al::alSourcei(source_id,
+                      ffi::AL_BUFFER,
+                      sound_data.borrow().with_mut(|sd| {
+                        sound_data::get_buffer(sd)
+                      }) as i32);
+
         // Check if there is OpenAL internal error
         match al::openal_has_error() {
             Some(err) => { println!("{}", err); return None; },
-            None => {} 
+            None => {}
         };
 
         Some(Sound {
@@ -114,7 +121,7 @@ impl Sound {
             sound_data  : sound_data
         })
     }
-    
+
     /**
      * Get the sound datas.
      *
@@ -124,25 +131,29 @@ impl Sound {
     pub fn get_datas(&self) -> Rc<RefCell<SoundData>> {
         self.sound_data.clone()
     }
-    
+
     /**
      * Set the sound datas.
      *
      * Doesn't work if the sound is currently playing.
-     * 
+     *
      * # Argument
      * `sound_data` - The new sound_data
      *
      */
     pub fn set_datas(&mut self, sound_data : Rc<RefCell<SoundData>>) -> () {
         check_openal_context!(());
-        
+
         if self.is_playing() {
             return;
         }
-        
+
         // set the buffer
-        al::alSourcei(self.al_source, ffi::AL_BUFFER, sound_data.borrow().with(|sd| sd.get_buffer()) as i32);
+        al::alSourcei(self.al_source,
+                      ffi::AL_BUFFER,
+                      sound_data.borrow().with(|sd| { 
+                        sound_data::get_buffer(sd)
+                      }) as i32);
 
         self.sound_data = sound_data
     }
@@ -161,29 +172,25 @@ impl AudioTags for Sound {
 }
 
 impl AudioController for Sound {
-    /**
-     * Play or resume the Sound.
-     */
+    /// Play or resume the Sound.
     fn play(&mut self) -> () {
         check_openal_context!(());
-        
+
         al::alSourcePlay(self.al_source);
-        
+
         match al::openal_has_error() {
             None => {},
             Some(err) => println!("{}", err)
         }
     }
-    
-    /**
-     * Pause the Sound.
-     */
+
+     /// Pause the Sound.
     fn pause(&mut self) -> () {
         check_openal_context!(());
-        
-        al::alSourcePause(self.al_source)       
+
+        al::alSourcePause(self.al_source)
     }
-    
+
     /**
      * Stop the Sound.
      */
@@ -192,7 +199,7 @@ impl AudioController for Sound {
 
         al::alSourceStop(self.al_source)
     }
-    
+
     /**
      * Check if the Sound is playing or not.
      *
@@ -205,7 +212,7 @@ impl AudioController for Sound {
             _           => false
         }
     }
-    
+
     /**
      * Get the current state of the Sound
      *
@@ -218,7 +225,7 @@ impl AudioController for Sound {
         // Get the source state
         let mut state : i32 = 0;
         al::alGetSourcei(self.al_source, ffi::AL_SOURCE_STATE, &mut state);
-        
+
         match state {
             ffi::AL_INITIAL     => Initial,
             ffi::AL_PLAYING     => Playing,
@@ -226,25 +233,25 @@ impl AudioController for Sound {
             ffi::AL_STOPPED     => Stopped,
             _                   => unreachable!()
         }
-        
+
     }
- 
+
     /**
      * Set the volume of the Sound.
      *
-     * A value of 1.0 means unattenuated. Each division by 2 equals an attenuation
-     * of about -6dB. Each multiplicaton by 2 equals an amplification of about
-     * +6dB.
+     * A value of 1.0 means unattenuated. Each division by 2 equals an
+     * attenuation of about -6dB. Each multiplicaton by 2 equals an
+     * amplification of about +6dB.
      *
      * # Argument
-     * * `volume` - The volume of the Sound, should be between 0. and 1. 
+     * * `volume` - The volume of the Sound, should be between 0. and 1.
      */
     fn set_volume(&mut self, volume : f32) -> () {
         check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_GAIN, volume);
     }
-    
+
     /**
      * Get the volume of the Sound.
      *
@@ -253,27 +260,28 @@ impl AudioController for Sound {
      */
     fn get_volume(&self) -> f32 {
         check_openal_context!(0.);
-        
+
         let mut volume : f32 = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_GAIN, &mut volume);
         volume
     }
-    
+
     /**
      * Set the minimal volume for a Sound.
      *
-     * The minimum volume allowed for a source, after distance and cone attenation is
-     * applied (if applicable).
+     * The minimum volume allowed for a source, after distance and cone
+     * attenation is applied (if applicable).
      *
      * # Argument
-     * * `min_volume` - The new minimal volume of the Sound should be between 0. and 1. 
+     * * `min_volume` - The new minimal volume of the Sound should be between
+     * 0. and 1.
      */
     fn set_min_volume(&mut self, min_volume : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_MIN_GAIN, min_volume);
     }
-    
+
     /**
      * Get the minimal volume of the Sound.
      *
@@ -282,27 +290,28 @@ impl AudioController for Sound {
      */
     fn get_min_volume(&self) -> f32 {
         check_openal_context!(0.);
-        
+
         let mut volume : f32 = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_MIN_GAIN, &mut volume);
         volume
     }
-    
+
     /**
      * Set the maximal volume for a Sound.
      *
-     * The maximum volume allowed for a sound, after distance and cone attenation is
-     * applied (if applicable).
+     * The maximum volume allowed for a sound, after distance and cone
+     * attenation is applied (if applicable).
      *
      * # Argument
-     * * `max_volume` - The new maximal volume of the Sound should be between 0. and 1. 
+     * * `max_volume` - The new maximal volume of the Sound should be between
+     * 0. and 1.
      */
     fn set_max_volume(&mut self, max_volume : f32) -> () {
         check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_MAX_GAIN, max_volume);
     }
-    
+
     /**
      * Get the maximal volume of the Sound.
      *
@@ -316,7 +325,7 @@ impl AudioController for Sound {
         al::alGetSourcef(self.al_source, ffi::AL_MAX_GAIN, &mut volume);
         volume
     }
-    
+
     /**
      * Set the Sound looping or not
      *
@@ -327,13 +336,17 @@ impl AudioController for Sound {
      */
     fn set_looping(&mut self, looping : bool) -> () {
         check_openal_context!(());
-        
+
         match looping {
-            true    => al::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_TRUE as i32),
-            false   => al::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_FALSE as i32)
+            true    => al::alSourcei(self.al_source,
+                                     ffi::AL_LOOPING,
+                                     ffi::ALC_TRUE as i32),
+            false   => al::alSourcei(self.al_source,
+                                     ffi::AL_LOOPING,
+                                     ffi::ALC_FALSE as i32)
         };
     }
-    
+
     /**
      * Check if the Sound is looping or not
      *
@@ -342,64 +355,69 @@ impl AudioController for Sound {
      */
     fn is_looping(&self) -> bool {
         check_openal_context!(false);
-        
-        let mut boolean = 0; 
+
+        let mut boolean = 0;
         al::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
-        
+
         match boolean as i8 {
             ffi::ALC_TRUE       => true,
             ffi::ALC_FALSE      => false,
             _                   => unreachable!()
         }
     }
-    
+
     /**
      * Set the pitch of the source.
-     * 
+     *
      * A multiplier for the frequency (sample rate) of the source's buffer.
      *
      * Default pitch is 1.0.
-     * 
+     *
      * # Argument
      * * `new_pitch` - The new pitch of the sound in the range [0.5 - 2.0]
      */
     fn set_pitch(&mut self, pitch : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_PITCH, pitch)
     }
-    
+
     /**
      * Set the pitch of the source.
-     * 
+     *
      * # Return
      * The pitch of the sound in the range [0.5 - 2.0]
      */
     fn get_pitch(&self) -> f32 {
         check_openal_context!(0.);
-        
+
         let mut pitch = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_PITCH, &mut pitch);
         pitch
     }
-    
+
     /**
      * Set the position of the sound relative to the listener or absolute.
      *
      * Default position is absolute.
      *
      * # Argument
-     * `relative` - True to set sound relative to the listener false to set the sound position absolute.
+     * `relative` - True to set sound relative to the listener false to set the
+     * sound position absolute.
      */
     fn set_relative(&mut self, relative : bool) -> () {
         check_openal_context!(());
 
         match relative {
-            true    => al::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_TRUE as i32),
-            false   => al::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_FALSE as i32)
+            true    => al::alSourcei(self.al_source,
+                                     ffi::AL_SOURCE_RELATIVE,
+                                     ffi::ALC_TRUE as i32),
+            false   => al::alSourcei(self.al_source,
+                                     ffi::AL_SOURCE_RELATIVE,
+                                     ffi::ALC_FALSE as i32)
         };
     }
-    
+
     /**
      * Is the sound relative to the listener or not ?
      *
@@ -408,51 +426,53 @@ impl AudioController for Sound {
      */
     fn is_relative(&mut self) -> bool {
         check_openal_context!(false);
-        
-        let mut boolean = 0; 
+
+        let mut boolean = 0;
         al::alGetSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, &mut boolean);
-        
+
         match boolean as i8 {
             ffi::ALC_TRUE       => true,
             ffi::ALC_FALSE      => false,
             _                   => unreachable!()
         }
     }
-    
+
     /**
      * Set the Sound location in three dimensional space.
      *
      * OpenAL, like OpenGL, uses a right handed coordinate system, where in a
-     * frontal default view X (thumb) points right, Y points up (index finger), and
-     * Z points towards the viewer/camera (middle finger). 
+     * frontal default view X (thumb) points right, Y points up (index finger),
+     * and Z points towards the viewer/camera (middle finger).
      * To switch from a left handed coordinate system, flip the sign on the Z
      * coordinate.
      *
-     * Default position is [0., 0., 0.]. 
+     * Default position is [0., 0., 0.].
      *
      * # Argument
-     * * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
+     * * `position` - A three dimensional vector of f32 containing the position
+     * of the listener [x, y, z].
      */
     fn set_position(&mut self, position : [f32, ..3]) -> () {
         check_openal_context!(());
-        
+
         al::alSourcefv(self.al_source, ffi::AL_POSITION, &position[0]);
     }
-    
+
     /**
      * Get the position of the Sound in three dimensional space.
      *
      * # Return
-     * A three dimensional vector of f32 containing the position of the listener [x, y, z].
+     * A three dimensional vector of f32 containing the position of the
+     * listener [x, y, z].
      */
     fn get_position(&self) -> [f32, ..3] {
         check_openal_context!([0., ..3]);
-        
+
         let mut position : [f32, ..3] = [0., ..3];
         al::alGetSourcefv(self.al_source, ffi::AL_POSITION, &mut position[0]);
         position
     }
-    
+
     /**
      * Set the direction of the Sound.
      *
@@ -465,10 +485,10 @@ impl AudioController for Sound {
      */
     fn set_direction(&mut self, direction : [f32, ..3]) -> () {
         check_openal_context!(());
-        
+
         al::alSourcefv(self.al_source, ffi::AL_DIRECTION, &direction[0]);
     }
-    
+
     /**
      * Get the direction of the Sound.
      *
@@ -477,19 +497,19 @@ impl AudioController for Sound {
      */
     fn get_direction(&self)  -> [f32, ..3] {
         check_openal_context!([0., ..3]);
-        
+
         let mut direction : [f32, ..3] = [0., ..3];
         al::alGetSourcefv(self.al_source, ffi::AL_DIRECTION, &mut direction[0]);
         direction
     }
-    
+
     /**
      * Set the maximum distance of the Sound.
      *
      * The distance above which the source is not attenuated any further with a
      * clamped distance model, or where attenuation reaches 0.0 gain for linear
      * distance models with a default rolloff factor.
-     * 
+     *
      * The default maximum distance is +inf.
      *
      * # Argument
@@ -497,10 +517,10 @@ impl AudioController for Sound {
      */
     fn set_max_distance(&mut self, max_distance : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_MAX_DISTANCE, max_distance);
     }
-    
+
     /**
      * Get the maximum distance of the Sound.
      *
@@ -509,17 +529,20 @@ impl AudioController for Sound {
      */
     fn get_max_distance(&self) -> f32 {
         check_openal_context!(0.);
-        
+
         let mut max_distance = 0.;
-        al::alGetSourcef(self.al_source, ffi::AL_MAX_DISTANCE, &mut max_distance);
+        al::alGetSourcef(self.al_source,
+                         ffi::AL_MAX_DISTANCE,
+                         &mut max_distance);
         max_distance
     }
-    
+
     /**
      * Set the reference distance of the Sound.
      *
      * The distance in units that no attenuation occurs.
-     * At 0.0, no distance attenuation ever occurs on non-linear attenuation models.
+     * At 0.0, no distance attenuation ever occurs on non-linear attenuation
+     * models.
      *
      * The default distance reference is 1.
      *
@@ -528,10 +551,10 @@ impl AudioController for Sound {
      */
     fn set_reference_distance(&mut self, ref_distance : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, ref_distance);
     }
-    
+
     /**
      * Get the reference distance of the Sound.
      *
@@ -540,12 +563,14 @@ impl AudioController for Sound {
      */
     fn get_reference_distance(&self) -> f32 {
         check_openal_context!(1.);
-        
+
         let mut ref_distance = 0.;
-        al::alGetSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, &mut ref_distance);
+        al::alGetSourcef(self.al_source,
+                         ffi::AL_REFERENCE_DISTANCE,
+                         &mut ref_distance);
         ref_distance
     }
-    
+
     /**
      * Set the attenuation of a Sound.
      *
@@ -562,7 +587,7 @@ impl AudioController for Sound {
 
         al::alSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, attenuation);
     }
-    
+
     /**
      * Get the attenuation of a Sound.
      *
@@ -573,7 +598,9 @@ impl AudioController for Sound {
         check_openal_context!(1.);
 
         let mut attenuation = 0.;
-        al::alGetSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, &mut attenuation);
+        al::alGetSourcef(self.al_source,
+                         ffi::AL_ROLLOFF_FACTOR,
+                         &mut attenuation);
         attenuation
     }
 
@@ -586,7 +613,7 @@ impl Drop for Sound {
      */
     fn drop(&mut self) -> () {
         unsafe {
-            ffi::alDeleteSources(1, &mut self.al_source);            
+            ffi::alDeleteSources(1, &mut self.al_source);
         }
     }
 }
@@ -649,7 +676,7 @@ mod test {
     #[test]
     fn sound_is_playing_TRUE() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
-        
+
         snd.play();
         assert_eq!(snd.is_playing(), true);
         snd.stop();
@@ -658,7 +685,7 @@ mod test {
     #[test]
     fn sound_is_playing_FALSE() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
-        
+
         assert_eq!(snd.is_playing(), false);
         snd.stop();
     }
@@ -667,7 +694,7 @@ mod test {
     fn sound_set_volume_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_volume(0.7);        
+        snd.set_volume(0.7);
         assert_eq!(snd.get_volume(), 0.7);
     }
 
@@ -677,7 +704,7 @@ mod test {
     // fn sound_set_volume_high_FAIL() -> () {
     //     let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-    //     snd.set_volume(10.9);      
+    //     snd.set_volume(10.9);
     //     assert_eq!(snd.get_volume(), 10.9);
     // }
 
@@ -686,7 +713,7 @@ mod test {
     fn sound_set_volume_low_FAIL() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_volume(-1.);      
+        snd.set_volume(-1.);
         assert_eq!(snd.get_volume(), -1.);
     }
 
@@ -694,7 +721,7 @@ mod test {
     fn sound_set_min_volume_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_min_volume(0.1);        
+        snd.set_min_volume(0.1);
         assert_eq!(snd.get_min_volume(), 0.1);
     }
 
@@ -703,7 +730,7 @@ mod test {
     fn sound_set_min_volume_high_FAIL() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_min_volume(10.9);      
+        snd.set_min_volume(10.9);
         assert_eq!(snd.get_min_volume(), 10.9);
     }
 
@@ -712,7 +739,7 @@ mod test {
     fn sound_set_min_volume_low_FAIL() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_min_volume(-1.);      
+        snd.set_min_volume(-1.);
         assert_eq!(snd.get_min_volume(), -1.);
     }
 
@@ -720,7 +747,7 @@ mod test {
     fn sound_set_max_volume_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_max_volume(0.9);      
+        snd.set_max_volume(0.9);
         assert_eq!(snd.get_max_volume(), 0.9);
     }
 
@@ -729,7 +756,7 @@ mod test {
     fn sound_set_max_volume_high_FAIL() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_max_volume(10.9);      
+        snd.set_max_volume(10.9);
         assert_eq!(snd.get_max_volume(), 10.9);
     }
 
@@ -738,7 +765,7 @@ mod test {
     fn sound_set_max_volume_low_FAIL() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_max_volume(-1.);      
+        snd.set_max_volume(-1.);
         assert_eq!(snd.get_max_volume(), -1.);
     }
 
@@ -754,7 +781,7 @@ mod test {
     fn sound_is_looping_FALSE() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_looping(false);      
+        snd.set_looping(false);
         assert_eq!(snd.is_looping(), false);
     }
 
@@ -797,7 +824,7 @@ mod test {
     fn sound_set_relative_FALSE() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_relative(false);      
+        snd.set_relative(false);
         assert_eq!(snd.is_relative(), false);
     }
 
@@ -805,7 +832,7 @@ mod test {
     fn sound_set_position_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_position([50., 150., 250.]);      
+        snd.set_position([50., 150., 250.]);
         assert_eq!(snd.get_position(), [50., 150., 250.]);
     }
 
@@ -813,7 +840,7 @@ mod test {
     fn sound_set_direction_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_direction([50., 150., 250.]);      
+        snd.set_direction([50., 150., 250.]);
         assert_eq!(snd.get_direction(), [50., 150., 250.]);
     }
 
@@ -822,7 +849,7 @@ mod test {
     fn sound_set_max_distance_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_max_distance(70.);      
+        snd.set_max_distance(70.);
         assert_eq!(snd.get_max_distance(), 70.);
     }
 
@@ -831,7 +858,7 @@ mod test {
     fn sound_set_max_distance_FAIL() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_max_distance(-1.);      
+        snd.set_max_distance(-1.);
         assert_eq!(snd.get_max_distance(), -1.);
     }
 
@@ -839,7 +866,7 @@ mod test {
     fn sound_set_reference_distance_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_reference_distance(70.);      
+        snd.set_reference_distance(70.);
         assert_eq!(snd.get_reference_distance(), 70.);
     }
 
@@ -848,7 +875,7 @@ mod test {
     fn sound_set_reference_distance_FAIL() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_reference_distance(-1.);      
+        snd.set_reference_distance(-1.);
         assert_eq!(snd.get_reference_distance(), -1.);
     }
 
@@ -856,7 +883,7 @@ mod test {
     fn sound_set_attenuation_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_attenuation(70.);      
+        snd.set_attenuation(70.);
         assert_eq!(snd.get_attenuation(), 70.);
     }
 
@@ -865,7 +892,7 @@ mod test {
     fn sound_set_attenuation_FAIL() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_attenuation(-1.);      
+        snd.set_attenuation(-1.);
         assert_eq!(snd.get_attenuation(), -1.);
     }
 }

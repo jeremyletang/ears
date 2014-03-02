@@ -105,13 +105,16 @@ Like __ears__ you can build the examples with `rustpkg`, just do :
 extern crate extra;
 
 // Reexport public API
-pub use einit::init;
+pub use einit::{init, init_in};
 pub use music::Music;
 pub use sound::Sound;
 pub use states::{State, Initial, Playing, Paused, Stopped};
 pub use sound_data::SoundData;
 pub use audio_controller::AudioController;
 pub use audio_tags::{AudioTags, Tags};
+pub use recorder::Recorder;
+pub use record_context::RecordContext;
+
 
 // Hidden internal bindings
 mod internal;
@@ -129,4 +132,5 @@ mod sound_data;
 mod states;
 mod audio_controller;
 mod audio_tags;
-pub mod recorder;
+mod recorder;
+mod record_context;

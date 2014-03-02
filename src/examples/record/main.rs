@@ -21,47 +21,22 @@
 
 extern crate ears;
 
-use std::io::stdin;
-use std::io::stdio::flush;
+use std::io::timer::sleep;
 
-use ears::{Music, AudioController, Playing, Stopped, Paused};
+fn main() -> () {
+    // call ears_init() function to ensure that the ears context is not destroyed by a task.
+    ears::init();
 
-fn main() {
-
-    // Read the inputs
-    let mut stdin = stdin();
-
-    print!("Insert the path to an audio file : ");
-    flush();
-
-    let mut line = stdin.read_line().unwrap();
-    line.pop_char();
-
-    // Try to create the music
-    let mut music = match Music::new(line) {
-        Some(music) => music,
-        None        => fail!("Cannot load the music.")
-    };
-
-    // Play it
-    music.play();
-
-    loop {
-        // Make your choice
-        println!("Commands :\n\tPlay  : l\n\tPause : p\n\tStop  : s\n\tExit  : x\n");
-        match stdin.read_line().unwrap() {
-            ~"l\n"    => music.play(),
-            ~"p\n"    => music.pause(),
-            ~"s\n"    => music.stop(),
-            ~"x\n"    => { music.stop(); break; },
-            _       => println!("Unknwon command.")
-        }
-        match music.get_state() {
-            Playing => println!("State : Playing"),
-            Stopped => println!("State : Stopped"),
-            Paused  => println!("State : Paused"),
-            _       => unreachable!() 
-        };
+    // initialize the RecordContext
+    let ctxt = ears::init_in().expect("initialization error !");
+    
+    // Create a new Recorder using the RecordContext
+    let mut recorder = ears::Recorder::new(ctxt);
+    recorder.start();
+    sleep(5000);
+    recorder.stop();
+    match recorder.save_to_file("hello") {
+        true => println!("Save okay !"),
+        false => println!("Cannot save ...")
     }
-    println!("Goodbye!");
 }

@@ -1,17 +1,17 @@
 // The MIT License (MIT)
-// 
+//
 // Copyright (c) 2013 Jeremy Letang (letang.jeremy@gmail.com)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
 // the Software, and to permit persons to whom the Software is furnished to do so,
 // subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
 // FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
@@ -81,6 +81,8 @@ pub mod ffi {
     pub static AL_PAUSED :              i32         = 0x1013;
     pub static AL_STOPPED :             i32         = 0x1014;
 
+    /// ALC
+    pub static ALC_CAPTURE_SAMPLES :    i32         = 0x312;
 
 
     extern "C" {
@@ -93,8 +95,8 @@ pub mod ffi {
         /// Device functions
         pub fn alcOpenDevice(devicename : *c_char) -> *ALCdevice;
         pub fn alcCloseDevice(device : *ALCdevice) -> ALCboolean;
-    
-        /// Listener functions 
+
+        /// Listener functions
         pub fn alListenerf(param : i32, value : f32) -> ();
         pub fn alListener3f(param : i32, value1 : f32, value2 : f32, value3 : f32) -> ();
         pub fn alGetListenerf(param : i32, value : *mut f32) -> ();
@@ -117,6 +119,16 @@ pub mod ffi {
         pub fn alSourceQueueBuffers(source : u32, nb : i32, buffers : *u32) -> ();
         pub fn alSourceUnqueueBuffers(source : u32, nb : i32, buffers : *mut u32) -> ();
 
+        /// Sound capture functions
+        pub fn alcCaptureCloseDevice(device: *ALCdevice) -> ALCboolean;
+        pub fn alcCaptureOpenDevice(device: *c_char, sample_rate: i32, format: i32, buffer_size: i32) -> *ALCdevice;
+        pub fn alcCaptureStart(devide: *ALCdevice);
+        pub fn alcCaptureStop(devide: *ALCdevice);
+        pub fn alcGetIntegerv(devide: *ALCdevice, param: i32,  size: i32, values: *mut i32);
+        pub fn alcCaptureSamples(devide: *ALCdevice, buffer: *c_void,sample: i32);
+
+        /// extension check
+        pub fn alcIsExtensionPresent(device: *ALCdevice, extension: *c_char) -> ALCboolean;
 
         /// Buffers functions
         pub fn alGenBuffers(n : i32, buffers : *mut u32) -> ();
@@ -132,7 +144,7 @@ pub mod ffi {
 }
 
 pub mod al {
-    
+
     use super::ffi;
     use std::libc::c_void;
 
@@ -173,7 +185,7 @@ pub mod al {
     pub fn alSourcePause(source : u32) -> () {
         unsafe { ffi::alSourcePause(source); }
     }
-    
+
     pub fn alSourceStop(source : u32) -> () {
         unsafe { ffi::alSourceStop(source); }
     }

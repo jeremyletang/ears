@@ -1,17 +1,17 @@
 // The MIT License (MIT)
-// 
+//
 // Copyright (c) 2013 Jeremy Letang (letang.jeremy@gmail.com)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
 // the Software, and to permit persons to whom the Software is furnished to do so,
 // subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
 // FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
@@ -24,10 +24,11 @@
  *
  * Simple class to play musics easily in 2 lines.
  *
- * The musics are played in them own task and load the samples progressively using circular buffers.
+ * The musics are played in them own task and load the samples progressively
+ * using circular buffers.
  * They are not associated to a MusicData like Musics.
  *
- * # Examples 
+ * # Examples
  * ```
  * extern mod ears;
  * use ears::Music;
@@ -54,7 +55,7 @@ use states::{State, Initial, Playing, Paused, Stopped};
 use audio_controller::AudioController;
 use audio_tags::{Tags, AudioTags, get_sound_tags};
 
-/// Class for play Musics
+/// Play Musics easily
 pub struct Music {
     /// The internal OpenAL source identifier
     priv al_source      : u32,
@@ -103,13 +104,16 @@ impl Music {
         // Retrieve format informations
         let format =  match al::get_channels_format(infos.channels) {
             Some(fmt) => fmt,
-            None => { println!("Internal error : unrecognized format."); return None; }
+            None => {
+                println!("Internal error : unrecognized format.");
+                return None;
+            }
         };
 
         // Check if there is OpenAL internal error
         match al::openal_has_error() {
             Some(err) => { println!("{}", err); return None; },
-            None => {} 
+            None => {}
         };
 
         let sound_tags = get_sound_tags(file);
@@ -122,7 +126,7 @@ impl Music {
             sample_to_read  : 50000,
             sample_format   : format,
             sound_tags      : sound_tags
-        })        
+        })
     }
 
     fn process_music(&mut self) -> () {
@@ -137,17 +141,27 @@ impl Music {
         let mut samples = vec::from_elem(sample_t_r as uint, 0i16);
 
         // full buff1
-        let mut len = mem::size_of::<i16>() * self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
-        al::alBufferData(al_buffers[0], sample_format, samples.as_ptr() as *c_void, len as i32, sample_rate);
-          
+        let mut len = mem::size_of::<i16>() *
+            self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
+        al::alBufferData(al_buffers[0],
+                         sample_format,
+                         samples.as_ptr() as *c_void,
+                         len as i32,
+                         sample_rate);
+
         // full buff2
         samples.clear();
-        len = mem::size_of::<i16>() * self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
-        al::alBufferData(al_buffers[1], sample_format, samples.as_ptr() as *c_void, len as i32, sample_rate);
+        len = mem::size_of::<i16>() *
+            self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
+        al::alBufferData(al_buffers[1],
+                         sample_format,
+                         samples.as_ptr() as *c_void,
+                         len as i32,
+                         sample_rate);
 
         // Queue the buffers
         al::alSourceQueueBuffers(al_source, 2, &al_buffers[0]);
-       
+
         // Launche the Music
         al::alSourcePlay(al_source);
 
@@ -163,22 +177,25 @@ impl Music {
             let mut i = 0;
             let mut buf = 0;
             let mut read;
-            
+
             while status != ffi::AL_STOPPED {
-                // wait a bit 
+                // wait a bit
                 sleep(50);
                 if status == ffi::AL_PLAYING {
-                   
-                    
-                    al::alGetSourcei(al_source, ffi::AL_BUFFERS_PROCESSED, &mut i);
+                    al::alGetSourcei(al_source,
+                                     ffi::AL_BUFFERS_PROCESSED,
+                                     &mut i);
                     if i != 0 {
-
                         samples.clear();
                         al::alSourceUnqueueBuffers(al_source, 1, &mut buf);
-                        read = file.read_i16(samples, sample_t_r as i64) * mem::size_of::<i16>() as i64;
-                        al::alBufferData(buf, sample_format, samples.as_ptr() as *c_void, read as i32, sample_rate);
+                        read = file.read_i16(samples, sample_t_r as i64) *
+                            mem::size_of::<i16>() as i64;
+                        al::alBufferData(buf,
+                                         sample_format,
+                                         samples.as_ptr() as *c_void,
+                                         read as i32,
+                                         sample_rate);
                         al::alSourceQueueBuffers(al_source, 1, &buf);
-
                     }
                 }
                 // Get source status
@@ -216,7 +233,6 @@ impl AudioController for Music {
             _       => {
                 if self.is_playing() {
                     al::alSourceStop(self.al_source);
-                    
                     // wait a bit for openal terminate
                     sleep(50);
                 }
@@ -276,7 +292,6 @@ impl AudioController for Music {
             ffi::AL_STOPPED     => Stopped,
             _                   => unreachable!()
         }
-        
     }
 
     /**
@@ -287,7 +302,7 @@ impl AudioController for Music {
      * +6dB.
      *
      * # Argument
-     * * `volume` - The volume of the Music, should be between 0. and 1. 
+     * * `volume` - The volume of the Music, should be between 0. and 1.
      */
     fn set_volume(&mut self, volume : f32) -> () {
         check_openal_context!(());
@@ -303,27 +318,28 @@ impl AudioController for Music {
      */
     fn get_volume(&self) -> f32 {
         check_openal_context!(0.);
-        
+
         let mut volume : f32 = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_GAIN, &mut volume);
         volume
     }
-    
+
     /**
      * Set the minimal volume for a Music.
      *
-     * The minimum volume allowed for a music, after distance and cone attenation is
-     * applied (if applicable).
+     * The minimum volume allowed for a music, after distance and cone
+     * attenation is applied (if applicable).
      *
      * # Argument
-     * * `min_volume` - The new minimal volume of the Music should be between 0. and 1. 
+     * * `min_volume` - The new minimal volume of the Music should be
+     * between 0. and 1.
      */
     fn set_min_volume(&mut self, min_volume : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_MIN_GAIN, min_volume);
     }
-    
+
     /**
      * Get the minimal volume of the Music.
      *
@@ -332,27 +348,28 @@ impl AudioController for Music {
      */
     fn get_min_volume(&self) -> f32 {
         check_openal_context!(0.);
-        
+
         let mut volume : f32 = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_MIN_GAIN, &mut volume);
         volume
     }
-    
+
     /**
      * Set the maximal volume for a Music.
      *
-     * The maximum volume allowed for a Music, after distance and cone attenation is
-     * applied (if applicable).
+     * The maximum volume allowed for a Music, after distance and cone
+     * attenation is applied (if applicable).
      *
      * # Argument
-     * * `max_volume` - The new maximal volume of the Music should be between 0. and 1. 
+     * * `max_volume` - The new maximal volume of the Music should be
+     * between 0. and 1.
      */
     fn set_max_volume(&mut self, max_volume : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_MAX_GAIN, max_volume);
     }
-    
+
     /**
      * Get the maximal volume of the Music.
      *
@@ -361,12 +378,12 @@ impl AudioController for Music {
      */
     fn get_max_volume(&self) -> f32 {
         check_openal_context!(0.);
-        
+
         let mut volume : f32 = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_MAX_GAIN, &mut volume);
         volume
     }
-    
+
     /**
      * Set the Music looping or not
      *
@@ -377,13 +394,17 @@ impl AudioController for Music {
      */
     fn set_looping(&mut self, looping : bool) -> () {
         check_openal_context!(());
-        
+
         match looping {
-            true    => al::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_TRUE as i32),
-            false   => al::alSourcei(self.al_source, ffi::AL_LOOPING, ffi::ALC_FALSE as i32)
+            true    => al::alSourcei(self.al_source,
+                                     ffi::AL_LOOPING,
+                                     ffi::ALC_TRUE as i32),
+            false   => al::alSourcei(self.al_source,
+                                     ffi::AL_LOOPING,
+                                     ffi::ALC_FALSE as i32)
         };
     }
-    
+
     /**
      * Check if the Music is looping or not
      *
@@ -392,8 +413,8 @@ impl AudioController for Music {
      */
     fn is_looping(&self) -> bool {
         check_openal_context!(false);
-        
-        let mut boolean = 0; 
+
+        let mut boolean = 0;
         al::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
         match boolean as i8 {
             ffi::ALC_TRUE       => true,
@@ -401,54 +422,59 @@ impl AudioController for Music {
             _                   => unreachable!()
         }
     }
-    
+
     /**
      * Set the pitch of the Music.
-     * 
+     *
      * A multiplier for the frequency (sample rate) of the Music's buffer.
      *
      * Default pitch is 1.0.
-     * 
+     *
      * # Argument
      * * `new_pitch` - The new pitch of the Music in the range [0.5 - 2.0]
      */
     fn set_pitch(&mut self, pitch : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_PITCH, pitch)
     }
-    
+
     /**
      * Set the pitch of the Music.
-     * 
+     *
      * # Return
      * The pitch of the Music in the range [0.5 - 2.0]
      */
     fn get_pitch(&self) -> f32 {
         check_openal_context!(0.);
-        
+
         let mut pitch = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_PITCH, &mut pitch);
         pitch
     }
-    
+
     /**
      * Set the position of the Music relative to the listener or absolute.
      *
      * Default position is absolute.
      *
      * # Argument
-     * `relative` - True to set Music relative to the listener false to set the Music position absolute.
+     * `relative` - True to set Music relative to the listener false to set the
+     * Music position absolute.
      */
     fn set_relative(&mut self, relative : bool) -> () {
         check_openal_context!(());
-        
+
         match relative {
-            true    => al::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_TRUE as i32),
-            false   => al::alSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, ffi::ALC_FALSE as i32)
+            true    => al::alSourcei(self.al_source,
+                                     ffi::AL_SOURCE_RELATIVE,
+                                     ffi::ALC_TRUE as i32),
+            false   => al::alSourcei(self.al_source,
+                                     ffi::AL_SOURCE_RELATIVE,
+                                     ffi::ALC_FALSE as i32)
         };
     }
-    
+
     /**
      * Is the Music relative to the listener or not ?
      *
@@ -457,8 +483,8 @@ impl AudioController for Music {
      */
     fn is_relative(&mut self) -> bool {
         check_openal_context!(false);
-        
-        let mut boolean = 0; 
+
+        let mut boolean = 0;
         al::alGetSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, &mut boolean);
         match boolean as i8 {
             ffi::ALC_TRUE       => true,
@@ -466,41 +492,43 @@ impl AudioController for Music {
             _                   => unreachable!()
         }
     }
-    
+
     /**
      * Set the Music location in three dimensional space.
      *
      * OpenAL, like OpenGL, uses a right handed coordinate system, where in a
-     * frontal default view X (thumb) points right, Y points up (index finger), and
-     * Z points towards the viewer/camera (middle finger). 
+     * frontal default view X (thumb) points right, Y points up (index finger),
+     * and Z points towards the viewer/camera (middle finger).
      * To switch from a left handed coordinate system, flip the sign on the Z
      * coordinate.
      *
-     * Default position is [0., 0., 0.]. 
+     * Default position is [0., 0., 0.].
      *
      * # Argument
-     * * `position` - A three dimensional vector of f32 containing the position of the listener [x, y, z].
+     * * `position` - A three dimensional vector of f32 containing the position
+     * of the listener [x, y, z].
      */
     fn set_position(&mut self, position : [f32, ..3]) -> () {
         check_openal_context!(());
-        
+
         al::alSourcefv(self.al_source, ffi::AL_POSITION, &position[0]);
     }
-    
+
     /**
      * Get the position of the Music in three dimensional space.
      *
      * # Return
-     * A three dimensional vector of f32 containing the position of the listener [x, y, z].
+     * A three dimensional vector of f32 containing the position of the
+     * listener [x, y, z].
      */
     fn get_position(&self) -> [f32, ..3] {
         check_openal_context!([0., ..3]);
-        
+
         let mut position : [f32, ..3] = [0., ..3];
         al::alGetSourcefv(self.al_source, ffi::AL_POSITION, &mut position[0]);
         position
     }
-    
+
     /**
      * Set the direction of the Music.
      *
@@ -513,10 +541,10 @@ impl AudioController for Music {
      */
     fn set_direction(&mut self, direction : [f32, ..3]) -> () {
         check_openal_context!(());
-        
+
         al::alSourcefv(self.al_source, ffi::AL_DIRECTION, &direction[0]);
     }
-    
+
     /**
      * Get the direction of the Music.
      *
@@ -525,19 +553,19 @@ impl AudioController for Music {
      */
     fn get_direction(&self)  -> [f32, ..3] {
         check_openal_context!([0., ..3]);
-        
+
         let mut direction : [f32, ..3] = [0., ..3];
         al::alGetSourcefv(self.al_source, ffi::AL_DIRECTION, &mut direction[0]);
         direction
     }
-    
+
     /**
      * Set the maximum distance of the Music.
      *
      * The distance above which the source is not attenuated any further with a
      * clamped distance model, or where attenuation reaches 0.0 gain for linear
      * distance models with a default rolloff factor.
-     * 
+     *
      * The default maximum distance is +inf.
      *
      * # Argument
@@ -545,10 +573,10 @@ impl AudioController for Music {
      */
     fn set_max_distance(&mut self, max_distance : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_MAX_DISTANCE, max_distance);
     }
-    
+
     /**
      * Get the maximum distance of the Music.
      *
@@ -557,17 +585,18 @@ impl AudioController for Music {
      */
     fn get_max_distance(&self) -> f32 {
         check_openal_context!(0.);
-        
+
         let mut max_distance = 0.;
         al::alGetSourcef(self.al_source, ffi::AL_MAX_DISTANCE, &mut max_distance);
         max_distance
     }
-    
+
     /**
      * Set the reference distance of the Music.
      *
      * The distance in units that no attenuation occurs.
-     * At 0.0, no distance attenuation ever occurs on non-linear attenuation models.
+     * At 0.0, no distance attenuation ever occurs on non-linear
+     * attenuation models.
      *
      * The default distance reference is 1.
      *
@@ -576,10 +605,10 @@ impl AudioController for Music {
      */
     fn set_reference_distance(&mut self, ref_distance : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, ref_distance);
     }
-    
+
     /**
      * Get the reference distance of the Music.
      *
@@ -588,12 +617,14 @@ impl AudioController for Music {
      */
     fn get_reference_distance(&self) -> f32 {
         check_openal_context!(1.);
-        
+
         let mut ref_distance = 0.;
-        al::alGetSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, &mut ref_distance);
+        al::alGetSourcef(self.al_source,
+                         ffi::AL_REFERENCE_DISTANCE,
+                         &mut ref_distance);
         ref_distance
     }
-    
+
     /**
      * Set the attenuation of a Music.
      *
@@ -607,10 +638,10 @@ impl AudioController for Music {
      */
     fn set_attenuation(&mut self, attenuation : f32) -> () {
         check_openal_context!(());
-        
+
         al::alSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, attenuation);
     }
-    
+
     /**
      * Get the attenuation of a Music.
      *
@@ -619,12 +650,13 @@ impl AudioController for Music {
      */
     fn get_attenuation(&self) -> f32 {
         check_openal_context!(1.);
-        
+
         let mut attenuation = 0.;
-        al::alGetSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, &mut attenuation);
+        al::alGetSourcef(self.al_source,
+                         ffi::AL_ROLLOFF_FACTOR,
+                         &mut attenuation);
         attenuation
-    } 
-    
+    }
 }
 
 
@@ -637,7 +669,7 @@ impl Drop for Music {
             al::alSourcei(self.al_source, ffi::AL_BUFFER, 0);
             ffi::alDeleteBuffers(2, &mut self.al_buffers[0]);
             ffi::alDeleteSources(1, &mut self.al_source);
-            // self.file.take_unwrap().close();         
+            // self.file.take_unwrap().close();
         }
     }
 }
@@ -707,7 +739,7 @@ mod test {
     #[ignore]
     fn music_is_playing_TRUE() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
-        
+
         msc.play();
         assert_eq!(msc.is_playing(), true);
         msc.stop();
@@ -718,7 +750,7 @@ mod test {
     #[ignore]
     fn music_is_playing_FALSE() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
-        
+
         assert_eq!(msc.is_playing(), false);
         msc.stop();
     }
@@ -727,7 +759,7 @@ mod test {
     fn music_set_volume_OK() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_volume(0.7);        
+        msc.set_volume(0.7);
         assert_eq!(msc.get_volume(), 0.7);
     }
 
@@ -735,7 +767,7 @@ mod test {
     fn music_set_min_volume_OK() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_min_volume(0.1);        
+        msc.set_min_volume(0.1);
         assert_eq!(msc.get_min_volume(), 0.1);
     }
 
@@ -743,7 +775,7 @@ mod test {
     fn music_set_max_volume_OK() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_max_volume(0.9);      
+        msc.set_max_volume(0.9);
         assert_eq!(msc.get_max_volume(), 0.9);
     }
 
@@ -759,7 +791,7 @@ mod test {
     fn music_is_looping_FALSE() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_looping(false);      
+        msc.set_looping(false);
         assert_eq!(msc.is_looping(), false);
     }
 
@@ -783,7 +815,7 @@ mod test {
     fn music_set_relative_FALSE() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_relative(false);      
+        msc.set_relative(false);
         assert_eq!(msc.is_relative(), false);
     }
 
@@ -791,7 +823,7 @@ mod test {
     fn music_set_position_OK() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_position([50., 150., 250.]);      
+        msc.set_position([50., 150., 250.]);
         assert_eq!(msc.get_position(), [50., 150., 250.]);
     }
 
@@ -799,7 +831,7 @@ mod test {
     fn music_set_direction_OK() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_direction([50., 150., 250.]);      
+        msc.set_direction([50., 150., 250.]);
         assert_eq!(msc.get_direction(), [50., 150., 250.]);
     }
 
@@ -807,7 +839,7 @@ mod test {
     fn music_set_max_distance() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_max_distance(70.);      
+        msc.set_max_distance(70.);
         assert_eq!(msc.get_max_distance(), 70.);
     }
 
@@ -815,7 +847,7 @@ mod test {
     fn music_set_reference_distance() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_reference_distance(70.);      
+        msc.set_reference_distance(70.);
         assert_eq!(msc.get_reference_distance(), 70.);
     }
 
@@ -823,7 +855,7 @@ mod test {
     fn music_set_attenuation() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_attenuation(70.);      
+        msc.set_attenuation(70.);
         assert_eq!(msc.get_attenuation(), 70.);
     }
 }
