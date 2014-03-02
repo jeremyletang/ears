@@ -28,7 +28,7 @@
  * and destroyed in a another task.
  */
 
-use capture_context::CaptureContext;
+use record_context::RecordContext;
 use internal::OpenAlData;
 
 /**
@@ -50,7 +50,7 @@ pub fn init() -> bool {
  * # Return
  * true if initialization is made with success, false otherwise
  */
-pub fn init_in() -> Option<CaptureContext> {
+pub fn init_in() -> Option<RecordContext> {
     match OpenAlData::check_al_input_context() {
         Ok(ctxt)     => Some(ctxt),
         Err(err)     => { println!("{}", err); None }

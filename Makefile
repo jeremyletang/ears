@@ -32,7 +32,7 @@ docs:
 	mkdir -p doc
 	rustdoc -o doc src/ears/lib.rs
 
-examples:
+examples: ears
 	rustc -o bin/many_sounds -L ./lib src/examples/many_sounds/main.rs
 	rustc -o bin/simple_player -L ./lib src/examples/simple_player/main.rs
 

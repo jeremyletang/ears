@@ -24,12 +24,18 @@
 *
 */
 
+use record_context::RecordContext;
+
 /// Records audio
-pub struct Recorder;
+pub struct Recorder {
+    priv ctxt: RecordContext
+}
 
 impl Recorder {
-	/// Create a new audio recorder
-	pub fn new() -> Recorder {
-		Recorder
-	}
+    /// Create a new audio recorder
+    pub fn new(record_context: RecordContext) -> Recorder {
+        Recorder {
+            ctxt: record_context
+        }
+    }
 }

@@ -30,8 +30,8 @@
 
 use std::{local_data, ptr};
 use openal::ffi;
-use capture_context;
-use capture_context::CaptureContext;
+use record_context;
+use record_context::RecordContext;
 
 static al_context: local_data::Key<~OpenAlData> = &local_data::Key;
 
@@ -100,12 +100,12 @@ impl OpenAlData {
         })
     }
 
-    fn is_input_context_init() -> Result<CaptureContext, ~str> {
+    fn is_input_context_init() -> Result<RecordContext, ~str> {
         local_data::get_mut(al_context, |openal_data| {
             match openal_data {
                 Some(d) => {
                     if d.al_capt_device.is_not_null() {
-                        Ok(capture_context::new(d.al_capt_device))
+                        Ok(record_context::new(d.al_capt_device))
                     } else {
                         if "ALC_EXT_CAPTURE".with_c_str(|c_str| unsafe {
                             ffi::alcIsExtensionPresent(d.al_device, c_str) }) == ffi::ALC_FALSE {
@@ -119,7 +119,7 @@ impl OpenAlData {
                             if d.al_capt_device.is_null() {
                                 Err(~"Internal error: cannot open the default capture device.")
                             } else {
-                                Ok(capture_context::new(d.al_capt_device))
+                                Ok(record_context::new(d.al_capt_device))
                             }
                         }
                     }
@@ -140,7 +140,7 @@ impl OpenAlData {
      * A result containing nothing if the OpenAlData struct exist,
      * otherwise an error message.
      */
-    pub fn check_al_input_context() -> Result<CaptureContext, ~str> {
+    pub fn check_al_input_context() -> Result<RecordContext, ~str> {
         if unsafe { ffi::alcGetCurrentContext() } != ptr::null() {
             OpenAlData::is_input_context_init()
         } else {

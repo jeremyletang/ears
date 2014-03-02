@@ -112,7 +112,9 @@ pub use states::{State, Initial, Playing, Paused, Stopped};
 pub use sound_data::SoundData;
 pub use audio_controller::AudioController;
 pub use audio_tags::{AudioTags, Tags};
-pub use capture_context::CaptureContext;
+pub use recorder::Recorder;
+pub use record_context::RecordContext;
+
 
 // Hidden internal bindings
 mod internal;
@@ -131,4 +133,4 @@ mod states;
 mod audio_controller;
 mod audio_tags;
 mod recorder;
-mod capture_context;
+mod record_context;
