@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2013 Jeremy Letang (letang.jeremy@gmail.com)
+// Copyright (c) 2014 Jeremy Letang (letang.jeremy@gmail.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -19,17 +19,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/*!
-* Record sounds (Not implemented)
-*
-*/
+#[warn(visible_private_types)];
 
-/// Records audio
-pub struct Recorder;
+use openal::ffi;
 
-impl Recorder {
-	/// Create a new audio recorder
-	pub fn new() -> Recorder {
-		Recorder
-	}
+/// The context needed to initialize a new Recorder
+pub struct CaptureContext {
+    priv capt_device: *ffi::ALCdevice
+}
+
+pub fn new(capt_device: *ffi::ALCdevice) -> CaptureContext {
+    CaptureContext {
+        capt_device: capt_device
+    }
+}
+
+pub fn get_device(ctxt: CaptureContext) -> *ffi::ALCdevice {
+    ctxt.capt_device
 }

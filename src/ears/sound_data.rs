@@ -1,17 +1,17 @@
 // The MIT License (MIT)
-// 
+//
 // Copyright (c) 2013 Jeremy Letang (letang.jeremy@gmail.com)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
 // the Software, and to permit persons to whom the Software is furnished to do so,
 // subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
 // FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
@@ -22,9 +22,10 @@
 /*!
  * The datas extracted from a sound file.
  *
- * Samples extracted from a file, 
+ * Samples extracted from a file.
  *
- * SoundDatas are made to be share between several Sound and play in the same time.
+ * SoundDatas are made to be share between several Sound and play in the same
+ * time.
  *
  * # Example
  * ```
@@ -42,7 +43,7 @@
  *   // Play the sounds
  *   snd1.play();
  *   snd2.play();
- * 
+ *
  *   // Wait until snd2 is playing
  *   while snd2.is_playing() {}
  * }
@@ -74,14 +75,16 @@ impl SoundData {
     /**
      * Create a new SoundData.
      *
-     * The SoundData contains all the information extracted from the file : samples and tags.
+     * The SoundData contains all the information extracted from the
+     * file: samples and tags.
      * It's an easy way to share the same samples between man Sounds objects.
-     * 
+     *
      * # Arguments
      * * `path` - The path of the file to load
      *
      * # Return
-     * An Option with Some(SoundData) if the SoundData is create, or None if an error has occured.
+     * An Option with Some(SoundData) if the SoundData is create, or None if
+     * an error has occured.
      */
     pub fn new(path : &str) -> Option<SoundData> {
         check_openal_context!(None);
@@ -102,16 +105,23 @@ impl SoundData {
 
         let mut buffer_id = 0;
         let len = mem::size_of::<i16>() * (samples.len());
-        
+
         // Retrieve format informations
         let format =  match al::get_channels_format(infos.channels) {
             Some(fmt) => fmt,
-            None => { println!("Internal error : unrecognized format."); return None; }
+            None => {
+                println!("Internal error : unrecognized format.");
+                return None;
+            }
         };
 
         al::alGenBuffers(1, &mut buffer_id);
-        al::alBufferData(buffer_id, format, samples.as_ptr() as *c_void, len as i32, infos.samplerate);
-        
+        al::alBufferData(buffer_id,
+                         format,
+                         samples.as_ptr() as *c_void,
+                         len as i32,
+                         infos.samplerate);
+
         match al::openal_has_error() {
             Some(err)   => { println!("{}", err); return None; },
             None        => {}
@@ -124,13 +134,13 @@ impl SoundData {
             al_buffer   : buffer_id
         };
         file.close();
-        
+
         Some(sound_data)
     }
 
     /**
      * Get the sound file infos.
-     * 
+     *
      * # Return
      * The struct SndInfo.
      */
