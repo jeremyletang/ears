@@ -21,10 +21,7 @@
 
 extern crate ears;
 
-use std::task;
-
 use std::io::timer::sleep;
-
 
 fn main() -> () {
     // call ears_init() function to ensure that the ears context is not destroyed by a task.

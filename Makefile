@@ -35,6 +35,7 @@ docs:
 examples: ears
 	rustc -o bin/many_sounds -L ./lib src/examples/many_sounds/main.rs
 	rustc -o bin/simple_player -L ./lib src/examples/simple_player/main.rs
+	rustc -o bin/record -L ./lib src/examples/record/main.rs
 
 
 clean:
@@ -42,3 +43,4 @@ clean:
 	rm -rf doc
 	rm -rf bin/many_sounds
 	rm -rf bin/simple_player
+	rm -rf bin/record

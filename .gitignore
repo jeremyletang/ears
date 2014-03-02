@@ -11,6 +11,7 @@
 bin/ears_tests
 bin/simple_player
 bin/many_sounds
+bin/record
 
 src/ears/lib
 
