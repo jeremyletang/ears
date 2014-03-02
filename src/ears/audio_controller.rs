@@ -20,12 +20,12 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*!
-* The functionnality that a Sound or a Music should implement.
+* The functionnality that a Sound or a Music should provide.
 */
 
 use states::State;
 
-/// The functionnality that an Audio Source should implement.
+/// The functionnality that an Audio Source should provide.
 pub trait AudioController {
     /**
      * Play or resume the Audio Source.

@@ -49,6 +49,7 @@ use std::cell::RefCell;
 
 use internal::OpenAlData;
 use sound_data::SoundData;
+use sound_data;
 use openal::{ffi, al};
 use states::{State, Initial, Playing, Paused, Stopped};
 use audio_controller::AudioController;
@@ -105,7 +106,9 @@ impl Sound {
         // set the buffer
         al::alSourcei(source_id,
                       ffi::AL_BUFFER,
-                      sound_data.borrow().with_mut(|sd| sd.get_buffer()) as i32);
+                      sound_data.borrow().with_mut(|sd| {
+                        sound_data::get_buffer(sd)
+                      }) as i32);
 
         // Check if there is OpenAL internal error
         match al::openal_has_error() {
@@ -148,7 +151,9 @@ impl Sound {
         // set the buffer
         al::alSourcei(self.al_source,
                       ffi::AL_BUFFER,
-                      sound_data.borrow().with(|sd| sd.get_buffer()) as i32);
+                      sound_data.borrow().with(|sd| { 
+                        sound_data::get_buffer(sd)
+                      }) as i32);
 
         self.sound_data = sound_data
     }

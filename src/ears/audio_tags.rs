@@ -53,7 +53,21 @@ pub struct Tags {
     Genre       : ~str
 }
 
-#[doc(hidden)]
+pub fn empty() -> Tags {
+    Tags {
+        Title       : ~"",
+        Copyright   : ~"",
+        Software    : ~"",
+        Artist      : ~"",
+        Comment     : ~"",
+        Date        : ~"",
+        Album       : ~"",
+        License     : ~"",
+        TrackNumber : ~"",
+        Genre       : ~""
+    }
+}
+
 pub fn get_sound_tags(file : &SndFile) -> Tags {
     Tags {
         Title       : file.get_string(Title).unwrap_or(~""),

@@ -221,11 +221,11 @@ pub enum FormatType {
     FormatTypeMask = ffi::SF_FORMAT_TYPEMASK as i32,
 }
 
-// impl BitOr<FormatType, FormatType> for FormatType {
-//     fn bitor(&self, _rhs: &FormatType) -> FormatType {
-//         *self | *_rhs
-//     }
-// }
+impl BitOr<FormatType, i32> for FormatType {
+    fn bitor(&self, _rhs: &FormatType) -> i32 {
+        (*self as i32) | (*_rhs as i32)
+    }
+}
 
 /// SndFile object, used to load/store sound from a file path or an fd.
 pub struct SndFile {
@@ -262,6 +262,31 @@ impl SndFile {
             sections : 0,
             seekable : 0
         };
+        let tmp_sndfile = path.with_c_str(|c_path| {
+            unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
+        });
+        if tmp_sndfile.is_null() {
+            Err(unsafe { str::raw::from_c_str(ffi::sf_strerror(ptr::null())) })
+        } else {
+            Ok(SndFile {
+                handle :    tmp_sndfile,
+                info :      info
+            })
+        }
+    }
+
+    /**
+     * Construct SndFile object with the path to the music and a mode to open it.
+     *
+     * # Arguments
+     * * path - The path to load the music
+     * * mode - The mode to open the music
+     * * info - The SndInfo to pass to the file
+     *
+     * Return Ok() containing the SndFile on success, a string representation of
+     * the error otherwise.
+     */
+    pub fn new_with_info(path : &str, mode : OpenMode, info: ~SndInfo) -> Result<SndFile, ~str> {
         let tmp_sndfile = path.with_c_str(|c_path| {
             unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
         });

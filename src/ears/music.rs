@@ -55,7 +55,7 @@ use states::{State, Initial, Playing, Paused, Stopped};
 use audio_controller::AudioController;
 use audio_tags::{Tags, AudioTags, get_sound_tags};
 
-/// Class for play Musics
+/// Play Musics easily
 pub struct Music {
     /// The internal OpenAL source identifier
     priv al_source      : u32,

@@ -81,6 +81,8 @@ pub mod ffi {
     pub static AL_PAUSED :              i32         = 0x1013;
     pub static AL_STOPPED :             i32         = 0x1014;
 
+    /// ALC
+    pub static ALC_CAPTURE_SAMPLES :    i32         = 0x312;
 
 
     extern "C" {
@@ -120,7 +122,10 @@ pub mod ffi {
         /// Sound capture functions
         pub fn alcCaptureCloseDevice(device: *ALCdevice) -> ALCboolean;
         pub fn alcCaptureOpenDevice(device: *c_char, sample_rate: i32, format: i32, buffer_size: i32) -> *ALCdevice;
-
+        pub fn alcCaptureStart(devide: *ALCdevice);
+        pub fn alcCaptureStop(devide: *ALCdevice);
+        pub fn alcGetIntegerv(devide: *ALCdevice, param: i32,  size: i32, values: *mut i32);
+        pub fn alcCaptureSamples(devide: *ALCdevice, buffer: *c_void,sample: i32);
 
         /// extension check
         pub fn alcIsExtensionPresent(device: *ALCdevice, extension: *c_char) -> ALCboolean;

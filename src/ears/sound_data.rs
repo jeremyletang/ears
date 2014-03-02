@@ -50,8 +50,6 @@
  * ```
  */
 
-#[allow(visible_private_types)];
-
 use sndfile::{SndFile, SndInfo, Read};
 use std::{vec, mem};
 use openal::{ffi, al};
@@ -137,28 +135,27 @@ impl SoundData {
 
         Some(sound_data)
     }
+}
 
-    /**
-     * Get the sound file infos.
-     *
-     * # Return
-     * The struct SndInfo.
-     */
-    #[doc(hidden)]
-    pub fn get_sndinfo<'r>(&'r self) -> &'r SndInfo {
-        &self.snd_info
-    }
 
-    /**
-     * Get the OpenAL identifier of the samples buffer.
-     *
-     * # Return
-     * The OpenAL internal identifier for the samples buffer of the sound.
-     */
-    #[doc(hidden)]
-    pub fn get_buffer(&self) -> u32 {
-        self.al_buffer
-    }
+/**
+ * Get the sound file infos.
+ *
+ * # Return
+ * The struct SndInfo.
+ */
+pub fn get_sndinfo<'r>(s_data: &'r SoundData) -> &'r SndInfo {
+    &s_data.snd_info
+}
+
+/**
+ * Get the OpenAL identifier of the samples buffer.
+ *
+ * # Return
+ * The OpenAL internal identifier for the samples buffer of the sound.
+ */
+pub fn get_buffer(s_data: &SoundData) -> u32 {
+    s_data.al_buffer
 }
 
 impl AudioTags for SoundData {
