@@ -19,10 +19,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/*!
-* Record sounds (Not implemented)
-*
-*/
+//! Record audio
+
 
 #[allow(missing_doc)];
 
@@ -35,7 +33,37 @@ use record_context;
 use openal::ffi;
 use sndfile::{SndInfo, SndFile, FormatWav, FormatPcm16, Write};
 
-/// Records audio
+/**
+ * Record audio
+ *
+ * This class provide easy audio recording using. The Recorder allow the user
+ * to record sound, then save it in a file, or create a SoundData object to play the 
+ * recorded sound in the same program.
+ * A special context, RecordContext is needed to create the Recorder object.
+ * The Recorder work in it's own task.
+ *
+ * # Examples
+ * ```Rust
+ * extern mod ears;
+ * use ears::{RecordContext, Recorder};
+ *
+ * fn main() -> () {
+ *     // Create a new context to record audio
+ *     let context = ears::init_in().unwrap();
+ *     // Create the recorder
+ *     let recorder = Recorder::new(context);
+ *     // Start to record something
+ *     recorder.start();
+ *
+ *     // Do some other stuff here //
+ *
+ *     // Stop the recorder
+ *     recorder.stop();
+ *     // Then store the recorded data in a file
+ *     recorder.save_to_file("hello_file");
+ * }
+ * ```
+ */
 pub struct Recorder {
     priv ctxt: RecordContext,
     priv stop_chan: Option<Chan<bool>>,

@@ -19,7 +19,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/*!
+//! The datas extracted from a sound file.
+
+use sndfile::{SndFile, SndInfo, Read};
+use std::{vec, mem};
+use openal::{ffi, al};
+use std::libc::c_void;
+use internal::OpenAlData;
+use audio_tags::{Tags, AudioTags, get_sound_tags};
+
+/**
  * The datas extracted from a sound file.
  *
  * Samples extracted from a file.
@@ -34,11 +43,12 @@
  *
  * fn main() -> () {
  *   // Create a SoundData
- *   let snd_data = @SoundData::new(~"path/to/my/sound.wav").unwrap();
+ *   let snd_data = Rc::new(RefCell::new(SoundData::new(~"path/to/my/sound.wav")
+ *                                       .unwrap()));
  *
  *   // Create two Sound with the same SoundData
- *   let snd1 = Sound::new_with_data(snd_data).unwrap();
- *   let snd2 = Sound::new)with_data(snd_data).unwrap();
+ *   let snd1 = Sound::new_with_data(snd_data.clone()).unwrap();
+ *   let snd2 = Sound::new_with_data(snd_data.clone()).unwrap();
  *
  *   // Play the sounds
  *   snd1.play();
@@ -49,15 +59,6 @@
  * }
  * ```
  */
-
-use sndfile::{SndFile, SndInfo, Read};
-use std::{vec, mem};
-use openal::{ffi, al};
-use std::libc::c_void;
-use internal::OpenAlData;
-use audio_tags::{Tags, AudioTags, get_sound_tags};
-
-/// Structure containing the data extracted from the sound file.
 pub struct SoundData {
     /// The SoundTags who contains all the information of the sound
     priv sound_tags     : Tags,
