@@ -19,7 +19,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/*!
+//! Play Music easily.
+
+use std::io::timer::sleep;
+use std::{vec, mem};
+use std::task;
+use std::libc::c_void;
+
+use internal::OpenAlData;
+use openal::{ffi, al};
+use sndfile::{SndInfo, SndFile, Read, SeekSet};
+use states::{State, Initial, Playing, Paused, Stopped};
+use audio_controller::AudioController;
+use audio_tags::{Tags, AudioTags, get_sound_tags};
+
+/**
  * Play Music easily.
  *
  * Simple class to play musics easily in 2 lines.
@@ -42,20 +56,6 @@
  * }
  * ```
  */
-
-use std::io::timer::sleep;
-use std::{vec, mem};
-use std::task;
-use std::libc::c_void;
-
-use internal::OpenAlData;
-use openal::{ffi, al};
-use sndfile::{SndInfo, SndFile, Read, SeekSet};
-use states::{State, Initial, Playing, Paused, Stopped};
-use audio_controller::AudioController;
-use audio_tags::{Tags, AudioTags, get_sound_tags};
-
-/// Play Musics easily
 pub struct Music {
     /// The internal OpenAL source identifier
     priv al_source      : u32,

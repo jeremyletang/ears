@@ -19,7 +19,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/*!
+//! Play Sounds easily.
+
+use std::rc::Rc;
+use std::cell::RefCell;
+
+use internal::OpenAlData;
+use sound_data::SoundData;
+use sound_data;
+use openal::{ffi, al};
+use states::{State, Initial, Playing, Paused, Stopped};
+use audio_controller::AudioController;
+use audio_tags::{AudioTags, Tags};
+
+/**
  * Play Sounds easily.
  *
  * Simple class to play sound easily in 2 lines, Sounds are really ligth
@@ -43,19 +56,6 @@
  * }
  * ```
  */
-
-use std::rc::Rc;
-use std::cell::RefCell;
-
-use internal::OpenAlData;
-use sound_data::SoundData;
-use sound_data;
-use openal::{ffi, al};
-use states::{State, Initial, Playing, Paused, Stopped};
-use audio_controller::AudioController;
-use audio_tags::{AudioTags, Tags};
-
-/// The Sound struct.
 pub struct Sound {
     /// The internal OpenAl source identifier
     priv al_source  : u32,
