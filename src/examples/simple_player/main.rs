@@ -49,18 +49,18 @@ fn main() {
     loop {
         // Make your choice
         println!("Commands :\n\tPlay  : l\n\tPause : p\n\tStop  : s\n\tExit  : x\n");
-        match stdin.read_line().unwrap() {
-            ~"l\n"    => music.play(),
-            ~"p\n"    => music.pause(),
-            ~"s\n"    => music.stop(),
-            ~"x\n"    => { music.stop(); break; },
+        match stdin.read_line().unwrap().as_slice() {
+            "l\n"    => music.play(),
+            "p\n"    => music.pause(),
+            "s\n"    => music.stop(),
+            "x\n"    => { music.stop(); break; },
             _       => println!("Unknwon command.")
         }
         match music.get_state() {
             Playing => println!("State : Playing"),
             Stopped => println!("State : Stopped"),
             Paused  => println!("State : Paused"),
-            _       => unreachable!() 
+            _       => unreachable!()
         };
     }
     println!("Goodbye!");
