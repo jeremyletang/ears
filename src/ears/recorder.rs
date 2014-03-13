@@ -66,8 +66,8 @@ use sndfile::{SndInfo, SndFile, FormatWav, FormatPcm16, Write};
  */
 pub struct Recorder {
     priv ctxt: RecordContext,
-    priv stop_chan: Option<Chan<bool>>,
-    priv data_port: Option<Port<~[i16]>>,
+    priv stop_sender: Option<Sender<bool>>,
+    priv data_receiver: Option<Receiver<~[i16]>>,
     priv samples: ~[i16]
 }
 
@@ -76,20 +76,20 @@ impl Recorder {
     pub fn new(record_context: RecordContext) -> Recorder {
         Recorder {
             ctxt: record_context,
-            stop_chan: None,
-            data_port: None,
+            stop_sender: None,
+            data_receiver: None,
             samples: ~[]
 
         }
     }
 
     pub fn start(&mut self) {
-        let (stop_port, stop_chan) = Chan::new();
-        let (data_port, data_chan) = Chan::new();
+        let (stop_sender, stop_receiver) = channel();
+        let (data_sender, data_receiver) = channel();
         let r_c = self.ctxt.clone();
 
-        self.stop_chan = Some(stop_chan);
-        self.data_port = Some(data_port);
+        self.stop_sender = Some(stop_sender);
+        self.data_receiver = Some(data_receiver);
 
         task::spawn(proc() {
             let mut terminate = false;
@@ -117,7 +117,7 @@ impl Recorder {
                     samples.push_all_move(tmp_buf);
                 }
 
-                match stop_port.try_recv() {
+                match stop_receiver.try_recv() {
                     Data(_) => {
                         unsafe { ffi::alcCaptureStop(ctxt); }
                         terminate = true;
@@ -125,15 +125,15 @@ impl Recorder {
                     _       => {}
                 }
             }
-            data_chan.send(samples);
+            data_sender.send(samples);
         });
     }
 
     pub fn stop(&mut self) -> bool {
-        match self.stop_chan {
+        match self.stop_sender {
             Some(ref s_c) => {
                 s_c.send(true);
-                match self.data_port {
+                match self.data_receiver {
                     Some(ref d_p) => {
                         self.samples = d_p.recv();
                         true
