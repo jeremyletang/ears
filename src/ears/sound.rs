@@ -106,7 +106,7 @@ impl Sound {
         // set the buffer
         al::alSourcei(source_id,
                       ffi::AL_BUFFER,
-                      sound_data.borrow().with_mut(|sd| {
+                      (*sound_data).with_mut(|sd| {
                         sound_data::get_buffer(sd)
                       }) as i32);
 
@@ -151,7 +151,7 @@ impl Sound {
         // set the buffer
         al::alSourcei(self.al_source,
                       ffi::AL_BUFFER,
-                      sound_data.borrow().with(|sd| { 
+                      (*sound_data).with(|sd| { 
                         sound_data::get_buffer(sd)
                       }) as i32);
 
@@ -167,7 +167,7 @@ impl AudioTags for Sound {
      * A borrowed pointer to the internal struct SoundTags
      */
     fn get_tags(&self) -> Tags {
-        self.sound_data.borrow().with(|sd| sd.get_tags().clone())
+        (*self.sound_data).with(|sd| sd.get_tags().clone())
     }
 }
 
