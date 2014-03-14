@@ -24,9 +24,9 @@
 
 #[allow(missing_doc)];
 
-use std::task;
+use std::{task, cast};
 use std::comm::Data;
-use std::cast;
+use std::vec_ng::Vec;
 
 use record_context::RecordContext;
 use record_context;
@@ -67,8 +67,8 @@ use sndfile::{SndInfo, SndFile, FormatWav, FormatPcm16, Write};
 pub struct Recorder {
     priv ctxt: RecordContext,
     priv stop_sender: Option<Sender<bool>>,
-    priv data_receiver: Option<Receiver<~[i16]>>,
-    priv samples: ~[i16]
+    priv data_receiver: Option<Receiver<Vec<i16>>>,
+    priv samples: Vec<i16>
 }
 
 impl Recorder {
@@ -78,7 +78,7 @@ impl Recorder {
             ctxt: record_context,
             stop_sender: None,
             data_receiver: None,
-            samples: ~[]
+            samples: Vec::new()
 
         }
     }
@@ -96,7 +96,7 @@ impl Recorder {
             let ctxt = record_context::get(r_c);
             unsafe { ffi::alcCaptureStart(ctxt); }
             let mut available_samples = 0;
-            let mut samples: ~[i16] = ~[];
+            let mut samples: Vec<i16> = Vec::new();
 
             while !terminate {
                 unsafe {
@@ -108,10 +108,10 @@ impl Recorder {
 
                 if available_samples != 0 {
                     let tmp_buf =
-                        ::std::vec::from_elem(available_samples as uint, 0i16);
+                        Vec::from_elem(available_samples as uint, 0i16);
                     unsafe {
                         ffi::alcCaptureSamples(ctxt,
-                                               cast::transmute(&tmp_buf[0]),
+                                               cast::transmute(&tmp_buf.as_slice()[0]),
                                                available_samples);
                     }
                     samples.push_all_move(tmp_buf);
@@ -163,7 +163,7 @@ impl Recorder {
             match SndFile::new_with_info(file_ext, Write, infos) {
                 Ok(mut f) => {
                     let len = self.samples.len() as i64;
-                    f.write_i16(self.samples, len);
+                    f.write_i16(self.samples.as_mut_slice(), len);
                     f.close();
                     true
                 },

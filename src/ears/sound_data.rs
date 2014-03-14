@@ -21,10 +21,12 @@
 
 //! The datas extracted from a sound file.
 
-use sndfile::{SndFile, SndInfo, Read};
-use std::{vec, mem};
-use openal::{ffi, al};
+use std::mem;
 use std::libc::c_void;
+use std::vec_ng::Vec;
+
+use openal::{ffi, al};
+use sndfile::{SndFile, SndInfo, Read};
 use internal::OpenAlData;
 use audio_tags::{Tags, AudioTags, get_sound_tags};
 
@@ -99,8 +101,8 @@ impl SoundData {
 
         let nb_sample = infos.channels as i64 * infos.frames;
 
-        let mut samples = vec::from_elem(nb_sample as uint, 0i16);
-        file.read_i16(samples, nb_sample as i64);
+        let mut samples = Vec::from_elem(nb_sample as uint, 0i16);
+        file.read_i16(samples.as_mut_slice(), nb_sample as i64);
 
         let mut buffer_id = 0;
         let len = mem::size_of::<i16>() * (samples.len());

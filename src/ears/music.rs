@@ -22,9 +22,10 @@
 //! Play Music easily.
 
 use std::io::timer::sleep;
-use std::{vec, mem};
+use std::mem;
 use std::task;
 use std::libc::c_void;
+use std::vec_ng::Vec;
 
 use internal::OpenAlData;
 use openal::{ffi, al};
@@ -138,11 +139,11 @@ impl Music {
         let al_buffers = self.al_buffers;
 
         // create buff
-        let mut samples = vec::from_elem(sample_t_r as uint, 0i16);
+        let mut samples = Vec::from_elem(sample_t_r as uint, 0i16);
 
         // full buff1
         let mut len = mem::size_of::<i16>() *
-            self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
+            self.file.get_mut_ref().read_i16(samples.as_mut_slice(), sample_t_r as i64) as uint;
         al::alBufferData(al_buffers[0],
                          sample_format,
                          samples.as_ptr() as *c_void,
@@ -152,7 +153,7 @@ impl Music {
         // full buff2
         samples.clear();
         len = mem::size_of::<i16>() *
-            self.file.get_mut_ref().read_i16(samples, sample_t_r as i64) as uint;
+            self.file.get_mut_ref().read_i16(samples.as_mut_slice(), sample_t_r as i64) as uint;
         al::alBufferData(al_buffers[1],
                          sample_format,
                          samples.as_ptr() as *c_void,
@@ -172,7 +173,7 @@ impl Music {
             };
 
             let mut file : ~SndFile = port.recv();
-            let mut samples = vec::from_elem(sample_t_r as uint, 0i16);
+            let mut samples = Vec::from_elem(sample_t_r as uint, 0i16);
             let mut status = ffi::AL_PLAYING;
             let mut i = 0;
             let mut buf = 0;
@@ -188,7 +189,7 @@ impl Music {
                     if i != 0 {
                         samples.clear();
                         al::alSourceUnqueueBuffers(al_source, 1, &mut buf);
-                        read = file.read_i16(samples, sample_t_r as i64) *
+                        read = file.read_i16(samples.as_mut_slice(), sample_t_r as i64) *
                             mem::size_of::<i16>() as i64;
                         al::alBufferData(buf,
                                          sample_format,
