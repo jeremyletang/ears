@@ -32,7 +32,7 @@ use openal::{ffi, al};
  * +6dB.
  *
  * # Argument
- * * `volume` - The global volume for the scene, should be between 0. and 1. 
+ * * `volume` - The global volume for the scene, should be between 0. and 1.
  */
 pub fn set_volume(volume : f32) -> () {
     check_openal_context!(());

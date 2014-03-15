@@ -64,7 +64,7 @@ pub trait AudioController {
      * +6dB.
      *
      * # Argument
-     * * `volume` - The volume of the Audio Source, should be between 0. and 1. 
+     * * `volume` - The volume of the Audio Source, should be between 0. and 1.
      */
     fn set_volume(&mut self, volume : f32) -> ();
 

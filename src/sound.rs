@@ -151,7 +151,7 @@ impl Sound {
         // set the buffer
         al::alSourcei(self.al_source,
                       ffi::AL_BUFFER,
-                      (*sound_data).with(|sd| { 
+                      (*sound_data).with(|sd| {
                         sound_data::get_buffer(sd)
                       }) as i32);
 
