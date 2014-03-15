@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2013 Jeremy Letang (letang.jeremy@gmail.com)
+// Copyright (c) 2014 Jeremy Letang (letang.jeremy@gmail.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -19,17 +19,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/*! The states of a Sound or a Music. */
+#[warn(visible_private_types)];
 
-/// The differents states in which a sound can be.
-#[deriving(Clone, Eq, Ord, Show)]
-pub enum State {
-    /// Initial state of the sound or music
-    Initial,
-    /// The sound or music is currently playing
-    Playing,
-    /// The sound or music is paused
-    Paused,
-    /// The sound or music is stopped
-    Stopped
+use openal::ffi;
+
+/// The context needed to initialize a new Recorder
+#[deriving(Clone)]
+pub struct RecordContext {
+    priv capt_device: *ffi::ALCdevice
+}
+
+pub fn new(capt_device: *ffi::ALCdevice) -> RecordContext {
+    RecordContext {
+        capt_device: capt_device
+    }
+}
+
+pub fn get(ctxt: RecordContext) -> *ffi::ALCdevice {
+    ctxt.capt_device
 }

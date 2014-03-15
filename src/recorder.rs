@@ -37,7 +37,7 @@ use sndfile::{SndInfo, SndFile, FormatWav, FormatPcm16, Write};
  * Record audio
  *
  * This class provide easy audio recording using. The Recorder allow the user
- * to record sound, then save it in a file, or create a SoundData object to play the 
+ * to record sound, then save it in a file, or create a SoundData object to play the
  * recorded sound in the same program.
  * A special context, RecordContext is needed to create the Recorder object.
  * The Recorder work in it's own task.

@@ -26,11 +26,11 @@ all: ears examples docs
 
 ears:
 	mkdir -p $(CARGO_OUT_DIR)
-	rustc --out-dir=$(CARGO_OUT_DIR) $(CARGO_RUSTFLAGS) src/ears/lib.rs
+	rustc --out-dir=$(CARGO_OUT_DIR) $(CARGO_RUSTFLAGS) src/lib.rs
 
 docs:
 	mkdir -p doc
-	rustdoc -o doc src/ears/lib.rs
+	rustdoc -o doc src/lib.rs
 
 examples: ears
 	rustc -o bin/many_sounds -L ./lib src/examples/many_sounds/main.rs
