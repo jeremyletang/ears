@@ -32,8 +32,6 @@
 
 #[allow(dead_code)];
 
-extern crate extra;
-
 use std::{str, ptr};
 
 #[doc(hidden)]
