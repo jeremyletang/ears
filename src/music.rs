@@ -701,7 +701,6 @@ mod test {
         }
     }
 
-    // TODO fix this
     #[test]
     #[ignore]
     fn music_play_OK() -> () {
@@ -712,7 +711,6 @@ mod test {
         msc.stop();
     }
 
-    // TODO fix this
     #[test]
     #[ignore]
     fn music_pause_OK() -> () {
@@ -735,7 +733,6 @@ mod test {
     }
 
 
-    //TODO fix this
     #[test]
     #[ignore]
     fn music_is_playing_TRUE() -> () {
@@ -746,7 +743,6 @@ mod test {
         msc.stop();
     }
 
-    //TODO fix this
     #[test]
     #[ignore]
     fn music_is_playing_FALSE() -> () {
@@ -825,7 +821,8 @@ mod test {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
         msc.set_position([50., 150., 250.]);
-        assert_eq!(msc.get_position(), [50., 150., 250.]);
+        let res = msc.get_position();
+        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
     }
 
     #[test]
@@ -833,7 +830,8 @@ mod test {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
         msc.set_direction([50., 150., 250.]);
-        assert_eq!(msc.get_direction(), [50., 150., 250.]);
+        let res = msc.get_direction();
+        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
     }
 
     #[test]
@@ -856,7 +854,8 @@ mod test {
     fn music_set_attenuation() -> () {
         let mut msc = Music::new("shot.wav").expect("Cannot create Music");
 
-        msc.set_attenuation(70.);
-        assert_eq!(msc.get_attenuation(), 70.);
+        msc.set_attenuation(0.5f32);
+        println!("{}", &msc.get_attenuation());
+        assert_eq!(&msc.get_attenuation(), &0.5f32);
     }
 }

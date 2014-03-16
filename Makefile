@@ -37,6 +37,8 @@ examples: ears
 	rustc -o bin/simple_player -L ./lib src/examples/simple_player/main.rs
 	rustc -o bin/record -L ./lib src/examples/record/main.rs
 
+tests:
+	rustc --test -o bin/ears_tests src/lib.rs
 
 clean:
 	rm -rf lib

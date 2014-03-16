@@ -121,8 +121,8 @@ pub fn get_orientation() -> ([f32, ..3], [f32, ..3]) {
 
 #[cfg(test)]
 mod test {
-    use listener::{set_volume, set_position, set_orientation};
-    use listener::{get_volume, get_position, get_orientation};
+    use listener::{set_volume, set_position, set_orientation,
+                   get_volume, get_position, get_orientation};
 
     #[test]
     pub fn listener_set_volume() -> () {
@@ -132,8 +132,9 @@ mod test {
 
     #[test]
     pub fn listener_set_position() -> () {
-        set_position([50., 150., 234.]);
-        assert_eq!(get_position(), [50., 150., 234.]);
+        set_position([50f32, 150f32, 234f32]);
+        let res = get_position();
+        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 234f32])
     }
 
     #[test]
@@ -141,8 +142,8 @@ mod test {
         set_orientation([50., 150., 234.], [277., 125., 71.]);
         match get_orientation() {
             ([x1, y1, z1], [x2, y2, z2]) => {
-               assert_eq!([x1, y1, z1], [50., 150., 234.]);
-               assert_eq!([x2, y2, z2], [277., 125., 71.])
+               assert_eq!(&[x1, y1, z1], &[50f32, 150f32, 234f32]);
+               assert_eq!(&[x2, y2, z2], &[277f32, 125f32, 71f32])
             }
         }
     }

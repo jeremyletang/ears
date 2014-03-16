@@ -627,7 +627,7 @@ mod test {
     #[test]
     fn sound_create_OK() -> () {
         let snd = Sound::new("shot.wav");
-
+        println!("YOUHOU");
         match snd {
             Some(_) => {},
             None    => fail!()
@@ -832,16 +832,18 @@ mod test {
     fn sound_set_position_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_position([50., 150., 250.]);
-        assert_eq!(snd.get_position(), [50., 150., 250.]);
+        snd.set_position([50f32, 150f32, 250f32]);
+        let res = snd.get_position();
+        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
     }
 
     #[test]
     fn sound_set_direction_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_direction([50., 150., 250.]);
-        assert_eq!(snd.get_direction(), [50., 150., 250.]);
+        snd.set_direction([50f32, 150f32, 250f32]);
+        let res = snd.get_direction();
+        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
     }
 
 
@@ -883,8 +885,8 @@ mod test {
     fn sound_set_attenuation_OK() -> () {
         let mut snd = Sound::new("shot.wav").expect("Cannot create sound");
 
-        snd.set_attenuation(70.);
-        assert_eq!(snd.get_attenuation(), 70.);
+        snd.set_attenuation(0.5f32);
+        assert_eq!(snd.get_attenuation(), 0.5f32);
     }
 
     #[test]

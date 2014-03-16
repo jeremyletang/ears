@@ -174,11 +174,12 @@ pub mod al {
         i
     }
 
-    pub fn alSourcei(source : u32, param : i32, value : i32) -> (){
+    pub fn alSourcei(source : u32, param : i32, value : i32) -> () {
         unsafe { ffi::alSourcei(source, param, value); }
     }
 
-    pub fn alSourcef(source : u32, param : i32, value : f32) -> (){
+    pub fn alSourcef(source : u32, param : i32, value : f32) -> () {
+        println!("VALUE: {}", value);
         unsafe { ffi::alSourcef(source, param, value); }
     }
 

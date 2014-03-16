@@ -70,16 +70,15 @@ mod test {
     #[test]
     fn test_init_in_with_normal_init_OK() -> () {
         init();
-        assert_eq!(init_in(), Some(_))
+        assert!(init_in().is_some())
     }
 
     #[test]
     fn test_init_in_alone_OK() -> () {
-        assert_eq!(init_in(), Some(_))
+        assert!(init_in().is_some())
     }
 
     #[test]
-    #[should_fail]
     fn test_init_in_in_another_task_OK() -> () {
         init();
         spawn(proc() {
