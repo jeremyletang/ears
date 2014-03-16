@@ -13,6 +13,7 @@ env:
 script:
   - rustc --version
   - make
+  - make tests
   - cd bin
   - ./ears_tests
 after_script:

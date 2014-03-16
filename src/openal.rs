@@ -179,7 +179,6 @@ pub mod al {
     }
 
     pub fn alSourcef(source : u32, param : i32, value : f32) -> () {
-        println!("VALUE: {}", value);
         unsafe { ffi::alSourcef(source, param, value); }
     }
 
