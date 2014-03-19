@@ -31,16 +31,14 @@ use internal::OpenAlData;
 use audio_tags::{Tags, AudioTags, get_sound_tags};
 
 /**
- * The datas extracted from a sound file.
- *
  * Samples extracted from a file.
  *
- * SoundDatas are made to be share between several Sound and play in the same
+ * SoundDatas are made to be shared between several Sound and played in the same
  * time.
  *
  * # Example
  * ```
- * extern mod ears;
+ * extern crate ears;
  * use ears::{Sound, SoundData};
  *
  * fn main() -> () {

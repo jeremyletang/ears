@@ -36,6 +36,14 @@ use internal::OpenAlData;
  *
  * # Return
  * true if initialization is made with success, false otherwise
+ *
+ * # Example
+ * ```Rust
+ * match ears::init() {
+ *     true  => { do_stuff() },
+ *     false => fail!("ears init error")  
+ * } 
+ * ```
  */
 pub fn init() -> bool {
     match OpenAlData::check_al_context() {
@@ -49,6 +57,14 @@ pub fn init() -> bool {
  *
  * # Return
  * true if initialization is made with success, false otherwise
+ *
+ * # Example
+ * ```Rust
+ * match ears::init_in() {
+ *     Some(rc) => { do_stuff() },
+ *     None     => fail!("ears init input error")  
+ * } 
+ * ```
  */
 pub fn init_in() -> Option<RecordContext> {
     match OpenAlData::check_al_input_context() {

@@ -41,7 +41,7 @@ use audio_tags::{AudioTags, Tags};
  *
  * # Examples
  * ```Rust
- * extern mod ears;
+ * extern crate ears;
  * use ears::Sound;
  *
  * fn main() -> () {
@@ -75,6 +75,14 @@ impl Sound {
      * # Return
      * An Option with Some(Sound) if the Sound is created properly, or None if
      * un error has occured.
+     *
+     * # Example
+     * ```Rust
+     * let my_snd = match Sound::new("path/to/the/sound.ogg") {
+     *     Some(snd) => snd,
+     *     None      => fail!("Cannot load the sound from a file !")
+     * };
+     * ```
      */
     pub fn new(path : &str) -> Option<Sound> {
         check_openal_context!(None);
@@ -96,6 +104,22 @@ impl Sound {
      * # Return
      * An Option with Some(Sound) if the Sound is created properly, or None if
      * un error has occured.
+     *
+     * # Example
+     * ```Rust
+     * use ears::SoundData;
+     * use std::rc::Rc;
+     * use std::cell::RefCell;
+     *
+     * let snd_data = match SoundData::new("path/to/the/sound.ogg") {
+     *     Some(snd_data) => Rc::new(RefCell::new(snd_data)),
+     *     None           => fail!("Cannot create the sound data !")
+     * };
+     * let snd = match Sound::new_with_data(snd_data) {
+     *     Some(snd) => snd,
+     *     None      => fail!("Cannot create a sound using a sound data !")
+     * }
+     * ```
      */
     pub fn new_with_data(sound_data : Rc<RefCell<SoundData>>) -> Option<Sound> {
         check_openal_context!(None);
@@ -127,6 +151,12 @@ impl Sound {
      *
      * # Return
      * The SoundData associated to this Sound.
+     *
+     * # Example
+     * ```Rust
+     * let my_snd = Sound::new("path/to/the/sound.ogg").unwrap();
+     * let snd_data = my_snd.get_datas();
+     * ```
      */
     pub fn get_datas(&self) -> Rc<RefCell<SoundData>> {
         self.sound_data.clone()
@@ -140,8 +170,15 @@ impl Sound {
      * # Argument
      * `sound_data` - The new sound_data
      *
+     * # Example
+     * ```Rust
+     * let my_snd1 = Sound::new("path/to/the/sound.ogg").unwrap();
+     * let my_snd2 = Sound::new("other/path/to/the/sound.ogg").unwrap();
+     * let snd1_data = my_snd1.get_datas(); 
+     * my_snd2.set_datas(snd1_data);
+     * ```
      */
-    pub fn set_datas(&mut self, sound_data : Rc<RefCell<SoundData>>) -> () {
+    pub fn set_datas(&mut self, sound_data : Rc<RefCell<SoundData>>) {
         check_openal_context!(());
 
         if self.is_playing() {
@@ -172,7 +209,15 @@ impl AudioTags for Sound {
 }
 
 impl AudioController for Sound {
-    /// Play or resume the Sound.
+    /**
+     * Play or resume the Sound.
+     * 
+     * # Example
+     * ```Rust
+     * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
+     * snd.play();
+     * ```
+     */
     fn play(&mut self) -> () {
         check_openal_context!(());
 
@@ -184,7 +229,17 @@ impl AudioController for Sound {
         }
     }
 
-     /// Pause the Sound.
+     /**
+      * Pause the Sound.
+      *
+      * # Example
+      * ```Rust
+      * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
+      * snd.play();
+      * snd.pause();
+      * snd.play(); // the sound restart at the moment of the pause 
+      * ```
+      */
     fn pause(&mut self) -> () {
         check_openal_context!(());
 
@@ -193,6 +248,14 @@ impl AudioController for Sound {
 
     /**
      * Stop the Sound.
+     *
+     * # Example
+     * ```Rust
+     * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
+     * snd.play();
+     * snd.stop();
+     * snd.play(); // the sound restart at the begining
+     * ```
      */
     fn stop(&mut self) -> () {
         check_openal_context!(());
@@ -205,6 +268,17 @@ impl AudioController for Sound {
      *
      * # Return
      * True if the Sound is playing, false otherwise.
+     * 
+     * # Example 
+     * ```Rust
+     * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
+     * snd.play();
+     * if snd.is_playing() {
+     *     println!("Sound is Playing !");
+     * } else {
+     *     println!("Sound is Pause or Stopped !");
+     * }
+     * ```
      */
     fn is_playing(&self) -> bool {
         match self.get_state() {
@@ -218,6 +292,17 @@ impl AudioController for Sound {
      *
      * # Return
      * The state of the sound as a variant of the enum State
+     *
+     * # Example 
+     * ```Rust
+     * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
+     * match snd.get_state() {
+     *     ears::Initial => println!("Sound has never been played"),
+     *     ears::Playing => println!("Sound is playing !"),
+     *     ears::Paused  => println!("Sound is paused !"),
+     *     ears::Stopped => println!("Sound is stopped !")
+     * }
+     * ```
      */
     fn get_state(&self) -> State {
         check_openal_context!(Initial);

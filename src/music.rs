@@ -45,7 +45,7 @@ use audio_tags::{Tags, AudioTags, get_sound_tags};
  *
  * # Examples
  * ```
- * extern mod ears;
+ * extern crate ears;
  * use ears::Music;
  *
  * fn main() -> () {
