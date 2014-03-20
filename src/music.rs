@@ -25,7 +25,7 @@ use std::io::timer::sleep;
 use std::mem;
 use std::task;
 use std::libc::c_void;
-use std::vec_ng::Vec;
+use std::vec::Vec;
 
 use internal::OpenAlData;
 use openal::{ffi, al};

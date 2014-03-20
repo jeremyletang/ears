@@ -23,7 +23,7 @@
 
 use std::mem;
 use std::libc::c_void;
-use std::vec_ng::Vec;
+use std::vec::Vec;
 
 use openal::{ffi, al};
 use sndfile::{SndFile, SndInfo, Read};

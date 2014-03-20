@@ -26,7 +26,7 @@
 
 use std::{task, cast};
 use std::comm::Data;
-use std::vec_ng::Vec;
+use std::vec::Vec;
 
 use record_context::RecordContext;
 use record_context;
