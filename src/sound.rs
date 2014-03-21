@@ -130,9 +130,9 @@ impl Sound {
         // set the buffer
         al::alSourcei(source_id,
                       ffi::AL_BUFFER,
-                      (*sound_data).with_mut(|sd| {
-                        sound_data::get_buffer(sd)
-                      }) as i32);
+                      sound_data::get_buffer((*sound_data)
+                                             .borrow_mut()
+                                             .get()) as i32);
 
         // Check if there is OpenAL internal error
         match al::openal_has_error() {
@@ -188,9 +188,9 @@ impl Sound {
         // set the buffer
         al::alSourcei(self.al_source,
                       ffi::AL_BUFFER,
-                      (*sound_data).with(|sd| {
-                        sound_data::get_buffer(sd)
-                      }) as i32);
+                        sound_data::get_buffer((*sound_data)
+                                               .borrow()
+                                               .get()) as i32);
 
         self.sound_data = sound_data
     }
@@ -204,7 +204,7 @@ impl AudioTags for Sound {
      * A borrowed pointer to the internal struct SoundTags
      */
     fn get_tags(&self) -> Tags {
-        (*self.sound_data).with(|sd| sd.get_tags().clone())
+        (*self.sound_data).borrow().get_tags().clone()
     }
 }
 
