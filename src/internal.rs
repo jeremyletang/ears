@@ -26,7 +26,7 @@
 * to be sure that the context is created.
 */
 
-#[macro_escape];
+#![macro_escape]
 
 use std::{local_data, ptr};
 use openal::ffi;

@@ -30,7 +30,7 @@
 * such as file endian-ness and data format
 */
 
-#[allow(dead_code)];
+#![allow(dead_code)]
 
 use std::{str, ptr};
 

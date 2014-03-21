@@ -89,15 +89,14 @@ use ears::Music;
 ```
 */
 
-#[feature(macro_rules)];
-
-#[crate_id = "ears#0.3"];
-#[desc = "Easy Api in Rust for Sounds"];
-#[license = "MIT"];
-#[crate_type = "dylib"];
-#[crate_type = "rlib"];
-#[warn(missing_doc)];
-#[allow(dead_code)];
+#![crate_id = "ears#0.3"]
+#![desc = "Easy Api in Rust for Sounds"]
+#![license = "MIT"]
+#![crate_type = "dylib"]
+#![crate_type = "rlib"]
+#![warn(missing_doc)]
+#![allow(dead_code)]
+#![feature(macro_rules)]
 
 // Reexport public API
 pub use einit::{init, init_in};

@@ -22,7 +22,7 @@
 //! Record audio
 
 
-#[allow(missing_doc)];
+#![allow(missing_doc)]
 
 use std::{task, cast};
 use std::comm::Data;

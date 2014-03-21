@@ -24,7 +24,7 @@
 * Bind only functions which are needed by lib sailor
 */
 
-#[allow(dead_code)];
+#![allow(dead_code)]
 
 
 #[link(name = "openal")]

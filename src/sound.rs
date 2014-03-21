@@ -174,7 +174,7 @@ impl Sound {
      * ```Rust
      * let my_snd1 = Sound::new("path/to/the/sound.ogg").unwrap();
      * let my_snd2 = Sound::new("other/path/to/the/sound.ogg").unwrap();
-     * let snd1_data = my_snd1.get_datas(); 
+     * let snd1_data = my_snd1.get_datas();
      * my_snd2.set_datas(snd1_data);
      * ```
      */
@@ -211,7 +211,7 @@ impl AudioTags for Sound {
 impl AudioController for Sound {
     /**
      * Play or resume the Sound.
-     * 
+     *
      * # Example
      * ```Rust
      * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
@@ -237,7 +237,7 @@ impl AudioController for Sound {
       * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
       * snd.play();
       * snd.pause();
-      * snd.play(); // the sound restart at the moment of the pause 
+      * snd.play(); // the sound restart at the moment of the pause
       * ```
       */
     fn pause(&mut self) -> () {
@@ -268,8 +268,8 @@ impl AudioController for Sound {
      *
      * # Return
      * True if the Sound is playing, false otherwise.
-     * 
-     * # Example 
+     *
+     * # Example
      * ```Rust
      * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
      * snd.play();
@@ -293,7 +293,7 @@ impl AudioController for Sound {
      * # Return
      * The state of the sound as a variant of the enum State
      *
-     * # Example 
+     * # Example
      * ```Rust
      * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
      * match snd.get_state() {
