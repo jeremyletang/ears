@@ -41,8 +41,8 @@ use internal::OpenAlData;
  * ```Rust
  * match ears::init() {
  *     true  => { do_stuff() },
- *     false => fail!("ears init error")  
- * } 
+ *     false => fail!("ears init error")
+ * }
  * ```
  */
 pub fn init() -> bool {
@@ -62,8 +62,8 @@ pub fn init() -> bool {
  * ```Rust
  * match ears::init_in() {
  *     Some(rc) => { do_stuff() },
- *     None     => fail!("ears init input error")  
- * } 
+ *     None     => fail!("ears init input error")
+ * }
  * ```
  */
 pub fn init_in() -> Option<RecordContext> {
