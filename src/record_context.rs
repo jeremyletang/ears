@@ -20,6 +20,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #![warn(visible_private_types)]
+#![allow(raw_pointer_deriving)]
 
 use openal::ffi;
 

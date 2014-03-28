@@ -27,6 +27,7 @@
 */
 
 #![macro_escape]
+#![allow(raw_pointer_deriving)]
 
 use std::{local_data, ptr};
 use openal::ffi;
