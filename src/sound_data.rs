@@ -189,7 +189,7 @@ mod test {
 
     #[test]
     fn sounddata_create_OK() -> () {
-        #[allow(unused_variable)];
+        #![allow(unused_variable)]
         let snd_data = SoundData::new("shot.wav").unwrap();
 
     }
@@ -197,7 +197,7 @@ mod test {
     #[test]
     #[should_fail]
     fn sounddata_create_FAIL() -> () {
-        #[allow(unused_variable)];
+        #![allow(unused_variable)]
         let snd_data = SoundData::new("toto.wav").unwrap();
     }
 }
