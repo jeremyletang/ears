@@ -66,7 +66,7 @@ pub trait AudioController {
      * # Argument
      * * `volume` - The volume of the Audio Source, should be between 0. and 1.
      */
-    fn set_volume(&mut self, volume : f32) -> ();
+    fn set_volume(&mut self, volume: f32) -> ();
 
     /**
      * Get the volume of the Audio Source.
@@ -86,7 +86,7 @@ pub trait AudioController {
      * * `min_volume` - The new minimal volume of the Audio Source should be
      * between 0. and 1.
      */
-    fn set_min_volume(&mut self, min_volume : f32) -> ();
+    fn set_min_volume(&mut self, min_volume: f32) -> ();
 
     /**
      * Get the minimal volume of the Audio Source.
@@ -106,7 +106,7 @@ pub trait AudioController {
      * * `max_volume` - The new maximal volume of the Audio Source should be
      * between 0. and 1.
      */
-    fn set_max_volume(&mut self, max_volume : f32) -> ();
+    fn set_max_volume(&mut self, max_volume: f32) -> ();
 
     /**
      * Get the maximal volume of the Audio Source.
@@ -124,7 +124,7 @@ pub trait AudioController {
      * # Arguments
      * `looping` - The new looping state.
      */
-    fn set_looping(&mut self, looping : bool) -> ();
+    fn set_looping(&mut self, looping: bool) -> ();
 
     /**
      * Check if the Audio Source is looping or not
@@ -145,7 +145,7 @@ pub trait AudioController {
      * * `new_pitch` - The new pitch of the Audio Source in the range
      * [0.5 - 2.0]
      */
-    fn set_pitch(&mut self, pitch : f32) -> ();
+    fn set_pitch(&mut self, pitch: f32) -> ();
 
     /**
      * Set the pitch of the source.
@@ -164,7 +164,7 @@ pub trait AudioController {
      * `relative` - True to set Audio Source relative to the
      * listener false to set the Audio Source position absolute.
      */
-    fn set_relative(&mut self, relative : bool) -> ();
+    fn set_relative(&mut self, relative: bool) -> ();
 
     /**
      * Is the Audio Source relative to the listener or not ?
@@ -189,7 +189,7 @@ pub trait AudioController {
      * * `position` - A three dimensional vector of f32 containing the
      * position of the listener [x, y, z].
      */
-    fn set_position(&mut self, position : [f32, ..3]) -> ();
+    fn set_position(&mut self, position: [f32, ..3]) -> ();
 
     /**
      * Get the position of the Audio Source in three dimensional space.
@@ -210,7 +210,7 @@ pub trait AudioController {
      * # Argument
      * `direction` - The new direction of the Audio Source.
      */
-    fn set_direction(&mut self, direction : [f32, ..3]) -> ();
+    fn set_direction(&mut self, direction: [f32, ..3]) -> ();
 
     /**
      * Get the direction of the Audio Source.
@@ -232,7 +232,7 @@ pub trait AudioController {
      * # Argument
      * `max_distance` - The new maximum distance in the range [0., +inf]
      */
-    fn set_max_distance(&mut self, max_distance : f32) -> ();
+    fn set_max_distance(&mut self, max_distance: f32) -> ();
 
     /**
      * Get the maximum distance of the Audio Source.
@@ -254,7 +254,7 @@ pub trait AudioController {
      * # Argument
      * * `ref_distance` - The new reference distance of the Audio Source.
      */
-    fn set_reference_distance(&mut self, ref_distance : f32) -> ();
+    fn set_reference_distance(&mut self, ref_distance: f32) -> ();
 
     /**
      * Get the reference distance of the Audio Source.
@@ -276,7 +276,7 @@ pub trait AudioController {
      * `attenuation` - The new attenuation for the Audio Source in the
      * range [0., 1.].
      */
-    fn set_attenuation(&mut self, attenuation : f32) -> ();
+    fn set_attenuation(&mut self, attenuation: f32) -> ();
 
     /**
      * Get the attenuation of a Sound.

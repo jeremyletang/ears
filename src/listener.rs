@@ -40,7 +40,7 @@ use openal::{ffi, al};
  * listener::set_volume(0.7f32);
  * ```
  */
-pub fn set_volume(volume : f32) -> () {
+pub fn set_volume(volume: f32) -> () {
     check_openal_context!(());
     al::alListenerf(ffi::AL_GAIN, volume);
 }
@@ -86,7 +86,7 @@ pub fn get_volume() -> f32 {
  * # use ears::listener;
  * listener::set_position([45, 90, 35]);
  */
-pub fn set_position(position : [f32, ..3]) -> () {
+pub fn set_position(position: [f32, ..3]) -> () {
     check_openal_context!(());
     al::alListenerfv(ffi::AL_POSITION, &position[0]);
 }
@@ -108,7 +108,7 @@ pub fn set_position(position : [f32, ..3]) -> () {
 pub fn get_position() -> [f32, ..3] {
     check_openal_context!([0., ..3]);
 
-    let mut position : [f32, ..3] = [0., ..3];
+    let mut position: [f32, ..3] = [0., ..3];
     al::alGetListenerfv(ffi::AL_POSITION, &mut position[0]);
     position
 }
@@ -128,9 +128,9 @@ pub fn get_position() -> [f32, ..3] {
  * listener::set_orientation([0.3f32, -0.4f32, 0.9f32], [0.7f32, 0.3f32, 0.8f32]);
  * ```
  */
-pub fn set_orientation(orientation_at : [f32, ..3], orientation_up : [f32, ..3]) {
+pub fn set_orientation(orientation_at: [f32, ..3], orientation_up : [f32, ..3]) {
     check_openal_context!(());
-    let orientation : [f32, ..6] = [orientation_at[0], orientation_at[1],
+    let orientation: [f32, ..6] = [orientation_at[0], orientation_at[1],
                                     orientation_at[2], orientation_up[0],
                                     orientation_up[1], orientation_up[2]];
     al::alListenerfv(ffi::AL_ORIENTATION, &orientation[0]);
@@ -152,7 +152,7 @@ pub fn set_orientation(orientation_at : [f32, ..3], orientation_up : [f32, ..3])
  */
 pub fn get_orientation() -> ([f32, ..3], [f32, ..3]) {
     check_openal_context!(([0., ..3], [0., ..3]));
-    let mut orientation : [f32, ..6] = [0., ..6];
+    let mut orientation: [f32, ..6] = [0., ..6];
     al::alGetListenerfv(ffi::AL_ORIENTATION, &mut orientation[0]);
     ([orientation[0], orientation[1], orientation[2]],
      [orientation[3], orientation[4], orientation[5]])

@@ -32,54 +32,54 @@ use sndfile::{SndFile, Title, Copyright, Software, Artist, Comment, Date,
 #[deriving(Clone, Show, Eq)]
 pub struct Tags {
     /// The title of the sound as a ~str
-    pub title       : ~str,
+    pub title:       ~str,
     /// The Copyright of the sound as a ~str
-    pub copyright   : ~str,
+    pub copyright:   ~str,
     /// The name of the software used to create the sound as a ~str
-    pub software    : ~str,
+    pub software:    ~str,
     /// The name of the artist of the sound as a ~str
-    pub artist      : ~str,
+    pub artist:      ~str,
     /// A comment as a ~str
-    pub comment     : ~str,
+    pub comment:     ~str,
     /// The creation date of the sound as a ~str
-    pub date        : ~str,
+    pub date:        ~str,
     /// The name of the album where the sound come from as a ~str
-    pub album       : ~str,
+    pub album:       ~str,
     /// The license of the sound as a ~str
-    pub license     : ~str,
+    pub license:     ~str,
     /// The tracknumber of the sound as a ~str
-    pub trackNumber : ~str,
+    pub trackNumber: ~str,
     /// The genre of the sound as a ~str
-    pub genre       : ~str
+    pub genre:       ~str
 }
 
 pub fn empty() -> Tags {
     Tags {
-        title       : ~"",
-        copyright   : ~"",
-        software    : ~"",
-        artist      : ~"",
-        comment     : ~"",
-        date        : ~"",
-        album       : ~"",
-        license     : ~"",
-        trackNumber : ~"",
-        genre       : ~""
+        title:       ~"",
+        copyright:   ~"",
+        software:    ~"",
+        artist:      ~"",
+        comment:     ~"",
+        date:        ~"",
+        album:       ~"",
+        license:     ~"",
+        trackNumber: ~"",
+        genre:       ~""
     }
 }
 
 pub fn get_sound_tags(file : &SndFile) -> Tags {
     Tags {
-        title       : file.get_string(Title).unwrap_or(~""),
-        copyright   : file.get_string(Copyright).unwrap_or(~""),
-        software    : file.get_string(Software).unwrap_or(~""),
-        artist      : file.get_string(Artist).unwrap_or(~""),
-        comment     : file.get_string(Comment).unwrap_or(~""),
-        date        : file.get_string(Date).unwrap_or(~""),
-        album       : file.get_string(Album).unwrap_or(~""),
-        license     : file.get_string(License).unwrap_or(~""),
-        trackNumber : file.get_string(TrackNumber).unwrap_or(~""),
-        genre       : file.get_string(Genre).unwrap_or(~"")
+        title:       file.get_string(Title).unwrap_or(~""),
+        copyright:   file.get_string(Copyright).unwrap_or(~""),
+        software:    file.get_string(Software).unwrap_or(~""),
+        artist:      file.get_string(Artist).unwrap_or(~""),
+        comment:     file.get_string(Comment).unwrap_or(~""),
+        date:        file.get_string(Date).unwrap_or(~""),
+        album:       file.get_string(Album).unwrap_or(~""),
+        license:     file.get_string(License).unwrap_or(~""),
+        trackNumber: file.get_string(TrackNumber).unwrap_or(~""),
+        genre:       file.get_string(Genre).unwrap_or(~"")
     }
 }
 

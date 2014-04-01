@@ -59,19 +59,19 @@ use audio_tags::{Tags, AudioTags, get_sound_tags};
  */
 pub struct Music {
     /// The internal OpenAL source identifier
-    al_source      : u32,
+    al_source:      u32,
     /// The internal OpenAL buffers
-    al_buffers     : [u32, ..2],
+    al_buffers:     [u32, ..2],
     /// The file open with libmscfile
-    file           : Option<~SndFile>,
+    file:           Option<~SndFile>,
     /// Information of the file
-    file_infos     : SndInfo,
+    file_infos:     SndInfo,
     /// Quantity of sample to read each time
-    sample_to_read : i32,
+    sample_to_read: i32,
     /// Format of the sample
-    sample_format  : i32,
+    sample_format:  i32,
     /// Audio tags
-    sound_tags     : Tags
+    sound_tags:     Tags
 }
 
 impl Music {
@@ -305,7 +305,7 @@ impl AudioController for Music {
      * # Argument
      * * `volume` - The volume of the Music, should be between 0. and 1.
      */
-    fn set_volume(&mut self, volume : f32) -> () {
+    fn set_volume(&mut self, volume: f32) -> () {
         check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_GAIN, volume);
@@ -335,7 +335,7 @@ impl AudioController for Music {
      * * `min_volume` - The new minimal volume of the Music should be
      * between 0. and 1.
      */
-    fn set_min_volume(&mut self, min_volume : f32) -> () {
+    fn set_min_volume(&mut self, min_volume: f32) -> () {
         check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_MIN_GAIN, min_volume);
@@ -365,7 +365,7 @@ impl AudioController for Music {
      * * `max_volume` - The new maximal volume of the Music should be
      * between 0. and 1.
      */
-    fn set_max_volume(&mut self, max_volume : f32) -> () {
+    fn set_max_volume(&mut self, max_volume: f32) -> () {
         check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_MAX_GAIN, max_volume);
@@ -393,7 +393,7 @@ impl AudioController for Music {
      * # Arguments
      * `looping` - The new looping state.
      */
-    fn set_looping(&mut self, looping : bool) -> () {
+    fn set_looping(&mut self, looping: bool) -> () {
         check_openal_context!(());
 
         match looping {
@@ -434,7 +434,7 @@ impl AudioController for Music {
      * # Argument
      * * `new_pitch` - The new pitch of the Music in the range [0.5 - 2.0]
      */
-    fn set_pitch(&mut self, pitch : f32) -> () {
+    fn set_pitch(&mut self, pitch: f32) -> () {
         check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_PITCH, pitch)
@@ -463,7 +463,7 @@ impl AudioController for Music {
      * `relative` - True to set Music relative to the listener false to set the
      * Music position absolute.
      */
-    fn set_relative(&mut self, relative : bool) -> () {
+    fn set_relative(&mut self, relative: bool) -> () {
         check_openal_context!(());
 
         match relative {
@@ -509,7 +509,7 @@ impl AudioController for Music {
      * * `position` - A three dimensional vector of f32 containing the position
      * of the listener [x, y, z].
      */
-    fn set_position(&mut self, position : [f32, ..3]) -> () {
+    fn set_position(&mut self, position: [f32, ..3]) -> () {
         check_openal_context!(());
 
         al::alSourcefv(self.al_source, ffi::AL_POSITION, &position[0]);
@@ -540,7 +540,7 @@ impl AudioController for Music {
      * # Argument
      * `direction` - The new direction of the Music.
      */
-    fn set_direction(&mut self, direction : [f32, ..3]) -> () {
+    fn set_direction(&mut self, direction: [f32, ..3]) -> () {
         check_openal_context!(());
 
         al::alSourcefv(self.al_source, ffi::AL_DIRECTION, &direction[0]);
@@ -572,7 +572,7 @@ impl AudioController for Music {
      * # Argument
      * `max_distance` - The new maximum distance in the range [0., +inf]
      */
-    fn set_max_distance(&mut self, max_distance : f32) -> () {
+    fn set_max_distance(&mut self, max_distance: f32) -> () {
         check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_MAX_DISTANCE, max_distance);
@@ -604,7 +604,7 @@ impl AudioController for Music {
      * # Argument
      * * `ref_distance` - The new reference distance of the Music.
      */
-    fn set_reference_distance(&mut self, ref_distance : f32) -> () {
+    fn set_reference_distance(&mut self, ref_distance: f32) -> () {
         check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_REFERENCE_DISTANCE, ref_distance);
@@ -637,7 +637,7 @@ impl AudioController for Music {
      * # Arguments
      * `attenuation` - The new attenuation for the Music in the range [0., 1.].
      */
-    fn set_attenuation(&mut self, attenuation : f32) -> () {
+    fn set_attenuation(&mut self, attenuation: f32) -> () {
         check_openal_context!(());
 
         al::alSourcef(self.al_source, ffi::AL_ROLLOFF_FACTOR, attenuation);
@@ -662,9 +662,7 @@ impl AudioController for Music {
 
 
 impl Drop for Music {
-    /**
-     * Destroy all the resources of the Music.
-     */
+    /// Destroy all the resources of the Music.
     fn drop(&mut self) -> () {
         unsafe {
             al::alSourcei(self.al_source, ffi::AL_BUFFER, 0);

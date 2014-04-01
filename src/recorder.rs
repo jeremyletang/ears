@@ -21,7 +21,6 @@
 
 //! Record audio
 
-
 #![allow(missing_doc)]
 
 use std::{task, cast};

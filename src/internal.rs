@@ -125,7 +125,8 @@ impl OpenAlData {
                         }
                     }
                 }   ,
-                None    => Err(~"Error: you must request the input context, in the task where you initialize ears.")
+                None    => Err(~"Error: you must request the input context, \
+                               in the task where you initialize ears.")
             }
         })
     }

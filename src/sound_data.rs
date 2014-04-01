@@ -61,13 +61,13 @@ use audio_tags::{Tags, AudioTags, get_sound_tags};
  */
 pub struct SoundData {
     /// The SoundTags who contains all the information of the sound
-    sound_tags     : Tags,
+    sound_tags: Tags,
     /// The sndfile samples information
-    snd_info       : SndInfo,
+    snd_info:   SndInfo,
     /// The total samples count of the Sound
-    nb_sample      : i64,
+    nb_sample:  i64,
     /// The OpenAl internal identifier for the buffer
-    al_buffer      : u32
+    al_buffer:  u32
 }
 
 impl SoundData {
@@ -85,7 +85,7 @@ impl SoundData {
      * An Option with Some(SoundData) if the SoundData is create, or None if
      * an error has occured.
      */
-    pub fn new(path : &str) -> Option<SoundData> {
+    pub fn new(path: &str) -> Option<SoundData> {
         check_openal_context!(None);
 
         let mut file;
@@ -172,9 +172,7 @@ impl AudioTags for SoundData {
 }
 
 impl Drop for SoundData {
-    /**
-     * Destroy all the resources attached to the SoundData.
-     */
+    /// Destroy all the resources attached to the SoundData
     fn drop(&mut self) -> () {
         unsafe {
             ffi::alDeleteBuffers(1, &mut self.al_buffer);
