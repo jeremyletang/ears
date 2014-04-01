@@ -25,19 +25,13 @@ use states::State;
 
 /// The functionnality that an Audio Source should provide.
 pub trait AudioController {
-    /**
-     * Play or resume the Audio Source.
-     */
+    /// Play or resume the Audio Source.
     fn play(&mut self) -> ();
 
-    /**
-     * Pause the Audio Source.
-     */
+    /// Pause the Audio Source.
     fn pause(&mut self) -> ();
 
-    /**
-     * Stop the Audio Source.
-     */
+    /// Stop the Audio Source.
     fn stop(&mut self) -> ();
 
     /**

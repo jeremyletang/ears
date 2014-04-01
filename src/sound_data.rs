@@ -155,6 +155,7 @@ pub fn get_sndinfo<'r>(s_data: &'r SoundData) -> &'r SndInfo {
  * # Return
  * The OpenAL internal identifier for the samples buffer of the sound.
  */
+ #[doc(hidden)]
 pub fn get_buffer(s_data: &SoundData) -> u32 {
     s_data.al_buffer
 }
