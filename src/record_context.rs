@@ -27,7 +27,7 @@ use openal::ffi;
 /// The context needed to initialize a new Recorder
 #[deriving(Clone, Eq, Show)]
 pub struct RecordContext {
-    priv capt_device: *ffi::ALCdevice
+    capt_device: *ffi::ALCdevice
 }
 
 pub fn new(capt_device: *ffi::ALCdevice) -> RecordContext {

@@ -32,25 +32,25 @@ use sndfile::{SndFile, Title, Copyright, Software, Artist, Comment, Date,
 #[deriving(Clone, Show, Eq)]
 pub struct Tags {
     /// The title of the sound as a ~str
-    title       : ~str,
+    pub title       : ~str,
     /// The Copyright of the sound as a ~str
-    copyright   : ~str,
+    pub copyright   : ~str,
     /// The name of the software used to create the sound as a ~str
-    software    : ~str,
+    pub software    : ~str,
     /// The name of the artist of the sound as a ~str
-    artist      : ~str,
+    pub artist      : ~str,
     /// A comment as a ~str
-    comment     : ~str,
+    pub comment     : ~str,
     /// The creation date of the sound as a ~str
-    date        : ~str,
+    pub date        : ~str,
     /// The name of the album where the sound come from as a ~str
-    album       : ~str,
+    pub album       : ~str,
     /// The license of the sound as a ~str
-    license     : ~str,
+    pub license     : ~str,
     /// The tracknumber of the sound as a ~str
-    trackNumber : ~str,
+    pub trackNumber : ~str,
     /// The genre of the sound as a ~str
-    genre       : ~str
+    pub genre       : ~str
 }
 
 pub fn empty() -> Tags {

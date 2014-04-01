@@ -51,12 +51,12 @@ mod ffi;
 /// function and the library when opening a file for reading or writing.
 #[deriving(Clone)]
 pub struct SndInfo {
-    frames : i64,
-    samplerate : i32,
-    channels : i32,
-    format : i32,
-    sections : i32,
-    seekable : i32
+    pub frames : i64,
+    pub samplerate : i32,
+    pub channels : i32,
+    pub format : i32,
+    pub sections : i32,
+    pub seekable : i32
 }
 
 /// Modes availables for the open function.
@@ -227,8 +227,8 @@ impl BitOr<FormatType, i32> for FormatType {
 
 /// SndFile object, used to load/store sound from a file path or an fd.
 pub struct SndFile {
-    priv handle : *ffi::SNDFILE,
-    priv info : ~SndInfo
+    handle : *ffi::SNDFILE,
+    info : ~SndInfo
 }
 
 impl Clone for SndFile {

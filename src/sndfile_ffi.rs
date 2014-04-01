@@ -122,9 +122,9 @@ pub static SF_FORMAT_ENDMASK : FORMAT_TYPE      = 0x30000000;
 pub type SNDFILE = c_void;
 
 pub struct FormatInfo {
-    format : i32,
-    name : *c_char,
-    extension : *c_char
+    pub format : i32,
+    pub name : *c_char,
+    pub extension : *c_char
 }
 
 extern "C" {

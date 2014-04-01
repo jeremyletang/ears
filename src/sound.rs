@@ -58,9 +58,9 @@ use audio_tags::{AudioTags, Tags};
  */
 pub struct Sound {
     /// The internal OpenAl source identifier
-    priv al_source  : u32,
+    al_source  : u32,
     /// The SoundData associated to the Sound.
-    priv sound_data : Rc<RefCell<SoundData>>
+    sound_data : Rc<RefCell<SoundData>>
 }
 
 impl Sound {
@@ -78,7 +78,7 @@ impl Sound {
      *
      * # Example
      * ```Rust
-     * let my_snd = match Sound::new("path/to/the/sound.ogg") {
+     * let snd = match Sound::new("path/to/the/sound.ogg") {
      *     Some(snd) => snd,
      *     None      => fail!("Cannot load the sound from a file !")
      * };
@@ -153,8 +153,8 @@ impl Sound {
      *
      * # Example
      * ```Rust
-     * let my_snd = Sound::new("path/to/the/sound.ogg").unwrap();
-     * let snd_data = my_snd.get_datas();
+     * let snd = Sound::new("path/to/the/sound.ogg").unwrap();
+     * let snd_data = snd.get_datas();
      * ```
      */
     pub fn get_datas(&self) -> Rc<RefCell<SoundData>> {
@@ -171,10 +171,10 @@ impl Sound {
      *
      * # Example
      * ```Rust
-     * let my_snd1 = Sound::new("path/to/the/sound.ogg").unwrap();
-     * let my_snd2 = Sound::new("other/path/to/the/sound.ogg").unwrap();
-     * let snd1_data = my_snd1.get_datas();
-     * my_snd2.set_datas(snd1_data);
+     * let snd1 = Sound::new("path/to/the/sound.ogg").unwrap();
+     * let snd2 = Sound::new("other/path/to/the/sound.ogg").unwrap();
+     * let snd_data = snd1.get_datas();
+     * snd2.set_datas(snd_data);
      * ```
      */
     pub fn set_datas(&mut self, sound_data : Rc<RefCell<SoundData>>) {

@@ -37,7 +37,7 @@ use openal::{ffi, al};
  * # Example
  * ```Rust
  * # use ears::listener;
- * listener::set_volume(0.7f32); 
+ * listener::set_volume(0.7f32);
  * ```
  */
 pub fn set_volume(volume : f32) -> () {
@@ -80,7 +80,7 @@ pub fn get_volume() -> f32 {
  * # Argument
  * * `position` - A three dimensional vector of f32 containing the position
  * of the listener [x, y, z].
- * 
+ *
  * # Example
  * ```Rust
  * # use ears::listener;

@@ -65,10 +65,10 @@ use sndfile::{SndInfo, SndFile, FormatWav, FormatPcm16, Write};
  * ```
  */
 pub struct Recorder {
-    priv ctxt: RecordContext,
-    priv stop_sender: Option<Sender<bool>>,
-    priv data_receiver: Option<Receiver<Vec<i16>>>,
-    priv samples: Vec<i16>
+    ctxt: RecordContext,
+    stop_sender: Option<Sender<bool>>,
+    data_receiver: Option<Receiver<Vec<i16>>>,
+    samples: Vec<i16>
 }
 
 impl Recorder {

@@ -59,19 +59,19 @@ use audio_tags::{Tags, AudioTags, get_sound_tags};
  */
 pub struct Music {
     /// The internal OpenAL source identifier
-    priv al_source      : u32,
+    al_source      : u32,
     /// The internal OpenAL buffers
-    priv al_buffers     : [u32, ..2],
+    al_buffers     : [u32, ..2],
     /// The file open with libmscfile
-    priv file           : Option<~SndFile>,
+    file           : Option<~SndFile>,
     /// Information of the file
-    priv file_infos     : SndInfo,
+    file_infos     : SndInfo,
     /// Quantity of sample to read each time
-    priv sample_to_read : i32,
+    sample_to_read : i32,
     /// Format of the sample
-    priv sample_format  : i32,
+    sample_format  : i32,
     /// Audio tags
-    priv sound_tags     : Tags
+    sound_tags     : Tags
 }
 
 impl Music {
@@ -84,7 +84,7 @@ impl Music {
      * # Return
      * An Option containing Some(Music) on success, None otherwise
      */
-    pub fn new(path : &str) -> Option<Music> {
+    pub fn new(path: &str) -> Option<Music> {
         // Check that OpenAL is launched
         check_openal_context!(None);
         // Retrieve File and Music datas

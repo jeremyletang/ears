@@ -38,9 +38,9 @@ static al_context: local_data::Key<~OpenAlData> = &local_data::Key;
 
 #[deriving(Clone)]
 pub struct OpenAlData {
-    priv al_context: *ffi::ALCcontext,
-    priv al_device: *ffi::ALCdevice,
-    priv al_capt_device:  *ffi::ALCdevice
+    al_context: *ffi::ALCcontext,
+    al_device: *ffi::ALCdevice,
+    al_capt_device:  *ffi::ALCdevice
 }
 
 impl OpenAlData {

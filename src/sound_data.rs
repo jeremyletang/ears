@@ -61,13 +61,13 @@ use audio_tags::{Tags, AudioTags, get_sound_tags};
  */
 pub struct SoundData {
     /// The SoundTags who contains all the information of the sound
-    priv sound_tags     : Tags,
+    sound_tags     : Tags,
     /// The sndfile samples information
-    priv snd_info       : SndInfo,
+    snd_info       : SndInfo,
     /// The total samples count of the Sound
-    priv nb_sample      : i64,
+    nb_sample      : i64,
     /// The OpenAl internal identifier for the buffer
-    priv al_buffer      : u32
+    al_buffer      : u32
 }
 
 impl SoundData {
