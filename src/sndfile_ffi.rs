@@ -22,7 +22,7 @@
 #![allow(dead_code, non_camel_case_types)]
 
 use super::{SndInfo, Error};
-use std::libc::{c_char, c_void};
+use libc::{c_char, c_void};
 
 pub type SF_MODE = i32;
 pub static SFM_READ : SF_MODE   = 0x10;

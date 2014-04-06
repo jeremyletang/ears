@@ -22,7 +22,7 @@
 //! The datas extracted from a sound file.
 
 use std::mem;
-use std::libc::c_void;
+use libc::c_void;
 use std::vec::Vec;
 
 use openal::{ffi, al};

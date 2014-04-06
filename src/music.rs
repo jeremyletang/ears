@@ -24,7 +24,7 @@
 use std::io::timer::sleep;
 use std::mem;
 use std::task;
-use std::libc::c_void;
+use libc::c_void;
 use std::vec::Vec;
 
 use internal::OpenAlData;

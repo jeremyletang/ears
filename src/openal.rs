@@ -32,7 +32,7 @@ extern {}
 
 pub mod ffi {
 
-    use std::libc::{c_char, c_void};
+    use libc::{c_char, c_void};
 
     /// OpenAL types
     pub type ALCboolean = c_char;
@@ -146,7 +146,7 @@ pub mod ffi {
 pub mod al {
 
     use super::ffi;
-    use std::libc::c_void;
+    use libc::c_void;
 
     pub fn alBufferData(buffer: u32, format: i32, data: *c_void, size: i32, freq: i32) -> () {
         unsafe { ffi::alBufferData(buffer, format, data, size, freq); }

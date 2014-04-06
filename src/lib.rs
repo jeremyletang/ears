@@ -98,6 +98,8 @@ use ears::Music;
 #![allow(dead_code)]
 #![feature(macro_rules)]
 
+extern crate libc;
+
 // Reexport public API
 pub use einit::{init, init_in};
 pub use music::Music;
