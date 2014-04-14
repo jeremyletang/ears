@@ -24,7 +24,6 @@
 #![allow(missing_doc)]
 
 use std::{task, cast};
-use std::comm::Data;
 use std::vec::Vec;
 
 use record_context::RecordContext;
@@ -117,7 +116,7 @@ impl Recorder {
                 }
 
                 match stop_receiver.try_recv() {
-                    Data(_) => {
+                    Ok(_) => {
                         unsafe { ffi::alcCaptureStop(ctxt); }
                         terminate = true;
                     },
