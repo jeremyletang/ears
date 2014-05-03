@@ -52,14 +52,14 @@ impl OpenAlData {
     fn new() -> Result<OpenAlData, ~str> {
         let device = unsafe { ffi::alcOpenDevice(ptr::null()) };
         if device.is_null() {
-            return Err(~"Internal error: cannot open the default device.");
+            return Err("Internal error: cannot open the default device.".to_owned());
         }
         let context = unsafe { ffi::alcCreateContext(device, ptr::null()) };
         if context.is_null() {
-            return Err(~"Internal error: cannot create the OpenAL context.");
+            return Err("Internal error: cannot create the OpenAL context.".to_owned());
         }
         if unsafe { ffi::alcMakeContextCurrent(context) } == ffi::ALC_FALSE {
-            return Err(~"Internal error: cannot make the OpenAL context current.");
+            return Err("Internal error: cannot make the OpenAL context current.".to_owned());
         }
 
         Ok(
@@ -110,7 +110,7 @@ impl OpenAlData {
                     } else {
                         if "ALC_EXT_CAPTURE".with_c_str(|c_str| unsafe {
                             ffi::alcIsExtensionPresent(d.al_device, c_str) }) == ffi::ALC_FALSE {
-                            return Err(~"Error: no input device available on your system.")
+                            return Err("Error: no input device available on your system.".to_owned())
                         } else {
                             d.al_capt_device = unsafe {
                                 ffi::alcCaptureOpenDevice(ptr::null(),
@@ -118,15 +118,15 @@ impl OpenAlData {
                                                           ffi::AL_FORMAT_MONO16,
                                                           44100) };
                             if d.al_capt_device.is_null() {
-                                Err(~"Internal error: cannot open the default capture device.")
+                                Err("Internal error: cannot open the default capture device.".to_owned())
                             } else {
                                 Ok(record_context::new(d.al_capt_device))
                             }
                         }
                     }
                 }   ,
-                None    => Err(~"Error: you must request the input context, \
-                               in the task where you initialize ears.")
+                None    => Err("Error: you must request the input context, \
+                               in the task where you initialize ears.".to_owned())
             }
         })
     }

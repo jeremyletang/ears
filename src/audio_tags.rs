@@ -55,31 +55,31 @@ pub struct Tags {
 
 pub fn empty() -> Tags {
     Tags {
-        title:       ~"",
-        copyright:   ~"",
-        software:    ~"",
-        artist:      ~"",
-        comment:     ~"",
-        date:        ~"",
-        album:       ~"",
-        license:     ~"",
-        trackNumber: ~"",
-        genre:       ~""
+        title:       "".to_owned(),
+        copyright:   "".to_owned(),
+        software:    "".to_owned(),
+        artist:      "".to_owned(),
+        comment:     "".to_owned(),
+        date:        "".to_owned(),
+        album:       "".to_owned(),
+        license:     "".to_owned(),
+        trackNumber: "".to_owned(),
+        genre:       "".to_owned()
     }
 }
 
 pub fn get_sound_tags(file : &SndFile) -> Tags {
     Tags {
-        title:       file.get_string(Title).unwrap_or(~""),
-        copyright:   file.get_string(Copyright).unwrap_or(~""),
-        software:    file.get_string(Software).unwrap_or(~""),
-        artist:      file.get_string(Artist).unwrap_or(~""),
-        comment:     file.get_string(Comment).unwrap_or(~""),
-        date:        file.get_string(Date).unwrap_or(~""),
-        album:       file.get_string(Album).unwrap_or(~""),
-        license:     file.get_string(License).unwrap_or(~""),
-        trackNumber: file.get_string(TrackNumber).unwrap_or(~""),
-        genre:       file.get_string(Genre).unwrap_or(~"")
+        title:       file.get_string(Title).unwrap_or("".to_owned()),
+        copyright:   file.get_string(Copyright).unwrap_or("".to_owned()),
+        software:    file.get_string(Software).unwrap_or("".to_owned()),
+        artist:      file.get_string(Artist).unwrap_or("".to_owned()),
+        comment:     file.get_string(Comment).unwrap_or("".to_owned()),
+        date:        file.get_string(Date).unwrap_or("".to_owned()),
+        album:       file.get_string(Album).unwrap_or("".to_owned()),
+        license:     file.get_string(License).unwrap_or("".to_owned()),
+        trackNumber: file.get_string(TrackNumber).unwrap_or("".to_owned()),
+        genre:       file.get_string(Genre).unwrap_or("".to_owned())
     }
 }
 

@@ -237,12 +237,12 @@ pub mod al {
     pub fn openal_has_error() -> Option<~str> {
          match unsafe { ffi::alGetError() } {
             ffi::AL_NO_ERROR            => None,
-            ffi::AL_INVALID_NAME        => Some(~"OpenAL error : Invalid name paramater passed to AL call."),
-            ffi::AL_INVALID_ENUM        => Some(~"OpenAL error : Invalid enum parameter passed to AL call."),
-            ffi::AL_INVALID_VALUE       => Some(~"OpenAL error : Invalid value parameter passed to AL call."),
-            ffi::AL_INVALID_OPERATION   => Some(~"OpenAL error : Illegal AL call."),
-            ffi::AL_OUT_OF_MEMORY       => Some(~"OpenAL error : Not enough memory."),
-            _                           => Some(~"OpenAL internal error : Unknow error.")
+            ffi::AL_INVALID_NAME        => Some("OpenAL error : Invalid name paramater passed to AL call.".to_owned()),
+            ffi::AL_INVALID_ENUM        => Some("OpenAL error : Invalid enum parameter passed to AL call.".to_owned()),
+            ffi::AL_INVALID_VALUE       => Some("OpenAL error : Invalid value parameter passed to AL call.".to_owned()),
+            ffi::AL_INVALID_OPERATION   => Some("OpenAL error : Illegal AL call.".to_owned()),
+            ffi::AL_OUT_OF_MEMORY       => Some("OpenAL error : Not enough memory.".to_owned()),
+            _                           => Some("OpenAL internal error : Unknow error.".to_owned())
         }
     }
 
