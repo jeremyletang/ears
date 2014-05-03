@@ -1,4 +1,4 @@
-# ears [![Build Status](https://travis-ci.org/JeremyLetang/ears.png?branch=master)](https://travis-ci.org/JeremyLetang/ears)
+# ears [![Build Status](https://travis-ci.org/JeremyLetang/ears.png?branch=master)](https://travis-ci.org/jeremyletang/ears)
 
 
 __ears__ is a simple library for play Sounds and Musics in Rust.
@@ -13,11 +13,11 @@ __ears__ is build on the top of OpenAL and libsndfile.
 ```Rust
 extern crate ears;
 use ears::Sound;
- 
+
 fn main() {
 	// Create a new Sound.
 	let snd = Sound::new(~"path/to/my/sound.ogg").unwrap();
- 	
+
 	// Play the Sound
 	snd.play();
 
