@@ -34,7 +34,7 @@ use openal::ffi;
 use record_context;
 use record_context::RecordContext;
 
-static al_context: local_data::Key<~OpenAlData> = &local_data::Key;
+static al_context: local_data::Key<Box<OpenAlData>> = &local_data::Key;
 
 #[deriving(Clone)]
 pub struct OpenAlData {
@@ -92,7 +92,7 @@ impl OpenAlData {
                 None        => {
                     match OpenAlData::new() {
                         Ok(al_data) => {
-                            local_data::set(al_context, ~al_data); Ok(())
+                            local_data::set(al_context, box al_data); Ok(())
                         },
                         Err(err)    => Err(err)
                     }

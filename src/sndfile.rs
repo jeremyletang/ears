@@ -228,7 +228,7 @@ impl BitOr<FormatType, i32> for FormatType {
 /// SndFile object, used to load/store sound from a file path or an fd.
 pub struct SndFile {
     handle : *ffi::SNDFILE,
-    info : ~SndInfo
+    info : Box<SndInfo>
 }
 
 impl Clone for SndFile {
@@ -252,7 +252,7 @@ impl SndFile {
      * the error otherwise.
      */
     pub fn new(path : &str, mode : OpenMode) -> Result<SndFile, ~str> {
-        let info : ~SndInfo = ~SndInfo {
+        let info = box SndInfo {
             frames : 0,
             samplerate : 0,
             channels : 0,
@@ -284,7 +284,7 @@ impl SndFile {
      * Return Ok() containing the SndFile on success, a string representation of
      * the error otherwise.
      */
-    pub fn new_with_info(path : &str, mode : OpenMode, info: ~SndInfo) -> Result<SndFile, ~str> {
+    pub fn new_with_info(path : &str, mode : OpenMode, info: Box<SndInfo>) -> Result<SndFile, ~str> {
         let tmp_sndfile = path.with_c_str(|c_path| {
             unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
         });
@@ -314,7 +314,7 @@ impl SndFile {
                        mode : OpenMode,
                        close_desc : bool)
                        -> Result<SndFile, ~str> {
-        let info : ~SndInfo = ~SndInfo {
+        let info = box SndInfo {
             frames : 0,
             samplerate : 0,
             channels : 0,

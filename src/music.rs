@@ -63,7 +63,7 @@ pub struct Music {
     /// The internal OpenAL buffers
     al_buffers:     [u32, ..2],
     /// The file open with libmscfile
-    file:           Option<~SndFile>,
+    file:           Option<Box<SndFile>>,
     /// Information of the file
     file_infos:     SndInfo,
     /// Quantity of sample to read each time
@@ -89,7 +89,7 @@ impl Music {
         check_openal_context!(None);
         // Retrieve File and Music datas
         let file = match SndFile::new(path, Read) {
-            Ok(file)    => ~file,
+            Ok(file)    => box file,
             Err(err)    => { println!("{}", err); return None; }
         };
         let infos = file.get_sndinfo();
@@ -172,7 +172,7 @@ impl Music {
                 Err(err)    => { println!("{}", err);}
             };
 
-            let mut file : ~SndFile = port.recv();
+            let mut file: Box<SndFile> = port.recv();
             let mut samples = Vec::from_elem(sample_t_r as uint, 0i16);
             let mut status = ffi::AL_PLAYING;
             let mut i = 0;

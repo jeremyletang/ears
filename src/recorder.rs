@@ -147,7 +147,7 @@ impl Recorder {
         if self.samples.len() == 0 {
             false
         } else {
-            let infos = ~SndInfo {
+            let infos = box SndInfo {
                 frames : self.samples.len() as i64,
                 samplerate : 44100,
                 channels : 1,
