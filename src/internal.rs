@@ -29,12 +29,14 @@
 #![macro_escape]
 #![allow(raw_pointer_deriving)]
 
-use std::{local_data, ptr};
+use std::cell::RefCell;
+use std::ptr;
 use openal::ffi;
 use record_context;
 use record_context::RecordContext;
 
-static al_context: local_data::Key<Box<OpenAlData>> = &local_data::Key;
+// static al_context: local_data::Key<Box<OpenAlData>> = &local_data::Key;
+local_data_key!(al_context: RefCell<Box<OpenAlData>>)
 
 #[deriving(Clone)]
 pub struct OpenAlData {
@@ -86,50 +88,90 @@ impl OpenAlData {
         if unsafe { ffi::alcGetCurrentContext() } != ptr::null() {
             return Ok(())
         }
-        local_data::get(al_context, |openal_data| {
-            match openal_data {
-                Some(_)     => Ok(()),
-                None        => {
-                    match OpenAlData::new() {
-                        Ok(al_data) => {
-                            local_data::set(al_context, box al_data); Ok(())
-                        },
-                        Err(err)    => Err(err)
-                    }
+        // local_data::get(al_context, |openal_data| {
+        //     match openal_data {
+        //         Some(_)     => Ok(()),
+        //         None        => {
+        //             match OpenAlData::new() {
+        //                 Ok(al_data) => {
+        //                     local_data::set(al_context, box al_data); Ok(())
+        //                 },
+        //                 Err(err)    => Err(err)
+        //             }
+        //         }
+        //     }
+        // })
+        match al_context.get() {
+            Some(_) => Ok(()),
+            None    => {
+                match OpenAlData::new() {
+                    Ok(al_data) => {
+                        al_context.replace(Some(RefCell::new(box al_data))); Ok(())
+                    },
+                    Err(err)    => Err(err)
                 }
             }
-        })
+        }
     }
 
     fn is_input_context_init() -> Result<RecordContext, ~str> {
-        local_data::get_mut(al_context, |openal_data| {
-            match openal_data {
-                Some(d) => {
-                    if d.al_capt_device.is_not_null() {
-                        Ok(record_context::new(d.al_capt_device))
+        let is_some = al_context.get().is_some();
+        if is_some {
+            let mut new_context = *(*al_context.get().unwrap()).borrow().clone();
+            if new_context.al_capt_device.is_not_null() {
+                Ok(record_context::new(new_context.al_capt_device))
+            } else {
+                if "ALC_EXT_CAPTURE".with_c_str(|c_str| unsafe {
+                    ffi::alcIsExtensionPresent(new_context.al_device, c_str) }) == ffi::ALC_FALSE {
+                    return Err("Error: no input device available on your system.".to_owned())
+                } else {
+                    new_context.al_capt_device = unsafe {
+                        ffi::alcCaptureOpenDevice(ptr::null(),
+                                                  44100,
+                                                  ffi::AL_FORMAT_MONO16,
+                                                  44100) };
+                    if new_context.al_capt_device.is_null() {
+                        Err("Internal error: cannot open the default capture device.".to_owned())
                     } else {
-                        if "ALC_EXT_CAPTURE".with_c_str(|c_str| unsafe {
-                            ffi::alcIsExtensionPresent(d.al_device, c_str) }) == ffi::ALC_FALSE {
-                            return Err("Error: no input device available on your system.".to_owned())
-                        } else {
-                            d.al_capt_device = unsafe {
-                                ffi::alcCaptureOpenDevice(ptr::null(),
-                                                          44100,
-                                                          ffi::AL_FORMAT_MONO16,
-                                                          44100) };
-                            if d.al_capt_device.is_null() {
-                                Err("Internal error: cannot open the default capture device.".to_owned())
-                            } else {
-                                Ok(record_context::new(d.al_capt_device))
-                            }
-                        }
+                        let cap_device = new_context.al_capt_device;
+                        al_context.replace(Some(RefCell::new(box new_context)));
+                        Ok(record_context::new(cap_device))
                     }
-                }   ,
-                None    => Err("Error: you must request the input context, \
-                               in the task where you initialize ears.".to_owned())
+                }
             }
-        })
+        } else {
+            Err("Error: you must request the input context, \
+                           in the task where you initialize ears.".to_owned())
+        }
     }
+        // local_data::get_mut(al_context, |openal_data| {
+        //     match openal_data {
+        //         Some(d) => {
+        //             if d.al_capt_device.is_not_null() {
+        //                 Ok(record_context::new(d.al_capt_device))
+        //             } else {
+        //                 if "ALC_EXT_CAPTURE".with_c_str(|c_str| unsafe {
+        //                     ffi::alcIsExtensionPresent(d.al_device, c_str) }) == ffi::ALC_FALSE {
+        //                     return Err("Error: no input device available on your system.".to_owned())
+        //                 } else {
+        //                     d.al_capt_device = unsafe {
+        //                         ffi::alcCaptureOpenDevice(ptr::null(),
+        //                                                   44100,
+        //                                                   ffi::AL_FORMAT_MONO16,
+        //                                                   44100) };
+        //                     if d.al_capt_device.is_null() {
+        //                         Err("Internal error: cannot open the default capture device.".to_owned())
+        //                     } else {
+        //                         Ok(record_context::new(d.al_capt_device))
+        //                     }
+        //                 }
+        //             }
+        //         }   ,
+        //         None    => Err("Error: you must request the input context, \
+        //                        in the task where you initialize ears.".to_owned())
+        //     }
+        // })
+    // }
 
     /**
      * Check if the input context is created.
