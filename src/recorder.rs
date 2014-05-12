@@ -23,7 +23,7 @@
 
 #![allow(missing_doc)]
 
-use std::{task, cast};
+use std::{task, mem};
 use std::vec::Vec;
 
 use record_context::RecordContext;
@@ -109,7 +109,7 @@ impl Recorder {
                         Vec::from_elem(available_samples as uint, 0i16);
                     unsafe {
                         ffi::alcCaptureSamples(ctxt,
-                                               cast::transmute(&tmp_buf.as_slice()[0]),
+                                               mem::transmute(&tmp_buf.as_slice()[0]),
                                                available_samples);
                     }
                     samples.push_all_move(tmp_buf);
