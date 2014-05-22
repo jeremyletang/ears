@@ -58,7 +58,7 @@ use audio_tags::{AudioTags, Tags};
  */
 pub struct Sound {
     /// The internal OpenAl source identifier
-    al_source:  u32,
+    al_source: u32,
     /// The SoundData associated to the Sound.
     sound_data: Rc<RefCell<SoundData>>
 }
@@ -88,8 +88,8 @@ impl Sound {
         check_openal_context!(None);
 
         let s_data = match SoundData::new(path) {
-            Some(s_d)   => Rc::new(RefCell::new(s_d)),
-            None        => return None
+            Some(s_d) => Rc::new(RefCell::new(s_d)),
+            None      => return None
         };
 
         Sound::new_with_data(s_data)
@@ -140,8 +140,8 @@ impl Sound {
         };
 
         Some(Sound {
-            al_source   : source_id,
-            sound_data  : sound_data
+            al_source: source_id,
+            sound_data: sound_data
         })
     }
 
@@ -310,11 +310,11 @@ impl AudioController for Sound {
         al::alGetSourcei(self.al_source, ffi::AL_SOURCE_STATE, &mut state);
 
         match state {
-            ffi::AL_INITIAL     => Initial,
-            ffi::AL_PLAYING     => Playing,
-            ffi::AL_PAUSED      => Paused,
-            ffi::AL_STOPPED     => Stopped,
-            _                   => unreachable!()
+            ffi::AL_INITIAL => Initial,
+            ffi::AL_PLAYING => Playing,
+            ffi::AL_PAUSED  => Paused,
+            ffi::AL_STOPPED => Stopped,
+            _               => unreachable!()
         }
 
     }
@@ -443,9 +443,9 @@ impl AudioController for Sound {
         al::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
 
         match boolean as i8 {
-            ffi::ALC_TRUE       => true,
-            ffi::ALC_FALSE      => false,
-            _                   => unreachable!()
+            ffi::ALC_TRUE  => true,
+            ffi::ALC_FALSE => false,
+            _              => unreachable!()
         }
     }
 
@@ -514,9 +514,9 @@ impl AudioController for Sound {
         al::alGetSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, &mut boolean);
 
         match boolean as i8 {
-            ffi::ALC_TRUE       => true,
-            ffi::ALC_FALSE      => false,
-            _                   => unreachable!()
+            ffi::ALC_TRUE  => true,
+            ffi::ALC_FALSE => false,
+            _              => unreachable!()
         }
     }
 

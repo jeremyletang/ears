@@ -148,8 +148,8 @@ impl OpenAlData {
             OpenAlData::is_input_context_init()
         } else {
             match OpenAlData::check_al_context() {
-                Ok(_)       => OpenAlData::is_input_context_init(),
-                Err(err)    => Err(err)
+                Ok(_)    => OpenAlData::is_input_context_init(),
+                Err(err) => Err(err)
             }
         }
     }
@@ -170,8 +170,8 @@ impl Drop for OpenAlData {
 macro_rules! check_openal_context(
     ($def_ret:expr) => (
             match OpenAlData::check_al_context() {
-                Ok(_)       => {},
-                Err(err)    => { println!("{}", err); return $def_ret; }
+                Ok(_)    => {},
+                Err(err) => { println!("{}", err); return $def_ret; }
             }
         );
 )

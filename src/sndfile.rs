@@ -66,9 +66,9 @@ pub struct SndInfo {
 /// * Write - Write only mode
 /// * ReadWrite - Read and Write mode
 pub enum OpenMode {
-    Read    = ffi::SFM_READ as i32,
-    Write   = ffi::SFM_WRITE as i32,
-    ReadWrite    = ffi::SFM_RDWR as i32
+    Read       = ffi::SFM_READ as i32,
+    Write      = ffi::SFM_WRITE as i32,
+    ReadWrite  = ffi::SFM_RDWR as i32
 }
 
 /// Type of strings available for method get_string()

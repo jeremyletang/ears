@@ -59,19 +59,19 @@ use audio_tags::{Tags, AudioTags, get_sound_tags};
  */
 pub struct Music {
     /// The internal OpenAL source identifier
-    al_source:      u32,
+    al_source: u32,
     /// The internal OpenAL buffers
-    al_buffers:     [u32, ..2],
+    al_buffers: [u32, ..2],
     /// The file open with libmscfile
-    file:           Option<Box<SndFile>>,
+    file: Option<Box<SndFile>>,
     /// Information of the file
-    file_infos:     SndInfo,
+    file_infos: SndInfo,
     /// Quantity of sample to read each time
     sample_to_read: i32,
     /// Format of the sample
-    sample_format:  i32,
+    sample_format: i32,
     /// Audio tags
-    sound_tags:     Tags
+    sound_tags: Tags
 }
 
 impl Music {
@@ -120,13 +120,13 @@ impl Music {
         let sound_tags = get_sound_tags(file);
 
         Some( Music {
-            al_source       : source_id,
-            al_buffers      : buffer_ids,
-            file            : Some(file),
-            file_infos      : infos,
-            sample_to_read  : 50000,
-            sample_format   : format,
-            sound_tags      : sound_tags
+            al_source: source_id,
+            al_buffers: buffer_ids,
+            file: Some(file),
+            file_infos: infos,
+            sample_to_read: 50000,
+            sample_format: format,
+            sound_tags: sound_tags
         })
     }
 
@@ -287,11 +287,11 @@ impl AudioController for Music {
         let state  = al::alGetState(self.al_source);
 
         match state {
-            ffi::AL_INITIAL     => Initial,
-            ffi::AL_PLAYING     => Playing,
-            ffi::AL_PAUSED      => Paused,
-            ffi::AL_STOPPED     => Stopped,
-            _                   => unreachable!()
+            ffi::AL_INITIAL => Initial,
+            ffi::AL_PLAYING => Playing,
+            ffi::AL_PAUSED  => Paused,
+            ffi::AL_STOPPED => Stopped,
+            _               => unreachable!()
         }
     }
 
@@ -418,9 +418,9 @@ impl AudioController for Music {
         let mut boolean = 0;
         al::alGetSourcei(self.al_source, ffi::AL_LOOPING, &mut boolean);
         match boolean as i8 {
-            ffi::ALC_TRUE       => true,
-            ffi::ALC_FALSE      => false,
-            _                   => unreachable!()
+            ffi::ALC_TRUE  => true,
+            ffi::ALC_FALSE => false,
+            _              => unreachable!()
         }
     }
 
@@ -488,9 +488,9 @@ impl AudioController for Music {
         let mut boolean = 0;
         al::alGetSourcei(self.al_source, ffi::AL_SOURCE_RELATIVE, &mut boolean);
         match boolean as i8 {
-            ffi::ALC_TRUE       => true,
-            ffi::ALC_FALSE      => false,
-            _                   => unreachable!()
+            ffi::ALC_TRUE  => true,
+            ffi::ALC_FALSE => false,
+            _              => unreachable!()
         }
     }
 
@@ -668,7 +668,6 @@ impl Drop for Music {
             al::alSourcei(self.al_source, ffi::AL_BUFFER, 0);
             ffi::alDeleteBuffers(2, &mut self.al_buffers[0]);
             ffi::alDeleteSources(1, &mut self.al_source);
-            // self.file.take_unwrap().close();
         }
     }
 }

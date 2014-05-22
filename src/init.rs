@@ -47,8 +47,8 @@ use internal::OpenAlData;
  */
 pub fn init() -> bool {
     match OpenAlData::check_al_context() {
-        Ok(_)       => true,
-        Err(err)    => { println!("{}", err); false }
+        Ok(_)    => true,
+        Err(err) => { println!("{}", err); false }
     }
 }
 
@@ -68,8 +68,8 @@ pub fn init() -> bool {
  */
 pub fn init_in() -> Option<RecordContext> {
     match OpenAlData::check_al_input_context() {
-        Ok(ctxt)     => Some(ctxt),
-        Err(err)     => { println!("{}", err); None }
+        Ok(ctxt) => Some(ctxt),
+        Err(err) => { println!("{}", err); None }
     }
 }
 
