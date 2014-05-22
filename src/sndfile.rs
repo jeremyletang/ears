@@ -32,7 +32,8 @@
 
 #![allow(dead_code)]
 
-use std::{str, ptr};
+use std::ptr;
+use std::c_str::CString;
 
 #[doc(hidden)]
 #[cfg(target_os="macos")]
@@ -251,7 +252,7 @@ impl SndFile {
      * Return Ok() containing the SndFile on success, a string representation of
      * the error otherwise.
      */
-    pub fn new(path : &str, mode : OpenMode) -> Result<SndFile, ~str> {
+    pub fn new(path : &str, mode : OpenMode) -> Result<SndFile, StrBuf> {
         let info = box SndInfo {
             frames : 0,
             samplerate : 0,
@@ -264,7 +265,9 @@ impl SndFile {
             unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
         });
         if tmp_sndfile.is_null() {
-            Err(unsafe { str::raw::from_c_str(ffi::sf_strerror(ptr::null())) })
+            Err(unsafe {
+                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_strbuf()
+            })
         } else {
             Ok(SndFile {
                 handle :    tmp_sndfile,
@@ -284,12 +287,14 @@ impl SndFile {
      * Return Ok() containing the SndFile on success, a string representation of
      * the error otherwise.
      */
-    pub fn new_with_info(path : &str, mode : OpenMode, info: Box<SndInfo>) -> Result<SndFile, ~str> {
+    pub fn new_with_info(path : &str, mode : OpenMode, info: Box<SndInfo>) -> Result<SndFile, StrBuf> {
         let tmp_sndfile = path.with_c_str(|c_path| {
             unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
         });
         if tmp_sndfile.is_null() {
-            Err(unsafe { str::raw::from_c_str(ffi::sf_strerror(ptr::null())) })
+            Err(unsafe {
+                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_strbuf()
+            })
         } else {
             Ok(SndFile {
                 handle :    tmp_sndfile,
@@ -313,7 +318,7 @@ impl SndFile {
     pub fn new_with_fd(fd : i32,
                        mode : OpenMode,
                        close_desc : bool)
-                       -> Result<SndFile, ~str> {
+                       -> Result<SndFile, StrBuf> {
         let info = box SndInfo {
             frames : 0,
             samplerate : 0,
@@ -331,7 +336,9 @@ impl SndFile {
             }
         };
         if tmp_sndfile.is_null() {
-            Err(unsafe { str::raw::from_c_str(ffi::sf_strerror(ptr::null())) })
+            Err(unsafe {
+                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_strbuf()
+            })
         } else {
             Ok(SndFile {
                 handle :    tmp_sndfile,
@@ -351,16 +358,18 @@ impl SndFile {
      * # Argument
      * * string_type - The type of the tag to retrieve
      *
-     * Return Some() ~str if the tag is found, None otherwise.
+     * Return Some(StrBuf) if the tag is found, None otherwise.
      */
-    pub fn get_string(&self, string_type : StringSoundType) -> Option<~str> {
+    pub fn get_string(&self, string_type : StringSoundType) -> Option<StrBuf> {
         let c_string = unsafe {
             ffi::sf_get_string(self.handle, string_type as i32)
         };
         if c_string.is_null() {
             None
         } else {
-            Some(unsafe { str::raw::from_c_str(c_string) })
+            Some(unsafe {
+                CString::new(c_string, false).as_str().unwrap().to_strbuf()
+            })
         }
     }
 
@@ -375,7 +384,7 @@ impl SndFile {
     */
     pub fn set_string(&mut self,
                       string_type : StringSoundType,
-                      string : ~str) -> Error {
+                      string : StrBuf) -> Error {
         unsafe {
             ffi::sf_set_string(self.handle,
                                string_type as i32,
@@ -687,9 +696,9 @@ impl SndFile {
      *
      * Return an owned str containing the last error.
      */
-    pub fn string_error(&self) -> ~str {
+    pub fn string_error(&self) -> StrBuf {
         unsafe {
-            str::raw::from_c_str(ffi::sf_strerror(self.handle))
+            CString::new(ffi::sf_strerror(self.handle), false).as_str().unwrap().to_strbuf()
         }
     }
 
@@ -698,9 +707,9 @@ impl SndFile {
      *
      * Return an owned str containing the error.
      */
-    pub fn error_number(error_num : Error) -> ~str {
+    pub fn error_number(error_num : Error) -> StrBuf {
         unsafe {
-            str::raw::from_c_str(ffi::sf_error_number(error_num as i32))
+            CString::new(ffi::sf_error_number(error_num as i32), false).as_str().unwrap().to_strbuf()
         }
     }
 
