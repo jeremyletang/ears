@@ -34,11 +34,11 @@ fn main() {
     print!("Insert the path to an audio file : ");
     flush();
 
-    let mut line = StrBuf::from_str(stdin.read_line().unwrap());
+    let mut line = stdin.read_line().unwrap();
     unsafe { line.pop_byte(); }
 
     // Try to create the music
-    let mut music = match Music::new(line.into_owned()) {
+    let mut music = match Music::new(line.as_slice()) {
         Some(music) => music,
         None        => fail!("Cannot load the music.")
     };

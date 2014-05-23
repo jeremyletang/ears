@@ -158,7 +158,7 @@ impl Recorder {
 
             let mut file_ext = StrBuf::from_str(filename);
             file_ext.push_str(".wav");
-            match SndFile::new_with_info(file_ext.into_owned(), Write, infos) {
+            match SndFile::new_with_info(file_ext.as_slice(), Write, infos) {
                 Ok(mut f) => {
                     let len = self.samples.len() as i64;
                     f.write_i16(self.samples.as_mut_slice(), len);
