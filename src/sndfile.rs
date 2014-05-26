@@ -252,7 +252,7 @@ impl SndFile {
      * Return Ok() containing the SndFile on success, a string representation of
      * the error otherwise.
      */
-    pub fn new(path : &str, mode : OpenMode) -> Result<SndFile, StrBuf> {
+    pub fn new(path : &str, mode : OpenMode) -> Result<SndFile, String> {
         let info = box SndInfo {
             frames : 0,
             samplerate : 0,
@@ -287,7 +287,7 @@ impl SndFile {
      * Return Ok() containing the SndFile on success, a string representation of
      * the error otherwise.
      */
-    pub fn new_with_info(path : &str, mode : OpenMode, info: Box<SndInfo>) -> Result<SndFile, StrBuf> {
+    pub fn new_with_info(path : &str, mode : OpenMode, info: Box<SndInfo>) -> Result<SndFile, String> {
         let tmp_sndfile = path.with_c_str(|c_path| {
             unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
         });
@@ -318,7 +318,7 @@ impl SndFile {
     pub fn new_with_fd(fd : i32,
                        mode : OpenMode,
                        close_desc : bool)
-                       -> Result<SndFile, StrBuf> {
+                       -> Result<SndFile, String> {
         let info = box SndInfo {
             frames : 0,
             samplerate : 0,
@@ -358,9 +358,9 @@ impl SndFile {
      * # Argument
      * * string_type - The type of the tag to retrieve
      *
-     * Return Some(StrBuf) if the tag is found, None otherwise.
+     * Return Some(String) if the tag is found, None otherwise.
      */
-    pub fn get_string(&self, string_type : StringSoundType) -> Option<StrBuf> {
+    pub fn get_string(&self, string_type : StringSoundType) -> Option<String> {
         let c_string = unsafe {
             ffi::sf_get_string(self.handle, string_type as i32)
         };
@@ -384,7 +384,7 @@ impl SndFile {
     */
     pub fn set_string(&mut self,
                       string_type : StringSoundType,
-                      string : StrBuf) -> Error {
+                      string : String) -> Error {
         unsafe {
             ffi::sf_set_string(self.handle,
                                string_type as i32,
@@ -696,7 +696,7 @@ impl SndFile {
      *
      * Return an owned str containing the last error.
      */
-    pub fn string_error(&self) -> StrBuf {
+    pub fn string_error(&self) -> String {
         unsafe {
             CString::new(ffi::sf_strerror(self.handle), false).as_str().unwrap().to_strbuf()
         }
@@ -707,7 +707,7 @@ impl SndFile {
      *
      * Return an owned str containing the error.
      */
-    pub fn error_number(error_num : Error) -> StrBuf {
+    pub fn error_number(error_num : Error) -> String {
         unsafe {
             CString::new(ffi::sf_error_number(error_num as i32), false).as_str().unwrap().to_strbuf()
         }

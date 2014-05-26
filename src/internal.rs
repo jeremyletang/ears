@@ -51,7 +51,7 @@ impl OpenAlData {
      *
      * Private method.
      */
-    fn new() -> Result<OpenAlData, StrBuf> {
+    fn new() -> Result<OpenAlData, String> {
         let device = unsafe { ffi::alcOpenDevice(ptr::null()) };
         if device.is_null() {
             return Err("Internal error: cannot open the default device.".to_strbuf());
@@ -84,7 +84,7 @@ impl OpenAlData {
      * A result containing nothing if the OpenAlData struct exist,
      * otherwise an error message.
      */
-    pub fn check_al_context() -> Result<(), StrBuf> {
+    pub fn check_al_context() -> Result<(), String> {
         if unsafe { ffi::alcGetCurrentContext() } != ptr::null() {
             return Ok(())
         }
@@ -101,7 +101,7 @@ impl OpenAlData {
         }
     }
 
-    fn is_input_context_init() -> Result<RecordContext, StrBuf> {
+    fn is_input_context_init() -> Result<RecordContext, String> {
         let is_some = al_context.get().is_some();
         if is_some {
             let mut new_context = *(*al_context.get().unwrap()).borrow().clone();
@@ -143,7 +143,7 @@ impl OpenAlData {
      * A result containing nothing if the OpenAlData struct exist,
      * otherwise an error message.
      */
-    pub fn check_al_input_context() -> Result<RecordContext, StrBuf> {
+    pub fn check_al_input_context() -> Result<RecordContext, String> {
         if unsafe { ffi::alcGetCurrentContext() } != ptr::null() {
             OpenAlData::is_input_context_init()
         } else {

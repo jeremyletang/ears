@@ -156,7 +156,7 @@ impl Recorder {
                 seekable : 0
             };
 
-            let mut file_ext = StrBuf::from_str(filename);
+            let mut file_ext = String::from_str(filename);
             file_ext.push_str(".wav");
             match SndFile::new_with_info(file_ext.as_slice(), Write, infos) {
                 Ok(mut f) => {

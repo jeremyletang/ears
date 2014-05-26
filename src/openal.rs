@@ -234,7 +234,7 @@ pub mod al {
         unsafe { ffi::alGetListenerfv(param, values); }
     }
 
-    pub fn openal_has_error() -> Option<StrBuf> {
+    pub fn openal_has_error() -> Option<String> {
          match unsafe { ffi::alGetError() } {
             ffi::AL_NO_ERROR          => None,
             ffi::AL_INVALID_NAME      => Some("OpenAL error : Invalid name paramater passed to AL call.".to_strbuf()),
