@@ -54,14 +54,14 @@ impl OpenAlData {
     fn new() -> Result<OpenAlData, String> {
         let device = unsafe { ffi::alcOpenDevice(ptr::null()) };
         if device.is_null() {
-            return Err("Internal error: cannot open the default device.".to_strbuf());
+            return Err("Internal error: cannot open the default device.".to_string());
         }
         let context = unsafe { ffi::alcCreateContext(device, ptr::null()) };
         if context.is_null() {
-            return Err("Internal error: cannot create the OpenAL context.".to_strbuf());
+            return Err("Internal error: cannot create the OpenAL context.".to_string());
         }
         if unsafe { ffi::alcMakeContextCurrent(context) } == ffi::ALC_FALSE {
-            return Err("Internal error: cannot make the OpenAL context current.".to_strbuf());
+            return Err("Internal error: cannot make the OpenAL context current.".to_string());
         }
 
         Ok(
@@ -110,7 +110,7 @@ impl OpenAlData {
             } else {
                 if "ALC_EXT_CAPTURE".with_c_str(|c_str| unsafe {
                     ffi::alcIsExtensionPresent(new_context.al_device, c_str) }) == ffi::ALC_FALSE {
-                    return Err("Error: no input device available on your system.".to_strbuf())
+                    return Err("Error: no input device available on your system.".to_string())
                 } else {
                     new_context.al_capt_device = unsafe {
                         ffi::alcCaptureOpenDevice(ptr::null(),
@@ -118,7 +118,7 @@ impl OpenAlData {
                                                   ffi::AL_FORMAT_MONO16,
                                                   44100) };
                     if new_context.al_capt_device.is_null() {
-                        Err("Internal error: cannot open the default capture device.".to_strbuf())
+                        Err("Internal error: cannot open the default capture device.".to_string())
                     } else {
                         let cap_device = new_context.al_capt_device;
                         al_context.replace(Some(RefCell::new(box new_context)));
@@ -128,7 +128,7 @@ impl OpenAlData {
             }
         } else {
             Err("Error: you must request the input context, \
-                           in the task where you initialize ears.".to_strbuf())
+                           in the task where you initialize ears.".to_string())
         }
     }
 

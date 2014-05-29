@@ -266,7 +266,7 @@ impl SndFile {
         });
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_strbuf()
+                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -293,7 +293,7 @@ impl SndFile {
         });
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_strbuf()
+                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -337,7 +337,7 @@ impl SndFile {
         };
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_strbuf()
+                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -368,7 +368,7 @@ impl SndFile {
             None
         } else {
             Some(unsafe {
-                CString::new(c_string, false).as_str().unwrap().to_strbuf()
+                CString::new(c_string, false).as_str().unwrap().to_string()
             })
         }
     }
@@ -698,7 +698,7 @@ impl SndFile {
      */
     pub fn string_error(&self) -> String {
         unsafe {
-            CString::new(ffi::sf_strerror(self.handle), false).as_str().unwrap().to_strbuf()
+            CString::new(ffi::sf_strerror(self.handle), false).as_str().unwrap().to_string()
         }
     }
 
@@ -709,7 +709,7 @@ impl SndFile {
      */
     pub fn error_number(error_num : Error) -> String {
         unsafe {
-            CString::new(ffi::sf_error_number(error_num as i32), false).as_str().unwrap().to_strbuf()
+            CString::new(ffi::sf_error_number(error_num as i32), false).as_str().unwrap().to_string()
         }
     }
 
