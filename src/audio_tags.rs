@@ -55,31 +55,31 @@ pub struct Tags {
 
 pub fn empty() -> Tags {
     Tags {
-        title: "".to_strbuf(),
-        copyright: "".to_strbuf(),
-        software: "".to_strbuf(),
-        artist: "".to_strbuf(),
-        comment: "".to_strbuf(),
-        date: "".to_strbuf(),
-        album: "".to_strbuf(),
-        license: "".to_strbuf(),
-        trackNumber: "".to_strbuf(),
-        genre: "".to_strbuf()
+        title: "".to_string(),
+        copyright: "".to_string(),
+        software: "".to_string(),
+        artist: "".to_string(),
+        comment: "".to_string(),
+        date: "".to_string(),
+        album: "".to_string(),
+        license: "".to_string(),
+        trackNumber: "".to_string(),
+        genre: "".to_string()
     }
 }
 
 pub fn get_sound_tags(file: &SndFile) -> Tags {
     Tags {
-        title: file.get_string(Title).unwrap_or("".to_strbuf()),
-        copyright: file.get_string(Copyright).unwrap_or("".to_strbuf()),
-        software: file.get_string(Software).unwrap_or("".to_strbuf()),
-        artist: file.get_string(Artist).unwrap_or("".to_strbuf()),
-        comment: file.get_string(Comment).unwrap_or("".to_strbuf()),
-        date: file.get_string(Date).unwrap_or("".to_strbuf()),
-        album: file.get_string(Album).unwrap_or("".to_strbuf()),
-        license: file.get_string(License).unwrap_or("".to_strbuf()),
-        trackNumber: file.get_string(TrackNumber).unwrap_or("".to_strbuf()),
-        genre: file.get_string(Genre).unwrap_or("".to_strbuf())
+        title: file.get_string(Title).unwrap_or("".to_string()),
+        copyright: file.get_string(Copyright).unwrap_or("".to_string()),
+        software: file.get_string(Software).unwrap_or("".to_string()),
+        artist: file.get_string(Artist).unwrap_or("".to_string()),
+        comment: file.get_string(Comment).unwrap_or("".to_string()),
+        date: file.get_string(Date).unwrap_or("".to_string()),
+        album: file.get_string(Album).unwrap_or("".to_string()),
+        license: file.get_string(License).unwrap_or("".to_string()),
+        trackNumber: file.get_string(TrackNumber).unwrap_or("".to_string()),
+        genre: file.get_string(Genre).unwrap_or("".to_string())
     }
 }
 
