@@ -22,7 +22,7 @@
 //! The states of a Sound or a Music
 
 /// The differents states in which a sound can be.
-#[deriving(Clone, Eq, Ord, Show)]
+#[deriving(Clone, PartialEq, PartialOrd, Show)]
 pub enum State {
     /// Initial state of the sound or music
     Initial,

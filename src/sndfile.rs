@@ -162,7 +162,7 @@ pub enum SeekMode {
 /// * EndianBig - Force big endian-ness
 /// * EndianCpu - Force CPU endian-ness
 #[repr(C)]
-#[deriving(Show, Clone, Ord, Eq)]
+#[deriving(Show, Clone, PartialOrd, PartialEq)]
 pub enum FormatType {
     FormatWav = ffi::SF_FORMAT_WAV as i32,
     FormatAiff = ffi::SF_FORMAT_AIFF as i32,

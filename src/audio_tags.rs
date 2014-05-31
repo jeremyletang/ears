@@ -29,7 +29,7 @@ use sndfile::{SndFile, Title, Copyright, Software, Artist, Comment, Date,
  *
  * If the tags doesn't exist in the sound file, the string is ~"".
  */
-#[deriving(Clone, Show, Eq)]
+#[deriving(Clone, Show, PartialEq)]
 pub struct Tags {
     /// The title of the sound as a String
     pub title: String,
