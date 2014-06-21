@@ -97,6 +97,7 @@ use ears::Music;
 #![warn(missing_doc)]
 #![allow(dead_code)]
 #![feature(macro_rules)]
+#![feature(unsafe_destructor)]
 
 extern crate libc;
 
