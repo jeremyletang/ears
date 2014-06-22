@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The ears library documentation.">
+
+    <title>ears::Tags - Rust</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400,600'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+</head>
+<body>
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='index.html'>ears</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='listener/index.html'>listener</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Music.html'>Music</a><a class='struct ' href='struct.RecordContext.html'>RecordContext</a><a class='struct ' href='struct.Recorder.html'>Recorder</a><a class='struct ' href='struct.Sound.html'>Sound</a><a class='struct ' href='struct.SoundData.html'>SoundData</a><a class='struct current' href='struct.Tags.html'>Tags</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='trait.AudioController.html'>AudioController</a><a class='trait ' href='trait.AudioTags.html'>AudioTags</a></div><div class='block fn'><h2>Functions</h2><a class='fn ' href='fn.init.html'>init</a><a class='fn ' href='fn.init_in.html'>init_in</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'>Struct <a href='index.html'>ears</a>::<a class='struct' href=''>Tags</a><a class='source' id='src-39041' href='../src/ears/src/audio_tags.rs.html#33-54'>[src]</a></h1>
+<pre class='rust struct'>pub struct Tags {
+    pub title: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub copyright: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub software: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub artist: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub comment: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub date: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub album: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub license: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub trackNumber: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub genre: <a class='struct' href='http://doc.rust-lang.org/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+}</pre><div class='docblock'><p>Structure containing the tags of a sound.</p>
+
+<p>If the tags doesn&#39;t exist in the sound file, the string is ~&quot;&quot;.</p>
+</div><h2 class='fields'>Fields</h2>
+<table><tr><td id='structfield.title'><code>title</code></td><td><div class='docblock'><p>The title of the sound as a String</p>
+</div></td></tr><tr><td id='structfield.copyright'><code>copyright</code></td><td><div class='docblock'><p>The Copyright of the sound as a String</p>
+</div></td></tr><tr><td id='structfield.software'><code>software</code></td><td><div class='docblock'><p>The name of the software used to create the sound as a String</p>
+</div></td></tr><tr><td id='structfield.artist'><code>artist</code></td><td><div class='docblock'><p>The name of the artist of the sound as a String</p>
+</div></td></tr><tr><td id='structfield.comment'><code>comment</code></td><td><div class='docblock'><p>A comment as a String</p>
+</div></td></tr><tr><td id='structfield.date'><code>date</code></td><td><div class='docblock'><p>The creation date of the sound as a String</p>
+</div></td></tr><tr><td id='structfield.album'><code>album</code></td><td><div class='docblock'><p>The name of the album where the sound come from as a String</p>
+</div></td></tr><tr><td id='structfield.license'><code>license</code></td><td><div class='docblock'><p>The license of the sound as a String</p>
+</div></td></tr><tr><td id='structfield.trackNumber'><code>trackNumber</code></td><td><div class='docblock'><p>The tracknumber of the sound as a String</p>
+</div></td></tr><tr><td id='structfield.genre'><code>genre</code></td><td><div class='docblock'><p>The genre of the sound as a String</p>
+</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../ears/struct.Tags.html' title='ears::Tags'>Tags</a></code></h3><div class='methods'><h4 id='method.eq' class='method'><code>fn <a href='#method.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../ears/struct.Tags.html' title='ears::Tags'>Tags</a>) -&gt; <a href='http://doc.rust-lang.org/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><code>fn <a href='#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../ears/struct.Tags.html' title='ears::Tags'>Tags</a>) -&gt; <a href='http://doc.rust-lang.org/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a> for <a class='struct' href='../ears/struct.Tags.html' title='ears::Tags'>Tags</a></code></h3><div class='methods'><h4 id='method.fmt' class='method'><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='http://doc.rust-lang.org/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../ears/struct.Tags.html' title='ears::Tags'>Tags</a></code></h3><div class='methods'><h4 id='method.clone' class='method'><code>fn <a href='#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../ears/struct.Tags.html' title='ears::Tags'>Tags</a></code></h4>
+<h4 id='method.clone_from' class='method'><code>fn <a href='#tymethod.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "ears";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>

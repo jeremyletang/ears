@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The ears library documentation.">
+
+    <title>ears::SoundData - Rust</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400,600'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+</head>
+<body>
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='index.html'>ears</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='listener/index.html'>listener</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Music.html'>Music</a><a class='struct ' href='struct.RecordContext.html'>RecordContext</a><a class='struct ' href='struct.Recorder.html'>Recorder</a><a class='struct ' href='struct.Sound.html'>Sound</a><a class='struct current' href='struct.SoundData.html'>SoundData</a><a class='struct ' href='struct.Tags.html'>Tags</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='trait.AudioController.html'>AudioController</a><a class='trait ' href='trait.AudioTags.html'>AudioTags</a></div><div class='block fn'><h2>Functions</h2><a class='fn ' href='fn.init.html'>init</a><a class='fn ' href='fn.init_in.html'>init_in</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'>Struct <a href='index.html'>ears</a>::<a class='struct' href=''>SoundData</a><a class='source' id='src-37831' href='../src/ears/src/sound_data.rs.html#62-71'>[src]</a></h1>
+<pre class='rust struct'>pub struct SoundData {
+    // some fields omitted
+}</pre><div class='docblock'><p>Samples extracted from a file.</p>
+
+<p>SoundDatas are made to be shared between several Sound and played in the same
+time.</p>
+
+<h1 id="example" class='section-header'><a
+                           href="#example">Example</a></h1><pre class='rust '>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>ears</span>;
+<span class='kw'>use</span> <span class='ident'>ears</span>::{<span class='ident'>Sound</span>, <span class='ident'>SoundData</span>};
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() <span class='op'>-&gt;</span> () {<span class='comment'>
+  // Create a SoundData
+  </span><span class='kw'>let</span> <span class='ident'>snd_data</span> <span class='op'>=</span> <span class='ident'>Rc</span>::<span class='ident'>new</span>(<span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='ident'>SoundData</span>::<span class='ident'>new</span>(<span class='kw-2'>~</span><span class='string'>&quot;path/to/my/sound.wav&quot;</span>)
+                                      .<span class='ident'>unwrap</span>()));<span class='comment'>
+
+  // Create two Sound with the same SoundData
+  </span><span class='kw'>let</span> <span class='ident'>snd1</span> <span class='op'>=</span> <span class='ident'>Sound</span>::<span class='ident'>new_with_data</span>(<span class='ident'>snd_data</span>.<span class='ident'>clone</span>()).<span class='ident'>unwrap</span>();
+  <span class='kw'>let</span> <span class='ident'>snd2</span> <span class='op'>=</span> <span class='ident'>Sound</span>::<span class='ident'>new_with_data</span>(<span class='ident'>snd_data</span>.<span class='ident'>clone</span>()).<span class='ident'>unwrap</span>();<span class='comment'>
+
+  // Play the sounds
+  </span><span class='ident'>snd1</span>.<span class='ident'>play</span>();
+  <span class='ident'>snd2</span>.<span class='ident'>play</span>();<span class='comment'>
+
+  // Wait until snd2 is playing
+  </span><span class='kw'>while</span> <span class='ident'>snd2</span>.<span class='ident'>is_playing</span>() {}
+}
+</pre>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../ears/struct.SoundData.html' title='ears::SoundData'>SoundData</a></code></h3><div class='methods'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(path: &amp;<a href='http://doc.rust-lang.org/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/core/option/type.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../ears/struct.SoundData.html' title='ears::SoundData'>SoundData</a>&gt;</code></h4>
+<div class='docblock'><p>Create a new SoundData.</p>
+
+<p>The SoundData contains all the information extracted from the
+file: samples and tags.
+It&#39;s an easy way to share the same samples between man Sounds objects.</p>
+
+<h1 id="arguments" class='section-header'><a
+                           href="#arguments">Arguments</a></h1>
+<ul>
+<li><code>path</code> - The path of the file to load</li>
+</ul>
+
+<h1 id="return" class='section-header'><a
+                           href="#return">Return</a></h1>
+<p>An Option with Some(SoundData) if the SoundData is create, or None if
+an error has occured.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../ears/trait.AudioTags.html' title='ears::AudioTags'>AudioTags</a> for <a class='struct' href='../ears/struct.SoundData.html' title='ears::SoundData'>SoundData</a></code></h3><div class='methods'><h4 id='method.get_tags' class='method'><code>fn <a href='#method.get_tags' class='fnname'>get_tags</a>(&amp;self) -&gt; <a class='struct' href='../ears/struct.Tags.html' title='ears::Tags'>Tags</a></code></h4>
+<div class='docblock'><p>Get the tags of a Sound.</p>
+
+<h1 id="return-1" class='section-header'><a
+                           href="#return-1">Return</a></h1>
+<p>A borrowed pointer to the internal struct SoundTags</p>
+</div></div><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../ears/struct.SoundData.html' title='ears::SoundData'>SoundData</a></code></h3><div class='methods'><h4 id='method.drop' class='method'><code>fn <a href='#method.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Destroy all the resources attached to the SoundData</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "ears";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The ears library documentation.">
+
+    <title>ears - Rust</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400,600'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+</head>
+<body>
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    <section class="sidebar">
+        
+        <p class='location'></p>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'>Crate <a class='mod' href=''>ears</a><a class='source' id='src-0' href='../src/ears/src/lib.rs.html#22-133'>[src]</a></h1>
+<div class='docblock'>
+<h1 id="ears" class='section-header'><a
+                           href="#ears">ears</a></h1>
+<p><strong>ears</strong> is a simple library for play Sounds and Musics in Rust.</p>
+
+<p><strong>ears</strong> is build on the top of OpenAL and libsndfile.</p>
+
+<ul>
+<li>Provide anaccess to the OpenAL spatialization functionality in a simple way.</li>
+<li>Accept a lot of audio formats thanks to libsndfile.</li>
+</ul>
+
+<h1 id="a-simple-example" class='section-header'><a
+                           href="#a-simple-example">A simple example</a></h1>
+<pre><code class="language-Rust">extern crate ears;
+use ears::Sound;
+
+fn main() {
+    // Create a new Sound.
+    let snd = Sound::new(~&quot;path/to/my/sound.ogg&quot;).unwrap();
+
+    // Play the Sound
+    snd.play();
+
+    // Wait until the end of the sound
+    while snd.is_playing() {}
+}</code></pre>
+
+<h1 id="functionnality" class='section-header'><a
+                           href="#functionnality">Functionnality</a></h1>
+<p><strong>ears</strong> provide two way for play audio files.</p>
+
+<ul>
+<li>The Sound class, which represent light sounds who can share a buffer of samples with another Sound.</li>
+<li>The Music class, which is a bigger sound and who can&#39;t share sample buffer.</li>
+</ul>
+
+<h1 id="use-ears" class='section-header'><a
+                           href="#use-ears">Use ears</a></h1>
+<p>As said before, <strong>ears</strong> require OpenAL and libsndfile, you need to install these two librarieson your system.</p>
+
+<p><strong>ears</strong> compiles against the last Rust compiler, so if it doesn&#39;t work on your computer you may need to update your compiler.</p>
+
+<p><strong>ears</strong> is built using make, so just type <code>make</code> at the root of the <strong>ears</strong> repository, this command
+build <strong>ears</strong>, the examples, and the documentation.</p>
+
+<p>You can build them separately too with the dedicated commands:</p>
+
+<pre><code class="language-Shell">&gt; make ears
+&gt; make examples
+&gt; make doc</code></pre>
+
+<p>then import stuff from <strong>ears</strong> in your project, you can import all the stuff :</p>
+
+<pre><code class="language-Rust">#[feature(globs)];
+extern crate ears;
+
+use ears::*;</code></pre>
+
+<p>or a specific one:</p>
+
+<pre><code class="language-Rust">extern crate ears;
+
+use ears::Music;</code></pre>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use states::{<a class='type' href='../ears/type.State.html' title='ears::State'>Initial</a>, <a class='type' href='../ears/type.State.html' title='ears::State'>Playing</a>, <a class='type' href='../ears/type.State.html' title='ears::State'>Paused</a>, <a class='type' href='../ears/type.State.html' title='ears::State'>Stopped</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                    <tr>
+                        <td><a class='mod' href='listener/index.html'
+                               title='ears::listener'>listener</a></td>
+                        <td class='docblock short'><p>Module for manage the listener in the scene.</p>
+</td>
+                    </tr>
+                </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                    <tr>
+                        <td><a class='struct' href='struct.Music.html'
+                               title='ears::Music'>Music</a></td>
+                        <td class='docblock short'><p>Play Music easily.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='struct' href='struct.RecordContext.html'
+                               title='ears::RecordContext'>RecordContext</a></td>
+                        <td class='docblock short'><p>The context needed to initialize a new Recorder</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='struct' href='struct.Recorder.html'
+                               title='ears::Recorder'>Recorder</a></td>
+                        <td class='docblock short'><p>Record audio</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='struct' href='struct.Sound.html'
+                               title='ears::Sound'>Sound</a></td>
+                        <td class='docblock short'><p>Play Sounds easily.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='struct' href='struct.SoundData.html'
+                               title='ears::SoundData'>SoundData</a></td>
+                        <td class='docblock short'><p>Samples extracted from a file.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='struct' href='struct.Tags.html'
+                               title='ears::Tags'>Tags</a></td>
+                        <td class='docblock short'><p>Structure containing the tags of a sound.</p>
+</td>
+                    </tr>
+                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                    <tr>
+                        <td><a class='type' href='type.State.html'
+                               title='ears::State'>State</a></td>
+                        <td class='docblock short'><p>The differents states in which a sound can be.</p>
+</td>
+                    </tr>
+                </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                    <tr>
+                        <td><a class='trait' href='trait.AudioController.html'
+                               title='ears::AudioController'>AudioController</a></td>
+                        <td class='docblock short'><p>The functionnality that an Audio Source should provide.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='trait' href='trait.AudioTags.html'
+                               title='ears::AudioTags'>AudioTags</a></td>
+                        <td class='docblock short'><p>AudioTags trait implemented by all struct who can provides audio.</p>
+</td>
+                    </tr>
+                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                    <tr>
+                        <td><a class='fn' href='fn.init.html'
+                               title='ears::init'>init</a></td>
+                        <td class='docblock short'><p>Initialize the internal context</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.init_in.html'
+                               title='ears::init_in'>init_in</a></td>
+                        <td class='docblock short'><p>Initialize the input device context</p>
+</td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "ears";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>
