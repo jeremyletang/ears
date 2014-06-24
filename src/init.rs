@@ -75,6 +75,8 @@ pub fn init_in() -> Option<RecordContext> {
 
 #[cfg(test)]
 mod test {
+    #![allow(non_snake_case_functions)]
+
     use init;
     use init_in;
 

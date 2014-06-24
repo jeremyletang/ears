@@ -674,13 +674,15 @@ impl Drop for Music {
 
 #[cfg(test)]
 mod test {
+    #![allow(non_snake_case_functions)]
+
     use music::Music;
     use states::{Playing, Paused, Stopped};
     use audio_controller::AudioController;
 
     #[test]
     fn music_create_OK() -> () {
-        let msc = Music::new("shot.wav");
+        let msc = Music::new("res/shot.wav");
 
         match msc {
             Some(_) => {},
@@ -701,7 +703,7 @@ mod test {
     #[test]
     #[ignore]
     fn music_play_OK() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.play();
         assert_eq!(msc.get_state() as i32, Playing as i32);
@@ -711,7 +713,7 @@ mod test {
     #[test]
     #[ignore]
     fn music_pause_OK() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.play();
         msc.pause();
@@ -721,7 +723,7 @@ mod test {
 
     #[test]
     fn music_stop_OK() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.play();
         msc.stop();
@@ -733,7 +735,7 @@ mod test {
     #[test]
     #[ignore]
     fn music_is_playing_TRUE() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.play();
         assert_eq!(msc.is_playing(), true);
@@ -743,7 +745,7 @@ mod test {
     #[test]
     #[ignore]
     fn music_is_playing_FALSE() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         assert_eq!(msc.is_playing(), false);
         msc.stop();
@@ -751,7 +753,7 @@ mod test {
 
     #[test]
     fn music_set_volume_OK() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_volume(0.7);
         assert_eq!(msc.get_volume(), 0.7);
@@ -759,7 +761,7 @@ mod test {
 
     #[test]
     fn music_set_min_volume_OK() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_min_volume(0.1);
         assert_eq!(msc.get_min_volume(), 0.1);
@@ -767,7 +769,7 @@ mod test {
 
     #[test]
     fn music_set_max_volume_OK() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_max_volume(0.9);
         assert_eq!(msc.get_max_volume(), 0.9);
@@ -775,7 +777,7 @@ mod test {
 
     #[test]
     fn music_is_looping_TRUE() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_looping(true);
         assert_eq!(msc.is_looping(), true);
@@ -783,7 +785,7 @@ mod test {
 
     #[test]
     fn music_is_looping_FALSE() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_looping(false);
         assert_eq!(msc.is_looping(), false);
@@ -791,7 +793,7 @@ mod test {
 
     #[test]
     fn music_set_pitch_OK() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_pitch(1.5);
         assert_eq!(msc.get_pitch(), 1.5);
@@ -799,7 +801,7 @@ mod test {
 
      #[test]
     fn music_set_relative_TRUE() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_relative(true);
         assert_eq!(msc.is_relative(), true);
@@ -807,7 +809,7 @@ mod test {
 
     #[test]
     fn music_set_relative_FALSE() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_relative(false);
         assert_eq!(msc.is_relative(), false);
@@ -815,7 +817,7 @@ mod test {
 
     #[test]
     fn music_set_position_OK() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_position([50., 150., 250.]);
         let res = msc.get_position();
@@ -824,7 +826,7 @@ mod test {
 
     #[test]
     fn music_set_direction_OK() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_direction([50., 150., 250.]);
         let res = msc.get_direction();
@@ -833,7 +835,7 @@ mod test {
 
     #[test]
     fn music_set_max_distance() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_max_distance(70.);
         assert_eq!(msc.get_max_distance(), 70.);
@@ -841,7 +843,7 @@ mod test {
 
     #[test]
     fn music_set_reference_distance() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_reference_distance(70.);
         assert_eq!(msc.get_reference_distance(), 70.);
@@ -849,7 +851,7 @@ mod test {
 
     #[test]
     fn music_set_attenuation() -> () {
-        let mut msc = Music::new("shot.wav").expect("Cannot create Music");
+        let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_attenuation(0.5f32);
         println!("{}", &msc.get_attenuation());

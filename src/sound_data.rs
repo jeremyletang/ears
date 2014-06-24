@@ -183,13 +183,15 @@ impl Drop for SoundData {
 
 #[cfg(test)]
 mod test {
+    #![allow(non_snake_case_functions)]
+
     #[allow(unused_variable)]
     use sound_data::SoundData;
 
     #[test]
     fn sounddata_create_OK() -> () {
         #![allow(unused_variable)]
-        let snd_data = SoundData::new("shot.wav").unwrap();
+        let snd_data = SoundData::new("res/shot.wav").unwrap();
 
     }
 
