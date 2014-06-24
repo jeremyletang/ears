@@ -1,0 +1,25 @@
+[package]
+
+name = "ears"
+version = "0.3.0"
+authors = ["Jeremy Letang <letang.jeremy@gmail.com>"]
+
+[[lib]]
+
+name = "ears"
+crate-type = ["dylib", "rlib"]
+
+[[bin]]
+
+name = "many_sounds"
+path = "src/examples/many_sounds/main.rs"
+
+[[bin]]
+
+name = "record"
+path = "src/examples/record/main.rs"
+
+[[bin]]
+
+name = "simple_player"
+path = "src/examples/simple_player/main.rs"

@@ -2,20 +2,23 @@ env:
   global:
     - secure: VnbCoVYdkLNGJsF7QXsu+fGVK1YkPmxvx3YuG5gQaUM+OkinME7hAlnUkDwwxet8G9U2ZX/nRo3XFUhC9yHGBL//bv++hOoLkGgqjhq5BFDBsiwVoEwuLcLr69xxa+4nn20zdG+ZTbz0tvxc05uz4ItZ2q+0oByMdhyqJT4PJzA=
 before_install:
+  - yes | sudo add-apt-repository ppa:cmrx64/cargo
   - sudo apt-get update
 install:
   - wget http://static.rust-lang.org/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.gz
   - tar xzf rust-nightly-x86_64-unknown-linux-gnu.tar.gz
   - export PATH=$PATH:$(pwd)/rust-nightly-x86_64-unknown-linux-gnu/bin
+  - sudo apt-get install cargo
   - sudo apt-get install libopenal-dev
   - sudo apt-get install libsndfile1-dev
 env:
  - RUST_TEST_TASKS=1
 script:
   - rustc --version
-  - make
-  - make tests
+  - cargo build
+  - rustc --test -o bin/ears_tests src/lib.rs
   - cd bin
   - ./ears_tests
+  - rustdoc -o doc src/ears.rs
 after_script:
   - curl http://www.rust-ci.org/artifacts/put?t=$RUSTCI_TOKEN | sh
