@@ -16,8 +16,7 @@ env:
 script:
   - rustc --version
   - cargo build
-  - rustc --test -o bin/ears_tests src/ears.rs
-  - cd bin
+  - rustc --test -o ears_tests src/ears.rs
   - ./ears_tests
   - rustdoc -o doc src/ears.rs
 after_script:
