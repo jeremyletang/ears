@@ -87,14 +87,14 @@ pub mod ffi {
 
     extern "C" {
         /// Context functions
-        pub fn alcCreateContext(device: *ALCdevice, attrlist: *i32) -> *ALCcontext;
-        pub fn alcMakeContextCurrent(context: *ALCcontext) -> ALCboolean;
-        pub fn alcDestroyContext(context: *ALCcontext);
-        pub fn alcGetCurrentContext() -> *ALCcontext;
+        pub fn alcCreateContext(device: *mut ALCdevice, attrlist: *mut i32) -> *mut ALCcontext;
+        pub fn alcMakeContextCurrent(context: *mut ALCcontext) -> ALCboolean;
+        pub fn alcDestroyContext(context: *mut ALCcontext);
+        pub fn alcGetCurrentContext() -> *mut ALCcontext;
 
         /// Device functions
-        pub fn alcOpenDevice(devicename: *c_char) -> *ALCdevice;
-        pub fn alcCloseDevice(device: *ALCdevice) -> ALCboolean;
+        pub fn alcOpenDevice(devicename: *mut c_char) -> *mut ALCdevice;
+        pub fn alcCloseDevice(device: *mut ALCdevice) -> ALCboolean;
 
         /// Listener functions
         pub fn alListenerf(param: i32, value: f32) -> ();
@@ -120,20 +120,20 @@ pub mod ffi {
         pub fn alSourceUnqueueBuffers(source: u32, nb: i32, buffers: *mut u32) -> ();
 
         /// Sound capture functions
-        pub fn alcCaptureCloseDevice(device: *ALCdevice) -> ALCboolean;
-        pub fn alcCaptureOpenDevice(device: *c_char, sample_rate: i32, format: i32, buffer_size: i32) -> *ALCdevice;
-        pub fn alcCaptureStart(devide: *ALCdevice);
-        pub fn alcCaptureStop(devide: *ALCdevice);
-        pub fn alcGetIntegerv(devide: *ALCdevice, param: i32,  size: i32, values: *mut i32);
-        pub fn alcCaptureSamples(devide: *ALCdevice, buffer: *c_void,sample: i32);
+        pub fn alcCaptureCloseDevice(device: *mut ALCdevice) -> ALCboolean;
+        pub fn alcCaptureOpenDevice(device: *mut c_char, sample_rate: i32, format: i32, buffer_size: i32) -> *mut ALCdevice;
+        pub fn alcCaptureStart(devide: *mut ALCdevice);
+        pub fn alcCaptureStop(devide: *mut ALCdevice);
+        pub fn alcGetIntegerv(devide: *mut ALCdevice, param: i32,  size: i32, values: *mut i32);
+        pub fn alcCaptureSamples(devide: *mut ALCdevice, buffer: *mut c_void,sample: i32);
 
         /// extension check
-        pub fn alcIsExtensionPresent(device: *ALCdevice, extension: *c_char) -> ALCboolean;
+        pub fn alcIsExtensionPresent(device: *mut ALCdevice, extension: *c_char) -> ALCboolean;
 
         /// Buffers functions
         pub fn alGenBuffers(n: i32, buffers: *mut u32) -> ();
         pub fn alDeleteBuffers(n: i32, buffers: *mut u32);
-        pub fn alBufferData(buffer: u32, format: i32, data: *c_void, size: i32, freq: i32) -> ();
+        pub fn alBufferData(buffer: u32, format: i32, data: *mut c_void, size: i32, freq: i32) -> ();
 
         /// Error
         pub fn alGetError() -> i32;
@@ -148,7 +148,7 @@ pub mod al {
     use super::ffi;
     use libc::c_void;
 
-    pub fn alBufferData(buffer: u32, format: i32, data: *c_void, size: i32, freq: i32) -> () {
+    pub fn alBufferData(buffer: u32, format: i32, data: *mut c_void, size: i32, freq: i32) -> () {
         unsafe { ffi::alBufferData(buffer, format, data, size, freq); }
     }
 

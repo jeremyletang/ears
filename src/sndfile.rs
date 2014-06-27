@@ -228,7 +228,7 @@ impl BitOr<FormatType, i32> for FormatType {
 
 /// SndFile object, used to load/store sound from a file path or an fd.
 pub struct SndFile {
-    handle : *ffi::SNDFILE,
+    handle : *mut ffi::SNDFILE,
     info : Box<SndInfo>
 }
 
@@ -253,7 +253,7 @@ impl SndFile {
      * the error otherwise.
      */
     pub fn new(path : &str, mode : OpenMode) -> Result<SndFile, String> {
-        let info = box SndInfo {
+        let mut info = box SndInfo {
             frames : 0,
             samplerate : 0,
             channels : 0,
@@ -262,11 +262,11 @@ impl SndFile {
             seekable : 0
         };
         let tmp_sndfile = path.with_c_str(|c_path| {
-            unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
+            unsafe {ffi::sf_open(c_path as *mut i8, mode as i32, &mut *info) }
         });
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_string()
+                CString::new(ffi::sf_strerror(ptr::mut_null()) as *i8, false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -287,13 +287,13 @@ impl SndFile {
      * Return Ok() containing the SndFile on success, a string representation of
      * the error otherwise.
      */
-    pub fn new_with_info(path : &str, mode : OpenMode, info: Box<SndInfo>) -> Result<SndFile, String> {
+    pub fn new_with_info(path : &str, mode : OpenMode, mut info: Box<SndInfo>) -> Result<SndFile, String> {
         let tmp_sndfile = path.with_c_str(|c_path| {
-            unsafe {ffi::sf_open(c_path, mode as i32, &*info) }
+            unsafe {ffi::sf_open(c_path as *mut i8, mode as i32, &mut *info) }
         });
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_string()
+                CString::new(ffi::sf_strerror(ptr::mut_null()) as *i8, false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -319,7 +319,7 @@ impl SndFile {
                        mode : OpenMode,
                        close_desc : bool)
                        -> Result<SndFile, String> {
-        let info = box SndInfo {
+        let mut info = box SndInfo {
             frames : 0,
             samplerate : 0,
             channels : 0,
@@ -329,15 +329,15 @@ impl SndFile {
         };
         let tmp_sndfile = match close_desc {
             true    => unsafe {
-                ffi::sf_open_fd(fd, mode as i32, &*info, ffi::SF_TRUE)
+                ffi::sf_open_fd(fd, mode as i32, &mut *info, ffi::SF_TRUE)
             },
             false   => unsafe {
-                ffi::sf_open_fd(fd, mode as i32, &*info, ffi::SF_FALSE)
+                ffi::sf_open_fd(fd, mode as i32, &mut *info, ffi::SF_FALSE)
             }
         };
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::null()), false).as_str().unwrap().to_string()
+                CString::new(ffi::sf_strerror(ptr::mut_null()) as *i8, false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -368,7 +368,7 @@ impl SndFile {
             None
         } else {
             Some(unsafe {
-                CString::new(c_string, false).as_str().unwrap().to_string()
+                CString::new(c_string as *i8, false).as_str().unwrap().to_string()
             })
         }
     }
@@ -388,7 +388,7 @@ impl SndFile {
         unsafe {
             ffi::sf_set_string(self.handle,
                                string_type as i32,
-                               string.to_c_str().unwrap())
+                               string.to_c_str().unwrap() as *mut i8)
         }
     }
 
@@ -400,7 +400,7 @@ impl SndFile {
      *
      * Return true if the struct is valid, false otherwise.
      */
-    pub fn check_format<'r>(info : &'r SndInfo) -> bool {
+    pub fn check_format<'r>(info : &'r mut SndInfo) -> bool {
         match unsafe {ffi::sf_format_check(info) } {
             ffi::SF_TRUE    => true,
             ffi::SF_FALSE   => false,
@@ -698,7 +698,7 @@ impl SndFile {
      */
     pub fn string_error(&self) -> String {
         unsafe {
-            CString::new(ffi::sf_strerror(self.handle), false).as_str().unwrap().to_string()
+            CString::new(ffi::sf_strerror(self.handle) as *i8, false).as_str().unwrap().to_string()
         }
     }
 
@@ -709,7 +709,7 @@ impl SndFile {
      */
     pub fn error_number(error_num : Error) -> String {
         unsafe {
-            CString::new(ffi::sf_error_number(error_num as i32), false).as_str().unwrap().to_string()
+            CString::new(ffi::sf_error_number(error_num as i32) as *i8, false).as_str().unwrap().to_string()
         }
     }
 

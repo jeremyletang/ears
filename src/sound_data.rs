@@ -117,7 +117,7 @@ impl SoundData {
         al::alGenBuffers(1, &mut buffer_id);
         al::alBufferData(buffer_id,
                          format,
-                         samples.as_ptr() as *c_void,
+                         samples.as_ptr() as *mut c_void,
                          len as i32,
                          infos.samplerate);
 

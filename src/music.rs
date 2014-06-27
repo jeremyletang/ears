@@ -146,7 +146,7 @@ impl Music {
             self.file.get_mut_ref().read_i16(samples.as_mut_slice(), sample_t_r as i64) as uint;
         al::alBufferData(al_buffers[0],
                          sample_format,
-                         samples.as_ptr() as *c_void,
+                         samples.as_ptr() as *mut c_void,
                          len as i32,
                          sample_rate);
 
@@ -156,7 +156,7 @@ impl Music {
             self.file.get_mut_ref().read_i16(samples.as_mut_slice(), sample_t_r as i64) as uint;
         al::alBufferData(al_buffers[1],
                          sample_format,
-                         samples.as_ptr() as *c_void,
+                         samples.as_ptr() as *mut c_void,
                          len as i32,
                          sample_rate);
 
@@ -193,7 +193,7 @@ impl Music {
                             mem::size_of::<i16>() as i64;
                         al::alBufferData(buf,
                                          sample_format,
-                                         samples.as_ptr() as *c_void,
+                                         samples.as_ptr() as *mut c_void,
                                          read as i32,
                                          sample_rate);
                         al::alSourceQueueBuffers(al_source, 1, &buf);

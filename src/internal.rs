@@ -40,9 +40,9 @@ local_data_key!(al_context: RefCell<Box<OpenAlData>>)
 
 #[deriving(Clone)]
 pub struct OpenAlData {
-    al_context: *ffi::ALCcontext,
-    al_device: *ffi::ALCdevice,
-    al_capt_device:  *ffi::ALCdevice
+    al_context: *mut ffi::ALCcontext,
+    al_device: *mut ffi::ALCdevice,
+    al_capt_device: *mut ffi::ALCdevice
 }
 
 impl OpenAlData {
@@ -52,11 +52,11 @@ impl OpenAlData {
      * Private method.
      */
     fn new() -> Result<OpenAlData, String> {
-        let device = unsafe { ffi::alcOpenDevice(ptr::null()) };
+        let device = unsafe { ffi::alcOpenDevice(ptr::mut_null()) };
         if device.is_null() {
             return Err("Internal error: cannot open the default device.".to_string());
         }
-        let context = unsafe { ffi::alcCreateContext(device, ptr::null()) };
+        let context = unsafe { ffi::alcCreateContext(device, ptr::mut_null()) };
         if context.is_null() {
             return Err("Internal error: cannot create the OpenAL context.".to_string());
         }
@@ -68,7 +68,7 @@ impl OpenAlData {
             OpenAlData {
                 al_context: context,
                 al_device: device,
-                al_capt_device: ptr::null()
+                al_capt_device: ptr::mut_null()
             }
         )
     }
@@ -85,7 +85,7 @@ impl OpenAlData {
      * otherwise an error message.
      */
     pub fn check_al_context() -> Result<(), String> {
-        if unsafe { ffi::alcGetCurrentContext() } != ptr::null() {
+        if unsafe { ffi::alcGetCurrentContext().is_not_null() } {
             return Ok(())
         }
         match al_context.get() {
@@ -113,7 +113,7 @@ impl OpenAlData {
                     return Err("Error: no input device available on your system.".to_string())
                 } else {
                     new_context.al_capt_device = unsafe {
-                        ffi::alcCaptureOpenDevice(ptr::null(),
+                        ffi::alcCaptureOpenDevice(ptr::mut_null(),
                                                   44100,
                                                   ffi::AL_FORMAT_MONO16,
                                                   44100) };
@@ -144,7 +144,7 @@ impl OpenAlData {
      * otherwise an error message.
      */
     pub fn check_al_input_context() -> Result<RecordContext, String> {
-        if unsafe { ffi::alcGetCurrentContext() } != ptr::null() {
+        if unsafe { ffi::alcGetCurrentContext().is_not_null() } {
             OpenAlData::is_input_context_init()
         } else {
             match OpenAlData::check_al_context() {
