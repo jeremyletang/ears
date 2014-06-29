@@ -266,7 +266,7 @@ impl SndFile {
         });
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::mut_null()) as *i8, false).as_str().unwrap().to_string()
+                CString::new(ffi::sf_strerror(ptr::mut_null()) as *const i8, false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -293,7 +293,7 @@ impl SndFile {
         });
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::mut_null()) as *i8, false).as_str().unwrap().to_string()
+                CString::new(ffi::sf_strerror(ptr::mut_null()) as *const i8, false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -337,7 +337,7 @@ impl SndFile {
         };
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::mut_null()) as *i8, false).as_str().unwrap().to_string()
+                CString::new(ffi::sf_strerror(ptr::mut_null()) as *const i8, false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -368,7 +368,7 @@ impl SndFile {
             None
         } else {
             Some(unsafe {
-                CString::new(c_string as *i8, false).as_str().unwrap().to_string()
+                CString::new(c_string as *const i8, false).as_str().unwrap().to_string()
             })
         }
     }
@@ -698,7 +698,7 @@ impl SndFile {
      */
     pub fn string_error(&self) -> String {
         unsafe {
-            CString::new(ffi::sf_strerror(self.handle) as *i8, false).as_str().unwrap().to_string()
+            CString::new(ffi::sf_strerror(self.handle) as *const i8, false).as_str().unwrap().to_string()
         }
     }
 
@@ -709,7 +709,7 @@ impl SndFile {
      */
     pub fn error_number(error_num : Error) -> String {
         unsafe {
-            CString::new(ffi::sf_error_number(error_num as i32) as *i8, false).as_str().unwrap().to_string()
+            CString::new(ffi::sf_error_number(error_num as i32) as *const i8, false).as_str().unwrap().to_string()
         }
     }
 

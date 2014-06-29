@@ -101,7 +101,7 @@ pub mod ffi {
         pub fn alListener3f(param: i32, value1: f32, value2: f32, value3: f32) -> ();
         pub fn alGetListenerf(param: i32, value: *mut f32) -> ();
         pub fn alGetListener3f(param: f32, value1: *mut f32, value2: *mut f32, value3: *mut f32) -> ();
-        pub fn alListenerfv(param: i32, values: *f32) -> ();
+        pub fn alListenerfv(param: i32, values: *const f32) -> ();
         pub fn alGetListenerfv(param: i32, values: *mut f32) -> ();
 
         /// Sources functions
@@ -114,9 +114,9 @@ pub mod ffi {
         pub fn alSourceStop(source: u32) -> ();
         pub fn alGetSourcei(source: u32, param: i32, value: *mut i32) -> ();
         pub fn alGetSourcef(source: u32, param: i32, value: *mut f32) -> ();
-        pub fn alSourcefv(source: u32, param: i32, value: *f32) -> ();
+        pub fn alSourcefv(source: u32, param: i32, value: *const f32) -> ();
         pub fn alGetSourcefv(source: u32, param: i32, value: *mut f32) -> ();
-        pub fn alSourceQueueBuffers(source: u32, nb: i32, buffers: *u32) -> ();
+        pub fn alSourceQueueBuffers(source: u32, nb: i32, buffers: *const u32) -> ();
         pub fn alSourceUnqueueBuffers(source: u32, nb: i32, buffers: *mut u32) -> ();
 
         /// Sound capture functions
@@ -128,7 +128,7 @@ pub mod ffi {
         pub fn alcCaptureSamples(devide: *mut ALCdevice, buffer: *mut c_void,sample: i32);
 
         /// extension check
-        pub fn alcIsExtensionPresent(device: *mut ALCdevice, extension: *c_char) -> ALCboolean;
+        pub fn alcIsExtensionPresent(device: *mut ALCdevice, extension: *const c_char) -> ALCboolean;
 
         /// Buffers functions
         pub fn alGenBuffers(n: i32, buffers: *mut u32) -> ();
@@ -152,7 +152,7 @@ pub mod al {
         unsafe { ffi::alBufferData(buffer, format, data, size, freq); }
     }
 
-    pub fn alSourceQueueBuffers(source: u32, nb: i32, buffers: *u32) -> () {
+    pub fn alSourceQueueBuffers(source: u32, nb: i32, buffers: *const u32) -> () {
         unsafe { ffi::alSourceQueueBuffers(source, nb, buffers); }
     }
 
@@ -198,7 +198,7 @@ pub mod al {
         unsafe {ffi::alGenSources(n, sources); }
     }
 
-    pub fn alSourcefv(source: u32, param: i32, value: *f32) -> () {
+    pub fn alSourcefv(source: u32, param: i32, value: *const f32) -> () {
         unsafe { ffi::alSourcefv(source, param, value); }
     }
 
@@ -226,7 +226,7 @@ pub mod al {
         unsafe { ffi::alGetListener3f(param, value1, value2, value3); }
     }
 
-    pub fn alListenerfv(param: i32, values: *f32) -> () {
+    pub fn alListenerfv(param: i32, values: *const f32) -> () {
         unsafe { ffi::alListenerfv(param, values); }
     }
 

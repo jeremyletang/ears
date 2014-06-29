@@ -123,8 +123,8 @@ pub type SNDFILE = c_void;
 
 pub struct FormatInfo {
     pub format : i32,
-    pub name : *c_char,
-    pub extension : *c_char
+    pub name : *mut c_char,
+    pub extension : *mut c_char
 }
 
 extern "C" {
