@@ -32,7 +32,7 @@ fn main() -> () {
     // call ears_init() function to ensure that the ears context is not destroyed by a task.
     ears::init();
 
-    let mut i = 0;
+    let mut i = 0u;
 
     while i < 20 {
         task::spawn(proc() {
