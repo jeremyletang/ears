@@ -89,7 +89,7 @@ use ears::Music;
 ```
 */
 
-#![crate_id = "ears#0.3"]
+#![crate_name = "ears"]
 #![desc = "Easy Api in Rust for Sounds"]
 #![license = "MIT"]
 #![crate_type = "dylib"]
