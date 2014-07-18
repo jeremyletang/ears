@@ -117,7 +117,7 @@ impl Music {
             None => {}
         };
 
-        let sound_tags = get_sound_tags(file);
+        let sound_tags = get_sound_tags(&*file);
 
         Some( Music {
             al_source: source_id,
