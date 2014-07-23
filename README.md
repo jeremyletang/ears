@@ -1,12 +1,12 @@
 # ears [![Build Status](https://travis-ci.org/jeremyletang/ears.png?branch=master)](https://travis-ci.org/jeremyletang/ears)
 
 
-__ears__ is a simple library for play Sounds and Musics in Rust.
+__ears__ is a simple library to play Sounds and Musics in Rust.
 
 __ears__ is build on the top of OpenAL and libsndfile.
 
-* Provide anaccess to the OpenAL spatialization functionality in a simple way.
-* Accept a lot of audio formats thanks to libsndfile.
+* Provides an access to the OpenAL spatialization functionality in a simple way.
+* Accepts a lot of audio formats, thanks to libsndfile.
 
 # A simple example
 
@@ -26,21 +26,21 @@ fn main() {
 }
 ```
 
-# Functionnality
+# Functionalities
 
-__ears__ provide two way for play audio files.
+__ears__ provides two ways to play audio files.
 
-* The Sound class, which represent light sounds who can share a buffer of samples with another Sound.
+* The Sound class, which represents light sounds who can share a buffer of samples with another Sound.
 * The Music class, which is a bigger sound and who can't share sample buffer.
 
 # Use ears
 
-As said before, __ears__ require OpenAL and libsndfile, you need to install these two librarieson your system.
+Like previously said, __ears__ requires OpenAL and libsndfile. You need to install these two libraries on your system.
 
 __ears__ compiles against the last Rust compiler, so if it doesn't work on your computer you may need to update your compiler.
 
 __ears__ is built using make, so just type `make` at the root of the __ears__ repository, this command
-build __ears__, the examples, and the documentation.
+builds __ears__, examples and the documentation.
 
 You can build them separately too with the dedicated commands:
 
@@ -50,7 +50,7 @@ You can build them separately too with the dedicated commands:
 > make doc
 ```
 
-then import stuff from __ears__ in your project, you can import all the stuff :
+then import stuff from __ears__ in your project, you can import all the stuff:
 
 ```Rust
 #[feature(globs)];
