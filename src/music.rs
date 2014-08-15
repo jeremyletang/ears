@@ -24,6 +24,7 @@
 use std::io::timer::sleep;
 use std::mem;
 use std::task;
+use std::time::Duration;
 use libc::c_void;
 use std::vec::Vec;
 
@@ -181,7 +182,7 @@ impl Music {
 
             while status != ffi::AL_STOPPED {
                 // wait a bit
-                sleep(50);
+                sleep(Duration::milliseconds(50i32));
                 if status == ffi::AL_PLAYING {
                     al::alGetSourcei(al_source,
                                      ffi::AL_BUFFERS_PROCESSED,
@@ -235,7 +236,7 @@ impl AudioController for Music {
                 if self.is_playing() {
                     al::alSourceStop(self.al_source);
                     // wait a bit for openal terminate
-                    sleep(50);
+                    sleep(Duration::milliseconds(50i32));
                 }
                 self.file.get_mut_ref().seek(0, SeekSet);
                 self.process_music();
@@ -259,7 +260,7 @@ impl AudioController for Music {
         check_openal_context!(());
 
         al::alSourceStop(self.al_source);
-        sleep(50)
+        sleep(Duration::milliseconds(50i32));
     }
 
     /**

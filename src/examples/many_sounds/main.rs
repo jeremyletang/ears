@@ -24,6 +24,7 @@
 extern crate ears;
 
 use std::io::timer::sleep;
+use std::time::Duration;
 use std::task;
 
 use ears::{Sound, AudioController};
@@ -41,10 +42,10 @@ fn main() -> () {
             while snd2.is_playing() {}
         });
         i += 1;
-        sleep(150);
+        sleep(Duration::milliseconds(150i32));
     }
 
     // Wait until the last sound is played, the main task own the ears context,
     // so we should kepp it alive
-    sleep(900);
+    sleep(Duration::milliseconds(900i32));
 }

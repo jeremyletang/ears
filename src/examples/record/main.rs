@@ -23,6 +23,7 @@
 
 extern crate ears;
 
+use std::time::Duration;
 use std::io::timer::sleep;
 
 fn main() -> () {
@@ -35,7 +36,7 @@ fn main() -> () {
     // Create a new Recorder using the RecordContext
     let mut recorder = ears::Recorder::new(ctxt);
     recorder.start();
-    sleep(5000);
+    sleep(Duration::milliseconds(5000i32));
     recorder.stop();
     match recorder.save_to_file("hello") {
         true => println!("Save okay !"),
