@@ -4,7 +4,7 @@ name = "ears"
 version = "0.3.0"
 authors = ["Jeremy Letang <letang.jeremy@gmail.com>"]
 
-[[lib]]
+[lib]
 
 name = "ears"
 crate-type = ["dylib", "rlib"]
