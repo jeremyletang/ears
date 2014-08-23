@@ -50,6 +50,7 @@ mod ffi;
 
 /// The SndInfo structure is for passing data between the calling
 /// function and the library when opening a file for reading or writing.
+#[repr(C)]
 #[deriving(Clone)]
 pub struct SndInfo {
     pub frames : i64,

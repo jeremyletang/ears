@@ -139,7 +139,9 @@ pub mod ffi {
         pub fn alGetError() -> i32;
     }
 
+    #[repr(C)]
     pub struct ALCdevice;
+    #[repr(C)]
     pub struct ALCcontext;
 }
 

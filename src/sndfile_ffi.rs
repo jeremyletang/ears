@@ -121,6 +121,7 @@ pub static SF_FORMAT_ENDMASK : FORMAT_TYPE      = 0x30000000;
 
 pub type SNDFILE = c_void;
 
+#[repr(C)]
 pub struct FormatInfo {
     pub format : i32,
     pub name : *mut c_char,
