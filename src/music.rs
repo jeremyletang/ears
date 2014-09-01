@@ -144,7 +144,7 @@ impl Music {
 
         // full buff1
         let mut len = mem::size_of::<i16>() *
-            self.file.get_mut_ref().read_i16(samples.as_mut_slice(), sample_t_r as i64) as uint;
+            self.file.as_mut().unwrap().read_i16(samples.as_mut_slice(), sample_t_r as i64) as uint;
         al::alBufferData(al_buffers[0],
                          sample_format,
                          samples.as_ptr() as *mut c_void,
@@ -154,7 +154,7 @@ impl Music {
         // full buff2
         samples.clear();
         len = mem::size_of::<i16>() *
-            self.file.get_mut_ref().read_i16(samples.as_mut_slice(), sample_t_r as i64) as uint;
+            self.file.as_mut().unwrap().read_i16(samples.as_mut_slice(), sample_t_r as i64) as uint;
         al::alBufferData(al_buffers[1],
                          sample_format,
                          samples.as_ptr() as *mut c_void,
@@ -182,7 +182,7 @@ impl Music {
 
             while status != ffi::AL_STOPPED {
                 // wait a bit
-                sleep(Duration::milliseconds(50i32));
+                sleep(Duration::milliseconds(50i64));
                 if status == ffi::AL_PLAYING {
                     al::alGetSourcei(al_source,
                                      ffi::AL_BUFFERS_PROCESSED,
@@ -205,7 +205,7 @@ impl Music {
             }
             al::alSourcei(al_source, ffi::AL_BUFFER, 0);
         });
-        let file = self.file.get_ref().clone();
+        let file = self.file.as_ref().unwrap().clone();
         chan.send(file);
     }
 
@@ -236,9 +236,9 @@ impl AudioController for Music {
                 if self.is_playing() {
                     al::alSourceStop(self.al_source);
                     // wait a bit for openal terminate
-                    sleep(Duration::milliseconds(50i32));
+                    sleep(Duration::milliseconds(50i64));
                 }
-                self.file.get_mut_ref().seek(0, SeekSet);
+                self.file.as_mut().unwrap().seek(0, SeekSet);
                 self.process_music();
             }
         }
@@ -260,7 +260,7 @@ impl AudioController for Music {
         check_openal_context!(());
 
         al::alSourceStop(self.al_source);
-        sleep(Duration::milliseconds(50i32));
+        sleep(Duration::milliseconds(50i64));
     }
 
     /**

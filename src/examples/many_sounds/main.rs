@@ -42,10 +42,10 @@ fn main() -> () {
             while snd2.is_playing() {}
         });
         i += 1;
-        sleep(Duration::milliseconds(150i32));
+        sleep(Duration::milliseconds(150i64));
     }
 
     // Wait until the last sound is played, the main task own the ears context,
     // so we should kepp it alive
-    sleep(Duration::milliseconds(900i32));
+    sleep(Duration::milliseconds(900i64));
 }

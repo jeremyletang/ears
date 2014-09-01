@@ -36,7 +36,7 @@ fn main() -> () {
     // Create a new Recorder using the RecordContext
     let mut recorder = ears::Recorder::new(ctxt);
     recorder.start();
-    sleep(Duration::milliseconds(5000i32));
+    sleep(Duration::milliseconds(5000i64));
     recorder.stop();
     match recorder.save_to_file("hello") {
         true => println!("Save okay !"),

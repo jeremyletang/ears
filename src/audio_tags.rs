@@ -48,7 +48,7 @@ pub struct Tags {
     /// The license of the sound as a String
     pub license: String,
     /// The tracknumber of the sound as a String
-    pub trackNumber: String,
+    pub track_number: String,
     /// The genre of the sound as a String
     pub genre: String
 }
@@ -63,7 +63,7 @@ pub fn empty() -> Tags {
         date: "".to_string(),
         album: "".to_string(),
         license: "".to_string(),
-        trackNumber: "".to_string(),
+        track_number: "".to_string(),
         genre: "".to_string()
     }
 }
@@ -78,7 +78,7 @@ pub fn get_sound_tags(file: &SndFile) -> Tags {
         date: file.get_string(Date).unwrap_or("".to_string()),
         album: file.get_string(Album).unwrap_or("".to_string()),
         license: file.get_string(License).unwrap_or("".to_string()),
-        trackNumber: file.get_string(TrackNumber).unwrap_or("".to_string()),
+        track_number: file.get_string(TrackNumber).unwrap_or("".to_string()),
         genre: file.get_string(Genre).unwrap_or("".to_string())
     }
 }

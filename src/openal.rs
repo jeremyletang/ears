@@ -24,8 +24,7 @@
 * Bind only functions which are needed by lib sailor
 */
 
-#![allow(dead_code, non_snake_case_functions)]
-
+#![allow(dead_code, non_snake_case)]
 
 #[link(name = "openal")]
 extern {}
