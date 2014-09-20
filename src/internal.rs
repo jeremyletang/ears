@@ -52,11 +52,11 @@ impl OpenAlData {
      * Private method.
      */
     fn new() -> Result<OpenAlData, String> {
-        let device = unsafe { ffi::alcOpenDevice(ptr::mut_null()) };
+        let device = unsafe { ffi::alcOpenDevice(ptr::null_mut()) };
         if device.is_null() {
             return Err("Internal error: cannot open the default device.".to_string());
         }
-        let context = unsafe { ffi::alcCreateContext(device, ptr::mut_null()) };
+        let context = unsafe { ffi::alcCreateContext(device, ptr::null_mut()) };
         if context.is_null() {
             return Err("Internal error: cannot create the OpenAL context.".to_string());
         }
@@ -68,7 +68,7 @@ impl OpenAlData {
             OpenAlData {
                 al_context: context,
                 al_device: device,
-                al_capt_device: ptr::mut_null()
+                al_capt_device: ptr::null_mut()
             }
         )
     }
@@ -113,7 +113,7 @@ impl OpenAlData {
                     return Err("Error: no input device available on your system.".to_string())
                 } else {
                     new_context.al_capt_device = unsafe {
-                        ffi::alcCaptureOpenDevice(ptr::mut_null(),
+                        ffi::alcCaptureOpenDevice(ptr::null_mut(),
                                                   44100,
                                                   ffi::AL_FORMAT_MONO16,
                                                   44100) };

@@ -267,7 +267,7 @@ impl SndFile {
         });
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::mut_null()) as *const i8, false).as_str().unwrap().to_string()
+                CString::new(ffi::sf_strerror(ptr::null_mut()) as *const i8, false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -294,7 +294,7 @@ impl SndFile {
         });
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::mut_null()) as *const i8, false).as_str().unwrap().to_string()
+                CString::new(ffi::sf_strerror(ptr::null_mut()) as *const i8, false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
@@ -338,7 +338,7 @@ impl SndFile {
         };
         if tmp_sndfile.is_null() {
             Err(unsafe {
-                CString::new(ffi::sf_strerror(ptr::mut_null()) as *const i8, false).as_str().unwrap().to_string()
+                CString::new(ffi::sf_strerror(ptr::null_mut()) as *const i8, false).as_str().unwrap().to_string()
             })
         } else {
             Ok(SndFile {
