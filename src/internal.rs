@@ -35,7 +35,6 @@ use openal::ffi;
 use record_context;
 use record_context::RecordContext;
 
-// static al_context: local_data::Key<Box<OpenAlData>> = &local_data::Key;
 local_data_key!(al_context: RefCell<Box<OpenAlData>>)
 
 #[deriving(Clone)]

@@ -112,7 +112,7 @@ impl Recorder {
                                                mem::transmute(&tmp_buf.as_slice()[0]),
                                                available_samples);
                     }
-                    samples.push_all_move(tmp_buf);
+                    samples.extend(tmp_buf.into_iter());
                 }
 
                 match stop_receiver.try_recv() {
