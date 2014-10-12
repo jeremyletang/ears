@@ -36,9 +36,7 @@ use std::ptr;
 use std::c_str::CString;
 
 #[doc(hidden)]
-#[cfg(target_os="macos")]
-#[cfg(target_os="linux")]
-#[cfg(target_os="win32")]
+#[cfg(any(target_os="macos", target_os="linux", target_os="win32"))]
 mod libsndfile {
     #[link(name = "sndfile")]
     extern {}

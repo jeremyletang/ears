@@ -35,53 +35,53 @@ pub mod ffi {
 
     /// OpenAL types
     pub type ALCboolean = c_char;
-    pub static ALC_TRUE:               ALCboolean  = 1;
-    pub static ALC_FALSE:              ALCboolean  = 0;
+    pub const ALC_TRUE:               ALCboolean  = 1;
+    pub const ALC_FALSE:              ALCboolean  = 0;
 
     /// Sound modifier
-    pub static AL_GAIN:                i32         = 0x100A;
-    pub static AL_PITCH:               i32         = 0x1003;
-    pub static AL_SOURCE_RELATIVE:     i32         = 0x202;
-    pub static AL_POSITION:            i32         = 0x1004;
-    pub static AL_ORIENTATION:         i32         = 0x100F;
-    pub static AL_DIRECTION:           i32         = 0x1005;
-    pub static AL_LOOPING:             i32         = 0x1007;
-    pub static AL_MIN_GAIN:            i32         = 0x100D;
-    pub static AL_MAX_GAIN:            i32         = 0x100E;
-    pub static AL_MAX_DISTANCE:        i32         = 0x1023;
-    pub static AL_REFERENCE_DISTANCE:  i32         = 0x1020;
-    pub static AL_ROLLOFF_FACTOR:      i32         = 0x1021;
+    pub const AL_GAIN:                i32         = 0x100A;
+    pub const AL_PITCH:               i32         = 0x1003;
+    pub const AL_SOURCE_RELATIVE:     i32         = 0x202;
+    pub const AL_POSITION:            i32         = 0x1004;
+    pub const AL_ORIENTATION:         i32         = 0x100F;
+    pub const AL_DIRECTION:           i32         = 0x1005;
+    pub const AL_LOOPING:             i32         = 0x1007;
+    pub const AL_MIN_GAIN:            i32         = 0x100D;
+    pub const AL_MAX_GAIN:            i32         = 0x100E;
+    pub const AL_MAX_DISTANCE:        i32         = 0x1023;
+    pub const AL_REFERENCE_DISTANCE:  i32         = 0x1020;
+    pub const AL_ROLLOFF_FACTOR:      i32         = 0x1021;
 
     /// Sound format
-    pub static AL_FORMAT_MONO16:       i32         = 0x1101;
-    pub static AL_FORMAT_STEREO16:     i32         = 0x1103;
-    pub static AL_FORMAT_51CHN16:      i32         = 0x120B;
-    pub static AL_FORMAT_61CHN16:      i32         = 0x120E;
-    pub static AL_FORMAT_71CHN16:      i32         = 0x1211;
-    pub static AL_FORMAT_QUAD16:       i32         = 0x1205;
+    pub const AL_FORMAT_MONO16:       i32         = 0x1101;
+    pub const AL_FORMAT_STEREO16:     i32         = 0x1103;
+    pub const AL_FORMAT_51CHN16:      i32         = 0x120B;
+    pub const AL_FORMAT_61CHN16:      i32         = 0x120E;
+    pub const AL_FORMAT_71CHN16:      i32         = 0x1211;
+    pub const AL_FORMAT_QUAD16:       i32         = 0x1205;
 
     /// Source params
-    pub static AL_BUFFER:              i32         = 0x1009;
-    pub static AL_BUFFERS_PROCESSED:   i32         = 0x1016;
-    pub static AL_BUFFERS_QUEUED:      i32         = 0x1015;
+    pub const AL_BUFFER:              i32         = 0x1009;
+    pub const AL_BUFFERS_PROCESSED:   i32         = 0x1016;
+    pub const AL_BUFFERS_QUEUED:      i32         = 0x1015;
 
     /// Error identifiers
-    pub static AL_NO_ERROR:            i32         = 0;
-    pub static AL_INVALID_NAME:        i32         = 0xA001;
-    pub static AL_INVALID_ENUM:        i32         = 0xA002;
-    pub static AL_INVALID_VALUE:       i32         = 0xA003;
-    pub static AL_INVALID_OPERATION:   i32         = 0xA004;
-    pub static AL_OUT_OF_MEMORY :      i32         = 0xA005;
+    pub const AL_NO_ERROR:            i32         = 0;
+    pub const AL_INVALID_NAME:        i32         = 0xA001;
+    pub const AL_INVALID_ENUM:        i32         = 0xA002;
+    pub const AL_INVALID_VALUE:       i32         = 0xA003;
+    pub const AL_INVALID_OPERATION:   i32         = 0xA004;
+    pub const AL_OUT_OF_MEMORY :      i32         = 0xA005;
 
     /// Source states
-    pub static AL_SOURCE_STATE:        i32         = 0x1010;
-    pub static AL_INITIAL:             i32         = 0x1011;
-    pub static AL_PLAYING:             i32         = 0x1012;
-    pub static AL_PAUSED:              i32         = 0x1013;
-    pub static AL_STOPPED:             i32         = 0x1014;
+    pub const AL_SOURCE_STATE:        i32         = 0x1010;
+    pub const AL_INITIAL:             i32         = 0x1011;
+    pub const AL_PLAYING:             i32         = 0x1012;
+    pub const AL_PAUSED:              i32         = 0x1013;
+    pub const AL_STOPPED:             i32         = 0x1014;
 
     /// ALC
-    pub static ALC_CAPTURE_SAMPLES :    i32         = 0x312;
+    pub const ALC_CAPTURE_SAMPLES :    i32         = 0x312;
 
 
     extern "C" {

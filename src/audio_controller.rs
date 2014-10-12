@@ -280,4 +280,3 @@ pub trait AudioController {
      */
     fn get_attenuation(&self) -> f32;
 }
-
