@@ -51,7 +51,7 @@ use audio_tags::{Tags, AudioTags, get_sound_tags};
  *
  * fn main() -> () {
  *    // Load a Music
- *   let msc = Music::new(~"path/to/my/Music.flac").unwrap();
+ *   let msc = Music::new("path/to/my/Music.flac").unwrap();
  *
  *   // Play it
  *   msc.play();
@@ -816,13 +816,15 @@ mod test {
         assert_eq!(msc.is_relative(), false);
     }
 
+    // untill https://github.com/rust-lang/rust/issues/7622 is not fixed, slice comparsion is used
+    
     #[test]
     fn music_set_position_OK() -> () {
         let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
 
         msc.set_position([50., 150., 250.]);
         let res = msc.get_position();
-        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
+        assert_eq!([res[0], res[1], res[2]][], [50f32, 150f32, 250f32][]);
     }
 
     #[test]
@@ -831,7 +833,7 @@ mod test {
 
         msc.set_direction([50., 150., 250.]);
         let res = msc.get_direction();
-        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
+        assert_eq!([res[0], res[1], res[2]][], [50f32, 150f32, 250f32][]);
     }
 
     #[test]

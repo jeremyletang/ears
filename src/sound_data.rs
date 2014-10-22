@@ -43,7 +43,7 @@ use audio_tags::{Tags, AudioTags, get_sound_tags};
  *
  * fn main() -> () {
  *   // Create a SoundData
- *   let snd_data = Rc::new(RefCell::new(SoundData::new(~"path/to/my/sound.wav")
+ *   let snd_data = Rc::new(RefCell::new(SoundData::new("path/to/my/sound.wav")
  *                                       .unwrap()));
  *
  *   // Create two Sound with the same SoundData
