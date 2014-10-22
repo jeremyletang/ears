@@ -911,13 +911,15 @@ mod test {
         assert_eq!(snd.is_relative(), false);
     }
 
+    // untill https://github.com/rust-lang/rust/issues/7622 is not fixed, slice comparsion is used
+
     #[test]
     fn sound_set_position_OK() -> () {
         let mut snd = Sound::new("res/shot.wav").expect("Cannot create sound");
 
         snd.set_position([50f32, 150f32, 250f32]);
         let res = snd.get_position();
-        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
+        assert_eq!([res[0], res[1], res[2]][], [50f32, 150f32, 250f32][]);
     }
 
     #[test]
@@ -926,7 +928,7 @@ mod test {
 
         snd.set_direction([50f32, 150f32, 250f32]);
         let res = snd.get_direction();
-        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
+        assert_eq!([res[0], res[1], res[2]][], [50f32, 150f32, 250f32][]);
     }
 
 
