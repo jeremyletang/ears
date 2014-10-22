@@ -46,7 +46,7 @@ use audio_tags::{AudioTags, Tags};
  *
  * fn main() -> () {
  *    // Create a Sound whith the path of the sound file.
- *    let snd = Sound::new(~"path/to/my/sound.ogg").unwrap();
+ *    let snd = Sound::new("path/to/my/sound.ogg").unwrap();
  *
  *    // Play it
  *    snd.play();

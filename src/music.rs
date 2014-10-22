@@ -51,7 +51,7 @@ use audio_tags::{Tags, AudioTags, get_sound_tags};
  *
  * fn main() -> () {
  *    // Load a Music
- *   let msc = Music::new(~"path/to/my/Music.flac").unwrap();
+ *   let msc = Music::new("path/to/my/Music.flac").unwrap();
  *
  *   // Play it
  *   msc.play();
