@@ -41,7 +41,7 @@ use internal::OpenAlData;
  * ```Rust
  * match ears::init() {
  *     true  => { do_stuff() },
- *     false => fail!("ears init error")
+ *     false => panic!("ears init error")
  * }
  * ```
  */
@@ -62,7 +62,7 @@ pub fn init() -> bool {
  * ```Rust
  * match ears::init_in() {
  *     Some(rc) => { do_stuff() },
- *     None     => fail!("ears init input error")
+ *     None     => panic!("ears init input error")
  * }
  * ```
  */
