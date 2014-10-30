@@ -42,7 +42,7 @@ fn main() {
     // Try to create the music
     let mut music = match Music::new(line.as_slice()) {
         Some(music) => music,
-        None        => fail!("Cannot load the music.")
+        None        => panic!("Cannot load the music.")
     };
 
     // Play it

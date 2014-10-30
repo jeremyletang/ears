@@ -80,7 +80,7 @@ impl Sound {
      * ```Rust
      * let snd = match Sound::new("path/to/the/sound.ogg") {
      *     Some(snd) => snd,
-     *     None      => fail!("Cannot load the sound from a file !")
+     *     None      => panic!("Cannot load the sound from a file !")
      * };
      * ```
      */
@@ -113,11 +113,11 @@ impl Sound {
      *
      * let snd_data = match SoundData::new("path/to/the/sound.ogg") {
      *     Some(snd_data) => Rc::new(RefCell::new(snd_data)),
-     *     None           => fail!("Cannot create the sound data !")
+     *     None           => panic!("Cannot create the sound data !")
      * };
      * let snd = match Sound::new_with_data(snd_data) {
      *     Some(snd) => snd,
-     *     None      => fail!("Cannot create a sound using a sound data !")
+     *     None      => panic!("Cannot create a sound using a sound data !")
      * }
      * ```
      */
@@ -713,7 +713,7 @@ mod test {
         println!("YOUHOU");
         match snd {
             Some(_) => {},
-            None    => fail!()
+            None    => panic!()
         }
     }
 
@@ -722,7 +722,7 @@ mod test {
         let snd = Sound::new("toto.wav");
 
         match snd {
-            Some(_) => fail!(),
+            Some(_) => panic!(),
             None    => {}
         }
     }

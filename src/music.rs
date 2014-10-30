@@ -687,7 +687,7 @@ mod test {
 
         match msc {
             Some(_) => {},
-            None    => fail!()
+            None    => panic!()
         }
     }
 
@@ -696,7 +696,7 @@ mod test {
         let msc = Music::new("toto.wav");
 
         match msc {
-            Some(_) => fail!(),
+            Some(_) => panic!(),
             None    => {}
         }
     }
