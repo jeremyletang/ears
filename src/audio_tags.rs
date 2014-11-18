@@ -21,8 +21,19 @@
 
 //! The tags extracted from an audio file.
 
-use sndfile::{SndFile, Title, Copyright, Software, Artist, Comment, Date,
-              Album, License, TrackNumber, Genre};
+use sndfile::SndFile;
+use sndfile::StringSoundType::{
+    Title,
+    Copyright,
+    Software,
+    Artist,
+    Comment,
+    Date,
+    Album,
+    License,
+    TrackNumber,
+    Genre
+};
 
 /**
  * Structure containing the tags of a sound.

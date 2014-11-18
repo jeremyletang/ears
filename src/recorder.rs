@@ -21,15 +21,15 @@
 
 //! Record audio
 
-#![allow(missing_doc)]
-
 use std::{task, mem};
 use std::vec::Vec;
 
 use record_context::RecordContext;
 use record_context;
 use openal::ffi;
-use sndfile::{SndInfo, SndFile, FormatWav, FormatPcm16, Write};
+use sndfile::{SndInfo, SndFile};
+use sndfile::OpenMode::Write;
+use sndfile::FormatType::{FormatWav, FormatPcm16};
 
 /**
  * Record audio

@@ -30,8 +30,11 @@ use std::vec::Vec;
 
 use internal::OpenAlData;
 use openal::{ffi, al};
-use sndfile::{SndInfo, SndFile, Read, SeekSet};
-use states::{State, Initial, Playing, Paused, Stopped};
+use sndfile::{SndInfo, SndFile};
+use sndfile::OpenMode::Read;
+use sndfile::SeekMode::SeekSet;
+use states::State;
+use states::State::{Initial, Playing, Paused, Stopped};
 use audio_controller::AudioController;
 use audio_tags::{Tags, AudioTags, get_sound_tags};
 

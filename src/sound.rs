@@ -25,10 +25,10 @@ use std::rc::Rc;
 use std::cell::RefCell;
 
 use internal::OpenAlData;
-use sound_data::SoundData;
-use sound_data;
+use sound_data::{mod, SoundData};
 use openal::{ffi, al};
-use states::{State, Initial, Playing, Paused, Stopped};
+use states::State;
+use states::State::{Initial, Playing, Paused, Stopped};
 use audio_controller::AudioController;
 use audio_tags::{AudioTags, Tags};
 

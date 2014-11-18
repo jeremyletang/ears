@@ -94,7 +94,6 @@ use ears::Music;
 #![license = "MIT"]
 #![crate_type = "dylib"]
 #![crate_type = "rlib"]
-#![warn(missing_doc)]
 #![allow(dead_code)]
 #![feature(macro_rules)]
 #![feature(unsafe_destructor)]
@@ -105,7 +104,7 @@ extern crate libc;
 pub use einit::{init, init_in};
 pub use music::Music;
 pub use sound::Sound;
-pub use states::{State, Initial, Playing, Paused, Stopped};
+pub use states::State;
 pub use sound_data::SoundData;
 pub use audio_controller::AudioController;
 pub use audio_tags::{AudioTags, Tags};

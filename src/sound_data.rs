@@ -26,7 +26,8 @@ use libc::c_void;
 use std::vec::Vec;
 
 use openal::{ffi, al};
-use sndfile::{SndFile, SndInfo, Read};
+use sndfile::{SndFile, SndInfo};
+use sndfile::OpenMode::Read;
 use internal::OpenAlData;
 use audio_tags::{Tags, AudioTags, get_sound_tags};
 
