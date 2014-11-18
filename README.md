@@ -16,7 +16,7 @@ use ears::Sound;
 
 fn main() {
 	// Create a new Sound.
-	let snd = Sound::new(~"path/to/my/sound.ogg").unwrap();
+	let snd = Sound::new("path/to/my/sound.ogg").unwrap();
 
 	// Play the Sound
 	snd.play();

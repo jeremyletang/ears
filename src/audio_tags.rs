@@ -38,7 +38,7 @@ use sndfile::StringSoundType::{
 /**
  * Structure containing the tags of a sound.
  *
- * If the tags doesn't exist in the sound file, the string is ~"".
+ * If the tags doesn't exist in the sound file, the string is "".
  */
 #[deriving(Clone, Show, PartialEq)]
 pub struct Tags {

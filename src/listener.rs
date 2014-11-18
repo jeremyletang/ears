@@ -169,11 +169,13 @@ mod test {
         assert_eq!(get_volume(), 0.77);
     }
 
+    // untill https://github.com/rust-lang/rust/issues/7622 is not used, slice comparsion is used
+
     #[test]
     pub fn listener_set_position() -> () {
         set_position([50f32, 150f32, 234f32]);
         let res = get_position();
-        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 234f32])
+        assert_eq!([res[0], res[1], res[2]][], [50f32, 150f32, 234f32][])
     }
 
     #[test]
@@ -181,8 +183,8 @@ mod test {
         set_orientation([50., 150., 234.], [277., 125., 71.]);
         match get_orientation() {
             ([x1, y1, z1], [x2, y2, z2]) => {
-               assert_eq!(&[x1, y1, z1], &[50f32, 150f32, 234f32]);
-               assert_eq!(&[x2, y2, z2], &[277f32, 125f32, 71f32])
+               assert_eq!([x1, y1, z1][], [50f32, 150f32, 234f32][]);
+               assert_eq!([x2, y2, z2][], [277f32, 125f32, 71f32][])
             }
         }
     }

@@ -37,12 +37,12 @@ fn main() {
     flush();
 
     let mut line = stdin.read_line().unwrap();
-    unsafe { line.pop_byte(); }
+    unsafe { line.as_mut_vec().pop(); }
 
     // Try to create the music
     let mut music = match Music::new(line.as_slice()) {
         Some(music) => music,
-        None        => fail!("Cannot load the music.")
+        None        => panic!("Cannot load the music.")
     };
 
     // Play it

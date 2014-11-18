@@ -46,7 +46,7 @@ use audio_tags::{AudioTags, Tags};
  *
  * fn main() -> () {
  *    // Create a Sound whith the path of the sound file.
- *    let snd = Sound::new(~"path/to/my/sound.ogg").unwrap();
+ *    let snd = Sound::new("path/to/my/sound.ogg").unwrap();
  *
  *    // Play it
  *    snd.play();
@@ -80,7 +80,7 @@ impl Sound {
      * ```Rust
      * let snd = match Sound::new("path/to/the/sound.ogg") {
      *     Some(snd) => snd,
-     *     None      => fail!("Cannot load the sound from a file !")
+     *     None      => panic!("Cannot load the sound from a file !")
      * };
      * ```
      */
@@ -113,11 +113,11 @@ impl Sound {
      *
      * let snd_data = match SoundData::new("path/to/the/sound.ogg") {
      *     Some(snd_data) => Rc::new(RefCell::new(snd_data)),
-     *     None           => fail!("Cannot create the sound data !")
+     *     None           => panic!("Cannot create the sound data !")
      * };
      * let snd = match Sound::new_with_data(snd_data) {
      *     Some(snd) => snd,
-     *     None      => fail!("Cannot create a sound using a sound data !")
+     *     None      => panic!("Cannot create a sound using a sound data !")
      * }
      * ```
      */
@@ -713,7 +713,7 @@ mod test {
         println!("YOUHOU");
         match snd {
             Some(_) => {},
-            None    => fail!()
+            None    => panic!()
         }
     }
 
@@ -722,7 +722,7 @@ mod test {
         let snd = Sound::new("toto.wav");
 
         match snd {
-            Some(_) => fail!(),
+            Some(_) => panic!(),
             None    => {}
         }
     }
@@ -911,13 +911,15 @@ mod test {
         assert_eq!(snd.is_relative(), false);
     }
 
+    // untill https://github.com/rust-lang/rust/issues/7622 is not fixed, slice comparsion is used
+
     #[test]
     fn sound_set_position_OK() -> () {
         let mut snd = Sound::new("res/shot.wav").expect("Cannot create sound");
 
         snd.set_position([50f32, 150f32, 250f32]);
         let res = snd.get_position();
-        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
+        assert_eq!([res[0], res[1], res[2]][], [50f32, 150f32, 250f32][]);
     }
 
     #[test]
@@ -926,7 +928,7 @@ mod test {
 
         snd.set_direction([50f32, 150f32, 250f32]);
         let res = snd.get_direction();
-        assert_eq!(&[res[0], res[1], res[2]], &[50f32, 150f32, 250f32]);
+        assert_eq!([res[0], res[1], res[2]][], [50f32, 150f32, 250f32][]);
     }
 
 
