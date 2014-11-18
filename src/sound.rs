@@ -701,10 +701,10 @@ impl Drop for Sound {
 
 #[cfg(test)]
 mod test {
-    #![allow(non_snake_case_functions)]
+    #![allow(non_snake_case)]
 
     use sound::Sound;
-    use states::{Playing, Paused, Stopped};
+    use states::State::{Playing, Paused, Stopped};
     use audio_controller::AudioController;
 
     #[test]

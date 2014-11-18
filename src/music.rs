@@ -678,10 +678,10 @@ impl Drop for Music {
 
 #[cfg(test)]
 mod test {
-    #![allow(non_snake_case_functions)]
+    #![allow(non_snake_case)]
 
     use music::Music;
-    use states::{Playing, Paused, Stopped};
+    use states::State::{Playing, Paused, Stopped};
     use audio_controller::AudioController;
 
     #[test]
@@ -820,7 +820,7 @@ mod test {
     }
 
     // untill https://github.com/rust-lang/rust/issues/7622 is not fixed, slice comparsion is used
-    
+
     #[test]
     fn music_set_position_OK() -> () {
         let mut msc = Music::new("res/shot.wav").expect("Cannot create Music");
