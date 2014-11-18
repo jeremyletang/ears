@@ -26,7 +26,8 @@ extern crate ears;
 use std::io::stdin;
 use std::io::stdio::flush;
 
-use ears::{Music, AudioController, Playing, Stopped, Paused};
+use ears::{Music, AudioController};
+use ears::State::{Playing, Stopped, Paused};
 
 fn main() {
 
