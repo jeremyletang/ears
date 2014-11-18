@@ -3,9 +3,18 @@
 name = "ears"
 version = "0.3.0"
 authors = ["Jeremy Letang <letang.jeremy@gmail.com>"]
+license = "MIT"
+keywords = ["audio", "openal", "sndfile"]
+readme = "README.md"
+
+repository = "https://github.com/jeremyletang/ears"
+homepage = "https://github.com/jeremyletang/ears"
+documentation = "https://github.com/jeremyletang/ears"
+description = """
+Easy Api in Rust to play Sounds
+"""
 
 [lib]
-
 name = "ears"
 crate-type = ["dylib", "rlib"]
 
