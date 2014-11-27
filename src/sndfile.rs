@@ -387,7 +387,7 @@ impl SndFile {
         unsafe {
             ffi::sf_set_string(self.handle,
                                string_type as i32,
-                               string.to_c_str().unwrap() as *mut i8)
+                               string.to_c_str().into_inner() as *mut i8)
         }
     }
 

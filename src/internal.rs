@@ -19,12 +19,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-/*!
-* Internal class to handle OpenAl context and device.
-*
-* Work as a Singleton, check_al_context must be called before each OpenAl object
-* to be sure that the context is created.
-*/
+//! Internal class to handle OpenAl context and device.
+//!
+//! Work as a Singleton, check_al_context must be called before each OpenAl object
+//! to be sure that the context is created.
 
 #![macro_escape]
 #![allow(raw_pointer_deriving)]
@@ -35,23 +33,19 @@ use openal::ffi;
 use record_context;
 use record_context::RecordContext;
 
-// static al_context: local_data::Key<Box<OpenAlData>> = &local_data::Key;
-// local_data_key!()
-thread_local!(static al_context: RefCell<Box<OpenAlData>> = RefCell::new(box OpenAlData::default()))
+thread_local!(static AL_CONTEXT: RefCell<Box<OpenAlData>> = RefCell::new(box OpenAlData::default()))
 
 #[deriving(Clone)]
 pub struct OpenAlData {
-    al_context: *mut ffi::ALCcontext,
-    al_device: *mut ffi::ALCdevice,
-    al_capt_device: *mut ffi::ALCdevice
+    pub al_context: *mut ffi::ALCcontext,
+    pub al_device: *mut ffi::ALCdevice,
+    pub al_capt_device: *mut ffi::ALCdevice
 }
 
 impl OpenAlData {
-    /**
-     * Create a new OpenAlData struct
-     *
-     * Private method.
-     */
+    /// Create a new OpenAlData struct
+    ///
+    /// Private method.
     fn new() -> Result<OpenAlData, String> {
         let device = unsafe { ffi::alcOpenDevice(ptr::null_mut()) };
         if device.is_null() {
@@ -91,76 +85,79 @@ impl OpenAlData {
             true
         }
     }
-    /**
-     * Check if the context is created.
-     *
-     * This function check is the OpenAl context is already created.
-     * If context doesn't exist, create it, and store it in a local_data,
-     * else get it from the local data and return it.
-     *
-     * # Return
-     * A result containing nothing if the OpenAlData struct exist,
-     * otherwise an error message.
-     */
+
+    /// Check if the context is created.
+    ///
+    /// This function check is the OpenAl context is already created.
+    /// If context doesn't exist, create it, and store it in a local_data,
+    /// else get it from the local data and return it.
+    ///
+    /// # Return
+    /// A result containing nothing if the OpenAlData struct exist,
+    /// otherwise an error message.
     pub fn check_al_context() -> Result<(), String> {
         if unsafe { ffi::alcGetCurrentContext().is_not_null() } {
             return Ok(())
         }
-        match al_context.get() {
-            Some(_) => Ok(()),
-            None    => {
+        AL_CONTEXT.with(|f| {
+            let is_def = f.borrow_mut().is_default();
+            if is_def {
                 match OpenAlData::new() {
                     Ok(al_data) => {
-                        al_context.replace(Some(RefCell::new(box al_data))); Ok(())
+                        *f.borrow_mut() = box al_data; Ok(())
                     },
-                    Err(err)    => Err(err)
+                    Err(err) => Err(err)
                 }
+            } else {
+                Ok(())
             }
-        }
+        })
     }
 
     fn is_input_context_init() -> Result<RecordContext, String> {
-        let is_some = al_context.get().is_some();
-        if is_some {
-            let mut new_context = *(*al_context.get().unwrap()).borrow().clone();
-            if new_context.al_capt_device.is_not_null() {
-                Ok(record_context::new(new_context.al_capt_device))
-            } else {
-                if "ALC_EXT_CAPTURE".with_c_str(|c_str| unsafe {
-                    ffi::alcIsExtensionPresent(new_context.al_device, c_str) }) == ffi::ALC_FALSE {
-                    return Err("Error: no input device available on your system.".to_string())
+        // let is_some = AL_CONTEXT.get().is_some();
+        AL_CONTEXT.with(|f| {
+            let is_def = f.borrow_mut().is_default();
+            if !is_def {
+                let mut new_context = f.borrow_mut();
+                if new_context.al_capt_device.is_not_null() {
+                    Ok(record_context::new(new_context.al_capt_device))
                 } else {
-                    new_context.al_capt_device = unsafe {
+                    if "ALC_EXT_CAPTURE".with_c_str(|c_str| unsafe {
+                        ffi::alcIsExtensionPresent(new_context.al_device, c_str) }) == ffi::ALC_FALSE {
+                        return Err("Error: no input device available on your system.".to_string())
+                    } else {
+                        new_context.al_capt_device = unsafe {
                         ffi::alcCaptureOpenDevice(ptr::null_mut(),
                                                   44100,
                                                   ffi::AL_FORMAT_MONO16,
                                                   44100) };
-                    if new_context.al_capt_device.is_null() {
-                        Err("Internal error: cannot open the default capture device.".to_string())
-                    } else {
-                        let cap_device = new_context.al_capt_device;
-                        al_context.replace(Some(RefCell::new(box new_context)));
-                        Ok(record_context::new(cap_device))
+                        if new_context.al_capt_device.is_null() {
+                            return Err("Internal error: cannot open the default capture device.".to_string())
+                        } else {
+                           let cap_device = new_context.al_capt_device;
+                           return Ok(record_context::new(cap_device))
+                        }
                     }
+                    Err("Error: you must request the input context, \
+                        in the task where you initialize ears.".to_string())
                 }
+            } else {
+                Err("Error: you must request the input context, \
+                    in the task where you initialize ears.".to_string())
             }
-        } else {
-            Err("Error: you must request the input context, \
-                           in the task where you initialize ears.".to_string())
-        }
+        })
     }
 
-    /**
-     * Check if the input context is created.
-     *
-     * This function check if the input OpenAl context is already created.
-     * The input openAL context need the normal AL context + its own extension.
-     * So check if the context exist first, then load the input extension.
-     *
-     * # Return
-     * A result containing nothing if the OpenAlData struct exist,
-     * otherwise an error message.
-     */
+    /// Check if the input context is created.
+    ///
+    /// This function check if the input OpenAl context is already created.
+    /// The input openAL context need the normal AL context + its own extension.
+    /// So check if the context exist first, then load the input extension.
+    ///
+    /// # Return
+    /// A result containing nothing if the OpenAlData struct exist,
+    /// otherwise an error message.
     pub fn check_al_input_context() -> Result<RecordContext, String> {
         if unsafe { ffi::alcGetCurrentContext().is_not_null() } {
             OpenAlData::is_input_context_init()
