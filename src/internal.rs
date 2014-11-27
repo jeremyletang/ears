@@ -35,7 +35,9 @@ use openal::ffi;
 use record_context;
 use record_context::RecordContext;
 
-local_data_key!(al_context: RefCell<Box<OpenAlData>>)
+// static al_context: local_data::Key<Box<OpenAlData>> = &local_data::Key;
+// local_data_key!()
+thread_local!(static al_context: RefCell<Box<OpenAlData>> = RefCell::new(box OpenAlData::default()))
 
 #[deriving(Clone)]
 pub struct OpenAlData {
@@ -72,6 +74,23 @@ impl OpenAlData {
         )
     }
 
+    fn default() -> OpenAlData {
+        OpenAlData {
+            al_context: ptr::null_mut(),
+            al_device: ptr::null_mut(),
+            al_capt_device: ptr::null_mut()
+        }
+    }
+
+    fn is_default(&self) -> bool {
+        if self.al_context.is_null() &&
+           self.al_device.is_null() &&
+           self.al_capt_device.is_null() {
+            false
+        } else {
+            true
+        }
+    }
     /**
      * Check if the context is created.
      *
