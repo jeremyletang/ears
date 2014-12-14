@@ -94,7 +94,7 @@ use ears::Music;
 #![license = "MIT"]
 #![crate_type = "dylib"]
 #![crate_type = "rlib"]
-#![allow(dead_code)]
+#![allow(dead_code, unused_attributes)]
 #![feature(macro_rules)]
 #![feature(unsafe_destructor)]
 

@@ -64,6 +64,7 @@ pub struct SndInfo {
 /// * Read - Read only mode
 /// * Write - Write only mode
 /// * ReadWrite - Read and Write mode
+#[deriving(Copy)]
 pub enum OpenMode {
     Read       = ffi::SFM_READ as int,
     Write      = ffi::SFM_WRITE as int,
@@ -71,6 +72,7 @@ pub enum OpenMode {
 }
 
 /// Type of strings available for method get_string()
+#[deriving(Copy)]
 pub enum StringSoundType {
     Title       = ffi::SF_STR_TITLE as int,
     Copyright   = ffi::SF_STR_COPYRIGHT as int,
@@ -86,6 +88,7 @@ pub enum StringSoundType {
 
 /// Types of error who can be return by API functions
 #[repr(C)]
+#[deriving(Copy)]
 pub enum Error {
     NoError             = ffi::SF_ERR_NO_ERROR as int,
     UnrecognizedFormat  = ffi::SF_ERR_UNRECOGNISED_FORMAT as int,
@@ -100,6 +103,7 @@ pub enum Error {
 /// * SeekSet - The offset is set to the start of the audio data plus offset (multichannel) frames.
 /// * SeekCur - The offset is set to its current location plus offset (multichannel) frames.
 /// * SeekEnd - The offset is set to the end of the data plus offset (multichannel) frames.
+#[deriving(Copy)]
 pub enum SeekMode {
     SeekSet = ffi::SEEK_SET as int,
     SeekCur = ffi::SEEK_CUR as int,
@@ -161,7 +165,7 @@ pub enum SeekMode {
 /// * EndianBig - Force big endian-ness
 /// * EndianCpu - Force CPU endian-ness
 #[repr(C)]
-#[deriving(Show, Clone, PartialOrd, PartialEq)]
+#[deriving(Show, Clone, PartialOrd, PartialEq, Copy)]
 pub enum FormatType {
     FormatWav = ffi::SF_FORMAT_WAV as int,
     FormatAiff = ffi::SF_FORMAT_AIFF as int,
